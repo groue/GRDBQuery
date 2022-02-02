@@ -58,7 +58,7 @@ extension Queryable {
 @propertyWrapper
 public struct Query<Request: Queryable>: DynamicProperty {
     /// Database access
-    @Environment private var database: Request.DatabaseContext
+    private var database: Request.DatabaseContext
     
     /// The object that keeps on observing the database as long as it is alive.
     @StateObject private var tracker = Tracker()
@@ -86,7 +86,16 @@ public struct Query<Request: Queryable>: DynamicProperty {
         _ request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
     {
-        _database = Environment(keyPath)
+        database = Environment(keyPath).wrappedValue
+        initialRequest = request
+    }
+
+    /// Creates a `Query`, given a queryable request and database context
+    public init(
+        request: Request,
+        database: Request.DatabaseContext)
+    {
+        self.database = database
         initialRequest = request
     }
     

@@ -17,7 +17,6 @@
 		56519DB5274EAC7400ED16D8 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519DB4274EAC7400ED16D8 /* Persistence.swift */; };
 		56519DB7274EAFD700ED16D8 /* DatabaseButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519DB6274EAFD700ED16D8 /* DatabaseButtons.swift */; };
 		56519DB9274EC27500ED16D8 /* PlayerCountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519DB8274EC27500ED16D8 /* PlayerCountRequest.swift */; };
-		56519DC0274FC3F700ED16D8 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 56519DBF274FC3F700ED16D8 /* GRDB */; };
 		56519DC2274FC44500ED16D8 /* GRDBQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 56519DC1274FC44500ED16D8 /* GRDBQuery */; };
 		56F8A189273802970011ACBE /* QueryDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F8A188273802970011ACBE /* QueryDemoApp.swift */; };
 		56F8A18B273802970011ACBE /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F8A18A273802970011ACBE /* AppView.swift */; };
@@ -28,6 +27,7 @@
 		56F8A1A6273802980011ACBE /* QueryDemoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F8A1A5273802980011ACBE /* QueryDemoUITestsLaunchTests.swift */; };
 		56F8A1BA273803BB0011ACBE /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 56F8A1B9273803BB0011ACBE /* GRDB */; };
 		56F8A1BE273803E90011ACBE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F8A1BD273803E90011ACBE /* Player.swift */; };
+		69BAF48A27AAB84800452053 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 69BAF48927AAB84800452053 /* GRDB */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,7 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56519DC0274FC3F700ED16D8 /* GRDB in Frameworks */,
+				69BAF48A27AAB84800452053 /* GRDB in Frameworks */,
 				56F8A1BA273803BB0011ACBE /* GRDB in Frameworks */,
 				56519DC2274FC44500ED16D8 /* GRDBQuery in Frameworks */,
 			);
@@ -230,8 +230,8 @@
 			name = QueryDemo;
 			packageProductDependencies = (
 				56F8A1B9273803BB0011ACBE /* GRDB */,
-				56519DBF274FC3F700ED16D8 /* GRDB */,
 				56519DC1274FC44500ED16D8 /* GRDBQuery */,
+				69BAF48927AAB84800452053 /* GRDB */,
 			);
 			productName = QueryDemo;
 			productReference = 56F8A185273802970011ACBE /* QueryDemo.app */;
@@ -306,7 +306,7 @@
 			);
 			mainGroup = 56F8A17C273802970011ACBE;
 			packageReferences = (
-				56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				69BAF48827AAB84800452053 /* XCRemoteSwiftPackageReference "GRDB" */,
 			);
 			productRefGroup = 56F8A186273802970011ACBE /* Products */;
 			projectDirPath = "";
@@ -713,22 +713,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+		69BAF48827AAB84800452053 /* XCRemoteSwiftPackageReference "GRDB" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDB.swift.git";
+			repositoryURL = "https://github.com/groue/GRDB.swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.13.0;
+				minimumVersion = 5.16.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		56519DBF274FC3F700ED16D8 /* GRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
-			productName = GRDB;
-		};
 		56519DC1274FC44500ED16D8 /* GRDBQuery */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GRDBQuery;
@@ -743,6 +738,11 @@
 		};
 		56F8A1B9273803BB0011ACBE /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = GRDB;
+		};
+		69BAF48927AAB84800452053 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69BAF48827AAB84800452053 /* XCRemoteSwiftPackageReference "GRDB" */;
 			productName = GRDB;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "GRDB",
-        "repositoryURL": "https://github.com/groue/GRDB.swift.git",
+        "repositoryURL": "https://github.com/groue/GRDB.swift",
         "state": {
           "branch": null,
-          "revision": "8658b7bc1009237457324fc050cd06e0d961b72a",
-          "version": "5.13.0"
+          "revision": "98ca653c6a1841b0fa2d69980aa941354d5c9ece",
+          "version": "5.20.0"
         }
       }
     ]

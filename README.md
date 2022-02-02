@@ -181,6 +181,21 @@ struct PlayerList: View {
 }
 ```
 
+It is also possible to initialize `@Query` with a `DatabaseQueue` without having it on the environment:
+```swift
+struct PlayerList: View {
+    // Ordering can change through the $players.ordering binding.
+    @Query<Player> var players: [Player]
+    
+    init(database: DatabaseQueue) {
+        _players = .init(
+            request: AllPlayers(),
+            database: database
+        )
+    }
+}
+```
+
 ## How to Handle Database Errors?
 
 **By default, `@Query` ignores errors** published by `Queryable` types. The SwiftUI views are just not updated whenever an error occurs. If the database is unavailable when the view appears, `@Query` will just output the default value.
