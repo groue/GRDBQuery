@@ -58,7 +58,7 @@ extension Queryable {
 @propertyWrapper
 public struct Query<Request: Queryable>: DynamicProperty {
     /// Database access
-    @Environment private var database: Request.DatabaseContext
+    @Environment private var database: Request.DatabaseContext?
     
     /// The object that keeps on observing the database as long as it is alive.
     @StateObject private var tracker = Tracker()
@@ -84,7 +84,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// database in the environment.
     public init(
         _ request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext?>)
     {
         _database = Environment(keyPath)
         initialRequest = request
@@ -96,6 +96,11 @@ public struct Query<Request: Queryable>: DynamicProperty {
         if tracker.needsInitialRequest {
             tracker.request = initialRequest
         }
+        guard let database = database else {
+            print("GRDBQuery: ERROR, database not found in SwiftUI environment, no results will be returned")
+            return
+        }
+        
         tracker.startTrackingIfNecessary(in: database)
     }
     
