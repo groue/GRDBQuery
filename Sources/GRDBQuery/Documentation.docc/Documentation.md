@@ -1,12 +1,12 @@
-# @Query
+# ``GRDBQuery``
 
-**Latest release**: November 25, 2021 • [version 0.1.0](https://github.com/groue/GRDBQuery/tree/0.1.0) • [CHANGELOG](CHANGELOG.md)
+The `@Query` property wrapper helps SwiftUI views feed from database content.
 
-**Requirements**: iOS 13.0+ / macOS 10.15+ / tvOS 13.0+ / watchOS 6.0+ &bull; Swift 5.5+ / Xcode 13+
+## Overview
 
----
+`@Query` is for [GRDB] what [`@FetchRequest`](https://developer.apple.com/documentation/swiftui/fetchrequest) is for Core Data. Although `@Query` does not depend on GRDB, it was designed with GRDB in mind.
 
-This package provides the `@Query` property wrapper, that lets your SwiftUI views automatically update their content when the database changes.
+The main use of `@Query` is to automatically update SwiftUI views when the database content changes:
 
 ```swift
 import GRDBQuery
@@ -25,12 +25,7 @@ struct PlayerList: View {
 }
 ```
 
-`@Query` is for [GRDB] what [`@FetchRequest`](https://developer.apple.com/documentation/swiftui/fetchrequest) is for Core Data. Although `@Query` does not depend on GRDB, it was designed with GRDB in mind.
-
-- [Why @Query?]
-- [Usage]
-- [How to Handle Database Errors?]
-- [Demo Application]
+We'll see below how to provide database access to the `PlayerList` view, and how to define the `AllPlayers` type in the above example.
 
 ## Why @Query?
 
@@ -124,7 +119,7 @@ struct AllPlayers: Queryable {
 }
 ```
 
-The `Queryable` protocol has two requirements: a default value, and a Combine publisher. The publisher is built from the `DatabaseQueue` stored in the environment (you'll adapt this sample code if you prefer another type). The publisher tracks database changes with GRDB [ValueObservation]. The default value is used until the publisher publishes its initial value.
+The ``Queryable`` protocol has two requirements: a default value, and a Combine publisher. The publisher is built from the `DatabaseQueue` stored in the environment (you'll adapt this sample code if you prefer another type). The publisher tracks database changes with GRDB [ValueObservation]. The default value is used until the publisher publishes its initial value.
 
 In the above sample code, we make sure the views are *immediately* fed with database content with the `scheduling: .immediate` option. This prevents any "blank state", or "flash of missing content".
 
@@ -152,7 +147,7 @@ struct PlayerList: View {
 }
 ```
 
-`@Query` exposes a binding to the request, so that views can change the request when they need. The [GRDB demo apps], for example, use a Queryable type that can change the player ordering:
+`@Query` exposes a binding to the request, so that views can change the request when they need. The [GRDB demo apps], for example, use a `Queryable` type that can change the player ordering:
 
 ```swift
 struct PlayerList: View {
@@ -208,22 +203,17 @@ struct AllPlayers: Queryable {
 }
 ```
 
+## Topics
 
-## Demo Application
+### The `@Query` property wrapper
 
-This package ships with a [demo app]. See also the [GRDB demo apps] for various examples of apps that use `@Query`.
+- ``Query``
 
----
+### Feeding `@Query` with database content
 
-🙌 `@Query` was vastly inspired from [Core Data and SwiftUI](https://davedelong.com/blog/2021/04/03/core-data-and-swiftui/) by [@davedelong](https://github.com/davedelong), with [a critical improvement](https://github.com/groue/GRDB.swift/pull/955) contributed by [@steipete](https://github.com/steipete). Many thanks to both of you!
+- ``Queryable``
 
-
-[Why @Query?]: #why-query
-[Usage]: #usage
-[How to Handle Database Errors?]: #how-to-handle-database-errors
 [GRDB]: http://github.com/groue/GRDB.swift
 [DatabaseQueue]: https://github.com/groue/GRDB.swift/blob/master/README.md#database-queues
 [GRDB demo apps]: https://github.com/groue/GRDB.swift/tree/master/Documentation/DemoApps
-[demo app]: Documentation/QueryDemo
-[Demo Application]: Documentation/QueryDemo
 [ValueObservation]: https://github.com/groue/GRDB.swift/blob/master/README.md#valueobservation
