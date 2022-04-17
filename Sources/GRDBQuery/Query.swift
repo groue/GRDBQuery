@@ -147,13 +147,11 @@ extension Queryable {
 ///
 /// - ``init(_:in:)``
 ///
-/// ### The Database Value
+/// ### Getting the Value
 ///
 /// - ``wrappedValue``
-///
-/// ### Modifying the Request
-///
 /// - ``projectedValue``
+/// - ``Wrapper``
 ///
 /// ### SwiftUI Integration
 ///
@@ -173,16 +171,12 @@ public struct Query<Request: Queryable>: DynamicProperty {
         tracker.value ?? Request.defaultValue
     }
     
-    /// A binding to the request, that lets your views modify it.
+    /// A projection of the `Query` that creates bindings to its
+    /// ``Queryable`` request.
     ///
-    /// Learn how to use this binding in the <doc:QueryableParameters> guide.
-    public var projectedValue: Binding<Request> {
-        Binding(
-            get: { tracker.request ?? initialRequest },
-            set: {
-                tracker.needsInitialRequest = false
-                tracker.request = $0
-            })
+    /// Learn how to use this projection in the <doc:QueryableParameters> guide.
+    public var projectedValue: Wrapper {
+        Wrapper(query: self)
     }
     
     /// Creates a `Query`, given a ``Queryable`` request, and a key path to the
@@ -250,6 +244,38 @@ public struct Query<Request: Queryable>: DynamicProperty {
             tracker.request = initialRequest
         }
         tracker.startTrackingIfNecessary(in: database)
+    }
+    
+    /// A wrapper of the underlying `Query` that creates bindings to
+    /// its ``Queryable`` request.
+    @dynamicMemberLookup public struct Wrapper {
+        fileprivate let query: Query
+        
+        /// Returns a binding to the property of the ``Queryable`` request, at
+        /// a given key path.
+        ///
+        /// Learn how to use this binding in the <doc:QueryableParameters> guide.
+        public subscript<U>(dynamicMember keyPath: WritableKeyPath<Request, U>) -> Binding<U> {
+            Binding(
+                get: {
+                    request.wrappedValue[keyPath: keyPath]
+                },
+                set: {
+                    request.wrappedValue[keyPath: keyPath] = $0
+                })
+        }
+
+        /// Returns a binding to the ``Queryable`` request.
+        ///
+        /// Learn how to use this binding in the <doc:QueryableParameters> guide.
+        public var request: Binding<Request> {
+            Binding(
+                get: { query.tracker.request ?? query.initialRequest },
+                set: {
+                    query.tracker.needsInitialRequest = false
+                    query.tracker.request = $0
+                })
+        }
     }
     
     /// The object that keeps on observing the database as long as it is alive.

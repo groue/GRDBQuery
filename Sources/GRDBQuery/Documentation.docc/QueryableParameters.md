@@ -91,6 +91,11 @@ struct ToggleOrderingButton: View {
 }
 ```
 
+In the above example, `$players.ordering` is a SwiftUI binding to the `ordering` property of the `AllPlayers` request.
+
+When appropriate, you can also use `$players.request`, a SwiftUI binding to the `AllPlayers` request itself.
+
+
 ## Configuring the Initial Request
 
 The above example has the `PlayerList` view always start with the `.byScore` ordering. When you want to provide the initial ordering as a parameter to your view, modify the sample code as below:
