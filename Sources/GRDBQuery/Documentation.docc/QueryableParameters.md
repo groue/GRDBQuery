@@ -95,7 +95,7 @@ struct ToggleOrderingButton: View {
 
 In the above example, `$players.ordering` is a SwiftUI binding to the `ordering` property of the `PlayerRequest` request.
 
-This binding feeds `ToggleOrderingButton`, which lets the user change the ordering of the request. `@Query` then redraws the view with an updated the database content. 
+This binding feeds `ToggleOrderingButton`, which lets the user change the ordering of the request. `@Query` then redraws the view with an updated database content. 
 
 When appropriate, you can also use `$players.request`, a SwiftUI binding to the `PlayerRequest` request itself.
 

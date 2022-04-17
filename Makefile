@@ -18,6 +18,17 @@ docs:
 	  --transform-for-static-hosting \
 	  --hosting-base-path GRDBQuery/$(DOCS_VERSION)
 
+docs-main:
+	mkdir -p ./docs/main
+	$(SWIFT) package \
+	  --allow-writing-to-directory ./docs/main \
+	  generate-documentation \
+	  --output-path ./docs/main \
+	  --target GRDBQuery \
+	  --disable-indexing \
+	  --transform-for-static-hosting \
+	  --hosting-base-path GRDBQuery/main
+
 distclean:
 	git -dfx .
 
