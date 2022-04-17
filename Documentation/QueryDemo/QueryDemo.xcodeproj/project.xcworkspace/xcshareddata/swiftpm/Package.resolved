@@ -6,8 +6,17 @@
         "repositoryURL": "https://github.com/groue/GRDB.swift.git",
         "state": {
           "branch": null,
-          "revision": "8658b7bc1009237457324fc050cd06e0d961b72a",
-          "version": "5.13.0"
+          "revision": "4472d3a60ec4cc383503eba5072ce17f781b9ddc",
+          "version": "5.23.0"
+        }
+      },
+      {
+        "package": "SwiftDocCPlugin",
+        "repositoryURL": "https://github.com/apple/swift-docc-plugin",
+        "state": {
+          "branch": null,
+          "revision": "3303b164430d9a7055ba484c8ead67a52f7b74f6",
+          "version": "1.0.0"
         }
       }
     ]
