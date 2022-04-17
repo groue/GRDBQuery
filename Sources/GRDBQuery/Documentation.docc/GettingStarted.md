@@ -161,6 +161,16 @@ struct AllPlayers: Queryable {
 }
 ```
 
+## Topics
+
+### The @Query property wrapper
+
+- ``Query``
+
+### Feeding @Query with database content
+
+- ``Queryable``
+
 [DatabaseQueue]: https://github.com/groue/GRDB.swift/blob/master/README.md#database-queues
 [ValueObservation]: https://github.com/groue/GRDB.swift/blob/master/README.md#valueobservation
 [GRDB demo apps]: https://github.com/groue/GRDB.swift/tree/master/Documentation/DemoApps
