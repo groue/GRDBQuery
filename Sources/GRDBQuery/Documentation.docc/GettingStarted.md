@@ -72,7 +72,7 @@ import GRDB
 import GRDBQuery
 
 /// Tracks the full list of players
-struct AllPlayers: Queryable {
+struct PlayerRequest: Queryable {
     static var defaultValue: [Player] { [] }
     
     func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
@@ -103,7 +103,7 @@ import GRDBQuery
 import SwiftUI
 
 struct PlayerList: View {
-    @Query(AllPlayers(), in: \.dbQueue)
+    @Query(PlayerRequest(), in: \.dbQueue)
     var players: [Player]
     
     var body: some View {
@@ -120,12 +120,31 @@ struct PlayerList: View {
 
 > Tip: Some applications want to use `@Query` without specifying the key path to the database in each and every view.
 >
-> See how to make the environment key implicit in ``Query/init(_:in:)``. 
+> To do so, add somewhere in your application those convenience `Query` initializers:
+>
+> ```swift
+> // Convenience Query initializers for requests
+> // that feed from `DatabaseQueue`.
+> extension Query where Request.DatabaseContext == DatabaseQueue {
+>     init(_ request: Request) {
+>         self.init(request, in: \.dbQueue)
+>     }
+>     init(_ request: Binding<Request>) {
+>         self.init(request, in: \.dbQueue)
+>     }
+>     init(constant request: Request) {
+>         self.init(constant:request, in: \.dbQueue)
+>     }
+> }
+> ```
+>
+> These initializers will streamline your SwiftUI views:
 >
 > ```swift
 > struct PlayerList: View {
->     @Query(AllPlayers()) // Implicit key path to the database
+>     @Query(PlayerRequest()) // Implicit key path to the database
 >     var players: [Player]
+>
 >     ...
 > }
 > ```
@@ -141,7 +160,7 @@ import Combine
 import GRDB
 import GRDBQuery
 
-struct AllPlayers: Queryable {
+struct PlayerRequest: Queryable {
     typealias Value = Result<[Player], Error>
     static var defaultValue: Value { .success([]) }
     

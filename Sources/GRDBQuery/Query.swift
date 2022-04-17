@@ -47,7 +47,7 @@ import SwiftUI
 ///
 /// ## Example
 ///
-/// The sample code below defines `AllPlayers`, a `Queryable` type that
+/// The sample code below defines `PlayerRequest`, a `Queryable` type that
 /// publishes the list of players found in the database:
 ///
 /// ```swift
@@ -56,7 +56,7 @@ import SwiftUI
 /// import GRDBQuery
 ///
 /// /// Tracks the full list of players
-/// struct AllPlayers: Queryable {
+/// struct PlayerRequest: Queryable {
 ///     static var defaultValue: [Player] { [] }
 ///
 ///     func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
@@ -68,7 +68,7 @@ import SwiftUI
 /// }
 /// ```
 ///
-/// This `AllPlayers` type will automatically update a SwiftUI view on every
+/// This `PlayerRequest` type will automatically update a SwiftUI view on every
 /// database changes, when wrapped by the `@Query` property wrapper:
 ///
 /// ```swift
@@ -76,7 +76,7 @@ import SwiftUI
 /// import SwiftUI
 ///
 /// struct PlayerList: View {
-///     @Query(AllPlayers())
+///     @Query(PlayerRequest())
 ///     var players: [Player]
 ///
 ///     var body: some View {
@@ -145,7 +145,9 @@ extension Queryable {
 ///
 /// ### Creating a @Query
 ///
-/// - ``init(_:in:)``
+/// - ``init(_:in:)-4ubsz``
+/// - ``init(_:in:)-2knwm``
+/// - ``init(constant:in:)``
 ///
 /// ### Getting the Value
 ///
@@ -158,13 +160,21 @@ extension Queryable {
 /// - ``update()``
 @propertyWrapper
 public struct Query<Request: Queryable>: DynamicProperty {
+    /// For a full discussion of these cases, see <doc:QueryableParameters>.
+    private enum Configuration {
+        case constant(Request)
+        case initial(Request)
+        case binding(Binding<Request>)
+    }
+    
     /// Database access
     @Environment private var database: Request.DatabaseContext
     
     /// The object that keeps on observing the database as long as it is alive.
     @StateObject private var tracker = Tracker()
     
-    private let initialRequest: Request
+    /// The `Query` configuration.
+    private let configuration: Configuration
     
     /// The last published database value.
     public var wrappedValue: Request.Value {
@@ -179,14 +189,14 @@ public struct Query<Request: Queryable>: DynamicProperty {
         Wrapper(query: self)
     }
     
-    /// Creates a `Query`, given a ``Queryable`` request, and a key path to the
-    /// database in the SwiftUI environment.
+    /// Creates a `Query`, given an initial ``Queryable`` request, and a key
+    /// path to the database in the SwiftUI environment.
     ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayerList: View {
-    ///     @Query(AllPlayers(), in: \.dbQueue)
+    ///     @Query(PlayerRequest(), in: \.dbQueue)
     ///     var players: [Player]
     ///
     ///     var body: some View {
@@ -195,36 +205,12 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// }
     /// ```
     ///
-    /// ### Making the Environment Key Path Implicit
+    /// > NOTE: After the view has appeared on screen, only the SwiftUI bindings
+    /// > returned by the ``projectedValue`` wrapper (`$players`) can update
+    /// > the database content visible on screen by changing the request.
+    /// > See <doc:QueryableParameters> for more details.
     ///
-    /// Some applications want to use `@Query` without specifying the
-    /// key path to the database in each and every view. To do so, add somewhere
-    /// in your application a convenience `Query` initializer:
-    ///
-    /// ```swift
-    /// extension Query where Request.DatabaseContext == DatabaseQueue {
-    ///     init(_ request: Request) {
-    ///         self.init(request, in: \.dbQueue)
-    ///     }
-    /// }
-    /// ```
-    ///
-    /// This initializer will improve your SwiftUI views:
-    ///
-    /// ```swift
-    /// struct PlayerList: View {
-    ///     @Query(AllPlayers()) // Implicit key path to the database
-    ///     var players: [Player]
-    ///
-    ///     ...
-    /// }
-    /// ```
-    ///
-    /// See <doc:GettingStarted> for more guidance about the key path, the type
-    /// that provides database access, and how to put it in the
-    /// SwiftUI environment.
-    ///
-    /// - parameter request: A ``Queryable`` request.
+    /// - parameter request: An initial ``Queryable`` request.
     /// - parameter keyPath: A key path to the database in the environment. To
     ///   know which key path you have to provide, and learn how to put the
     ///   database in the environment, see <doc:GettingStarted>.
@@ -232,24 +218,129 @@ public struct Query<Request: Queryable>: DynamicProperty {
         _ request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
     {
-        _database = Environment(keyPath)
-        initialRequest = request
+        self._database = Environment(keyPath)
+        self.configuration = .initial(request)
+    }
+    
+    /// Creates a `Query`, given a ``Queryable`` request, and a key path to the
+    /// database in the SwiftUI environment.
+    ///
+    /// For example:
+    ///
+    /// ```swift
+    /// struct PlayerList: View {
+    ///     @Query<PlayerRequest> var players: [Player]
+    ///
+    ///     init(constantRequest request: Binding<PlayerRequest>) {
+    ///         _players = Query(constant: request, in: \.dbQueue)
+    ///     }
+    ///
+    ///     var body: some View {
+    ///         List(players) { player in ... }
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// > NOTE: The SwiftUI bindings returned by the ``projectedValue`` wrapper
+    /// > (`$players`) can not update the database content: the request is
+    /// > "constant". See <doc:QueryableParameters> for more details.
+    ///
+    /// - parameter request: A ``Queryable`` request.
+    /// - parameter keyPath: A key path to the database in the environment. To
+    ///   know which key path you have to provide, and learn how to put the
+    ///   database in the environment, see <doc:GettingStarted>.
+    public init(
+        constant request: Request,
+        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+    {
+        self._database = Environment(keyPath)
+        self.configuration = .constant(request)
+    }
+    
+    /// Creates a `Query`, given a SwiftUI binding to its ``Queryable`` request,
+    /// and a key path to the database in the SwiftUI environment.
+    ///
+    /// For example:
+    ///
+    /// ```swift
+    /// struct Container {
+    ///     @State var request: PlayerRequest
+    ///
+    ///     var body: some View {
+    ///         PlayerList($request) // Note the `$request` binding here
+    ///     }
+    /// }
+    ///
+    /// struct PlayerList: View {
+    ///     @Query<PlayerRequest> var players: [Player]
+    ///
+    ///     init(_ request: Binding<PlayerRequest>) {
+    ///         _players = Query(request, in: \.dbQueue)
+    ///     }
+    ///
+    ///     var body: some View {
+    ///         List(players) { player in ... }
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// > NOTE: Both the `request` Binding argument, and the SwiftUI bindings
+    /// > returned by the ``projectedValue`` wrapper (`$players`) can update
+    /// > the database content visible on screen by changing the request.
+    /// > See <doc:QueryableParameters> for more details.
+    ///
+    /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
+    /// - parameter keyPath: A key path to the database in the environment. To
+    ///   know which key path you have to provide, and learn how to put the
+    ///   database in the environment, see <doc:GettingStarted>.
+    public init(
+        _ request: Binding<Request>,
+        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+    {
+        self._database = Environment(keyPath)
+        self.configuration = .binding(request)
     }
     
     /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
     public func update() {
-        // Feed tracker with necessary information,
-        // and make sure tracking has started.
-        if tracker.needsInitialRequest {
-            tracker.request = initialRequest
-        }
-        tracker.startTrackingIfNecessary(in: database)
+        tracker.update(configuration: configuration, database: database)
     }
     
     /// A wrapper of the underlying `Query` that creates bindings to
     /// its ``Queryable`` request.
     @dynamicMemberLookup public struct Wrapper {
-        fileprivate let query: Query
+        let query: Query
+        
+        /// Returns a binding to the ``Queryable`` request.
+        ///
+        /// Learn how to use this binding in the <doc:QueryableParameters> guide.
+        public var request: Binding<Request> {
+            Binding(
+                get: {
+                    if let request = query.tracker.request {
+                        return request
+                    }
+                    switch query.configuration {
+                    case let .constant(request), let .initial(request):
+                        return request
+                    case let .binding(binding):
+                        return binding.wrappedValue
+                    }
+                },
+                set: { newRequest in
+                    switch query.configuration {
+                    case .constant:
+                        // Constant request does not change
+                        break
+                    case .initial:
+                        query.tracker.request = newRequest
+                        query.tracker.objectWillChange.send()
+                    case let .binding(binding):
+                        binding.wrappedValue = newRequest
+                        query.tracker.objectWillChange.send()
+                    }
+                })
+        }
         
         /// Returns a binding to the property of the ``Queryable`` request, at
         /// a given key path.
@@ -264,56 +355,44 @@ public struct Query<Request: Queryable>: DynamicProperty {
                     request.wrappedValue[keyPath: keyPath] = $0
                 })
         }
-
-        /// Returns a binding to the ``Queryable`` request.
-        ///
-        /// Learn how to use this binding in the <doc:QueryableParameters> guide.
-        public var request: Binding<Request> {
-            Binding(
-                get: { query.tracker.request ?? query.initialRequest },
-                set: {
-                    query.tracker.needsInitialRequest = false
-                    query.tracker.request = $0
-                })
-        }
     }
     
     /// The object that keeps on observing the database as long as it is alive.
     private class Tracker: ObservableObject {
-        private(set) var value: Request.Value?
-        var needsInitialRequest = true
-        var request: Request? {
-            willSet {
-                if request != newValue {
-                    // Stop tracking, and tell SwiftUI about the update
-                    objectWillChange.send()
-                    cancellable = nil
-                }
-            }
-        }
+        @Published var value: Request.Value?
+        var request: Request?
+        private var trackedRequest: Request?
         private var cancellable: AnyCancellable?
         
-        init() { }
-        
-        func startTrackingIfNecessary(in database: Request.DatabaseContext) {
-            guard let request = request else {
-                // No request set
+        func update(configuration queryConfiguration: Configuration, database: Request.DatabaseContext) {
+            let newRequest: Request
+            switch queryConfiguration {
+            case let .initial(initialRequest):
+                // Ignore initial request once request has been set (by a
+                // previous call to this method, or by `Wrapper`).
+                newRequest = request ?? initialRequest
+            case let .constant(constantRequest):
+                newRequest = constantRequest
+            case let .binding(binding):
+                newRequest = binding.wrappedValue
+            }
+            
+            // Give up if the request is already tracked.
+            if newRequest == trackedRequest {
                 return
             }
             
-            guard cancellable == nil else {
-                // Already tracking
-                return
-            }
+            // Update inner state.
+            trackedRequest = newRequest
+            request = newRequest
             
-            cancellable = request.publisher(in: database).sink(
+            // Start tracking the new request
+            cancellable = newRequest.publisher(in: database).sink(
                 receiveCompletion: { _ in
                     // Ignore errors
                 },
                 receiveValue: { [weak self] value in
                     guard let self = self else { return }
-                    // Tell SwiftUI about the new value
-                    self.objectWillChange.send()
                     self.value = value
                 })
         }
