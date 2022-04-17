@@ -39,9 +39,9 @@ Techniques based on [`onAppear(perform:)`](https://developer.apple.com/documenta
 
 ## Documentation
 
-Learn how to use `@Query` in the **[GRDBQuery Documentation]**, or jump straight to the **[Getting Started]** guide.
+Learn how to use `@Query` in the **[Documentation]**, or jump straight to the **[Getting Started]** guide.
 
-Check out the **[GRDBQuery demo app]**, and the **[GRDB demo apps]** for various examples of `@Query` uses.
+Check out the **[demo app]**, and the **[GRDB demo apps]** for various examples of `@Query` uses.
 
 ## Thanks
 
@@ -50,6 +50,6 @@ Check out the **[GRDBQuery demo app]**, and the **[GRDB demo apps]** for various
 
 [GRDB]: http://github.com/groue/GRDB.swift
 [GRDB demo apps]: https://github.com/groue/GRDB.swift/tree/master/Documentation/DemoApps
-[GRDBQuery Documentation]: https://groue.github.io/GRDBQuery/0.1/documentation/grdbquery/
+[Documentation]: https://groue.github.io/GRDBQuery/0.1/documentation/grdbquery/
 [Getting Started]: https://groue.github.io/GRDBQuery/0.1/documentation/grdbquery/gettingstarted
-[GRDBQuery demo app]: Documentation/QueryDemo
+[demo app]: Documentation/QueryDemo
