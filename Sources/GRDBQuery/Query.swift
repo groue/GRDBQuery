@@ -57,7 +57,7 @@ import SwiftUI
 ///
 ///     func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
 ///         ValueObservation
-///             .tracking(Player.fetchAll)
+///             .tracking { db in try Player.fetchAll(db) }
 ///             .publisher(in: dbQueue, scheduling: .immediate)
 ///             .eraseToAnyPublisher()
 ///     }
@@ -76,122 +76,17 @@ import SwiftUI
 ///     var players: [Player]
 ///
 ///     var body: some View {
-///         List(players) { player in
-///             HStack {
-///                 Text(player.name)
-///                 Spacer()
-///                 Text("\(player.score) points")
-///             }
-///         }
+///         List(players) { player in ... }
 ///     }
 /// }
 /// ```
 ///
 /// For an explanation of how this works, and the required setup, please check
-/// the ``GRDBQuery`` overview.
+/// <doc:GettingStarted>.
 ///
-/// ## Defining Parameters
-///
-/// A `Queryable` type can adapt its Combine publisher according to its inner
-/// properties.
-///
-/// The `@Query` property wrapper detects changes in these properties,
-/// subscribes to the new publisher, and update SwiftUI views accordingly. The
-/// `Queryable` protocol inherits from the standard `Equatable` protocol in
-/// order to make it possible to detect those changes.
-///
-/// For example, let's extend the above `AllPlayers` type so that it can sort
-/// players by score, or by name:
-///
-/// ```swift
-/// struct AllPlayers: Queryable {
-///     enum Ordering {
-///         case byScore
-///         case byName
-///     }
-///
-///     /// How players are sorted.
-///     var ordering: Ordering
-///
-///     static var defaultValue: [Player] { [] }
-///
-///     func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
-///         ValueObservation
-///             .tracking { db in try fetchValue(db) }
-///             .publisher(in: dbQueue, scheduling: .immediate)
-///             .eraseToAnyPublisher()
-///     }
-///
-///     private func fetchValue(_ db: Database) throws -> [Player] {
-///         switch ordering {
-///         case .byScore:
-///             return try Player
-///                 .order(Column("score").desc)
-///                 .fetchAll(db)
-///         case .byName:
-///             return try Player
-///                 .order(Column("name"))
-///                 .fetchAll(db)
-///         }
-///     }
-/// }
-/// ```
-///
-/// SwiftUI views can change these properties with the Binding provided by the
-/// `@Query` property wrapper:
-///
-/// ```swift
-/// import GRDBQuery
-/// import SwiftUI
-///
-/// struct PlayerList: View {
-///     // Ordering can change through the $players.ordering binding.
-///     @Query(AllPlayers(ordering: .byScore))
-///     var players: [Player]
-///
-///     var body: some View {
-///         List(players) { player in
-///             HStack {
-///                 Text(player.name)
-///                 Spacer()
-///                 Text("\(player.score) points")
-///             }
-///         }
-///         .toolbar {
-///             ToolbarItem(placement: .navigationBarTrailing) {
-///                 ToggleOrderingButton(ordering: $players.ordering)
-///             }
-///         }
-///     }
-/// }
-///
-/// struct ToggleOrderingButton: View {
-///     @Binding var ordering: AllPlayers.Ordering
-///
-///     var body: some View {
-///         switch ordering {
-///         case .byName:
-///             Button("By Score") { ordering = .byScore }
-///         case .byScore:
-///             Button("By Name") { ordering = .byName }
-///         }
-///     }
-/// }
-/// ```
-///
-/// The above example has the `PlayerList` view always start with the `.byScore`
-/// ordering. When you want to provide the initial ordering as a parameter to
-/// your view, modify the sample code as below:
-///
-/// ```swift
-/// struct PlayerList: View {
-///     @Query<AllPlayers>
-///     var players: [Player]
-///
-///     init(initialOrdering: AllPlayers.Ordering) {
-///         _players = Query(AllPlayers(ordering: initialOrdering))
-///     }
-/// ```
+/// If you need to add parameters to a `Queryable` type, so that you can, for
+/// example, sort players by name or by score, and let your SwiftUI view control
+/// this ordering, see <doc:QueryableParameters>.
 ///
 /// ## Topics
 ///
@@ -213,7 +108,7 @@ public protocol Queryable: Equatable {
     /// ``publisher(in:)`` method.
     ///
     /// It may be a `GRDB.DatabaseQueue`, or your custom database manager: see
-    /// the ``GRDBQuery`` overview for more guidance.
+    /// <doc:GettingStarted> for more guidance.
     associatedtype DatabaseContext
     
     /// The type of the Combine publisher of database values, returned
@@ -223,8 +118,8 @@ public protocol Queryable: Equatable {
     /// The default value, used until the Combine publisher publishes its
     /// initial value.
     ///
-    /// The default value is unused if the publisher publishes its initial value
-    /// right on subscription.
+    /// The default value is unused if the publisher successfully publishes its
+    /// initial value right on subscription.
     static var defaultValue: Value { get }
     
     /// Returns a Combine publisher of database values.
@@ -238,8 +133,10 @@ extension Queryable {
     public typealias Value = ValuePublisher.Output
 }
 
-/// A property wrapper type that subscribes to its `Request` (a ``Queryable``
+/// A property wrapper that subscribes to its `Request` (a ``Queryable``
 /// type), and invalidates a SwiftUI view whenever the database values change.
+///
+/// Learn how to use `@Query` in <doc:GettingStarted>.
 ///
 /// ## Topics
 ///
@@ -274,6 +171,8 @@ public struct Query<Request: Queryable>: DynamicProperty {
     }
     
     /// A binding to the request, that lets your views modify it.
+    ///
+    /// Learn how to use this binding in the <doc:QueryableParameters> guide.
     public var projectedValue: Binding<Request> {
         Binding(
             get: { tracker.request ?? initialRequest },
@@ -326,14 +225,14 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// }
     /// ```
     ///
-    /// See the ``GRDBQuery`` overview for more guidance about the key path, the
-    /// type that provides database access, and how to put it in the
+    /// See <doc:GettingStarted> for more guidance about the key path, the type
+    /// that provides database access, and how to put it in the
     /// SwiftUI environment.
     ///
     /// - parameter request: A ``Queryable`` request.
     /// - parameter keyPath: A key path to the database in the environment. To
     ///   know which key path you have to provide, and learn how to put the
-    ///   database in the environment, see the ``GRDBQuery`` overview.
+    ///   database in the environment, see <doc:GettingStarted>.
     public init(
         _ request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
