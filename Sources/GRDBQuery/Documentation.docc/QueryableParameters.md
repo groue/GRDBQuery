@@ -4,13 +4,11 @@ Learn how a SwiftUI view can configure the database content it displays.
 
 ## Overview
 
-The `@Query` property wrapper feeds a SwiftUI view with the database values published by a ``Queryable`` request. Sometimes, the view needs to configure this request, and control the database values it displays.
-
-As an example, let's consider a SwiftUI list of players that needs to control how the list is ordered: by name, or by score. You will adapt this example to your own needs (sorting, filtering, etc.)
+When a SwiftUI view needs to configure the database values it displays, it will modify the ``Queryable`` request that feeds the `@Query` property wrapper.
 
 ## A Configurable Queryable Type
 
-Let's extend the `AllPlayers` type we have seen in <doc:GettingStarted>. It can now sort players by score, or by name, depending on its `ordering` property:
+As an example, let's extend the `AllPlayers` request type we have seen in <doc:GettingStarted>. It can now sort players by score, or by name, depending on its `ordering` property.
 
 ```swift
 struct AllPlayers: Queryable {
@@ -46,7 +44,9 @@ struct AllPlayers: Queryable {
 }
 ```
 
-The `@Query` property wrapper will detect changes in the `ordering` property, and update SwiftUI views accordingly. Such detection is possible because the ``Queryable`` protocol inherits from the standard `Equatable`.
+The `@Query` property wrapper will detect changes in the `ordering` property, and update SwiftUI views accordingly.
+
+> Experiment: You can adapt this example for your own needs. As you can see, you can modify the order to database values, but you can also change how they are filtered. All [ValueObservation] features are available. 
 
 ## Modifying the Request from the SwiftUI View
 
@@ -107,3 +107,5 @@ struct PlayerList: View {
     ...
 }
 ```
+
+[ValueObservation]: https://github.com/groue/GRDB.swift/blob/master/README.md#valueobservation

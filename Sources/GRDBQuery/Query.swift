@@ -41,6 +41,10 @@ import SwiftUI
 /// A `Queryable` type also provides a ``defaultValue``, which is displayed
 /// until the publisher publishes its initial value.
 ///
+/// The `Queryable` protocol inherits from the standard `Equatable` protocol so
+/// that SwiftUI views can configure the database values they display.
+/// See <doc:QueryableParameters> for more information.
+///
 /// ## Example
 ///
 /// The sample code below defines `AllPlayers`, a `Queryable` type that
@@ -84,9 +88,8 @@ import SwiftUI
 /// For an explanation of how this works, and the required setup, please check
 /// <doc:GettingStarted>.
 ///
-/// If you need to add parameters to a `Queryable` type, so that you can, for
-/// example, sort players by name or by score, and let your SwiftUI view control
-/// this ordering, see <doc:QueryableParameters>.
+/// Learn how a SwiftUI view can configure a `Queryable` type, control the
+/// database values it displays, in <doc:QueryableParameters>.
 ///
 /// ## Topics
 ///
@@ -200,7 +203,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///
     /// ### Making the Environment Key Path Implicit
     ///
-    /// Some applications want to create `@Query` without specifying the
+    /// Some applications want to use `@Query` without specifying the
     /// key path to the database in each and every view. To do so, add somewhere
     /// in your application a convenience `Query` initializer:
     ///
@@ -219,9 +222,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///     @Query(AllPlayers()) // Implicit key path to the database
     ///     var players: [Player]
     ///
-    ///     var body: some View {
-    ///         List(players) { player in ... }
-    ///     }
+    ///     ...
     /// }
     /// ```
     ///

@@ -88,9 +88,11 @@ struct AllPlayers: Queryable {
 
 The ``Queryable`` protocol has two requirements: a default value, and a Combine publisher. The publisher is built from the `DatabaseQueue` stored in the environment (you'll adapt this sample code if you prefer another type). The publisher tracks database changes with GRDB [ValueObservation]. The default value is used until the publisher publishes its initial value.
 
-In the above sample code, we make sure the views are *immediately* fed with database content with the `scheduling: .immediate` option. This prevents any "blank state", or "flash of missing content".
-
-The `scheduling: .immediate` option should be removed for database requests that are too slow. In this case, views are initially fed with the default value, and the database content is notified later, when it becomes available. In the meantime, your view can display some waiting indicator, or a [redacted](https://developer.apple.com/documentation/swiftui/view/redacted(reason:)) placeholder. 
+> Note: In the above sample code, we make sure the views are *immediately* fed with database content with the `scheduling: .immediate` option. This prevents any blank state, "flash of missing content", or unwanted initial animation.
+>
+> The `scheduling: .immediate` option should be removed for database requests that are too slow, because the user interface would be blocked until the database values are fetched.
+>
+> If you remove `scheduling: .immediate`, views are initially fed with the default value, and the database content is notified later, when it becomes available. You can for example use a `nil` default value that your view can detect in order to display some waiting indicator, or a [redacted](https://developer.apple.com/documentation/swiftui/view/redacted(reason:)) placeholder.
 
 ## Feed a SwiftUI View
 
@@ -116,31 +118,23 @@ struct PlayerList: View {
 }
 ```
 
-**As a convenience**, you can also define a dedicated `Query` initializer to use the `dbQueue` environment key automatically:
-
-```swift
-extension Query where Request.DatabaseContext == DatabaseQueue {
-    init(_ request: Request) {
-        self.init(request, in: \.dbQueue)
-    }
-}
-```
-
-This improves clarity at the call site:
-
-```swift
-struct PlayerList: View {
-    @Query(AllPlayers())
-    var players: [Player]
-    ...
-}
-```
+> Tip: Some applications want to use `@Query` without specifying the key path to the database in each and every view.
+>
+> See how to make the environment key implicit in ``Query/init(_:in:)``. 
+>
+> ```swift
+> struct PlayerList: View {
+>     @Query(AllPlayers()) // Implicit key path to the database
+>     var players: [Player]
+>     ...
+> }
+> ```
 
 ## How to Handle Database Errors?
 
 **By default, `@Query` ignores errors** published by `Queryable` types. The SwiftUI views are just not updated whenever an error occurs. If the database is unavailable when the view appears, `@Query` will just output the default value.
 
-You can restore error handling by publishing a `Result`, as in the example below: 
+You can restore error handling by publishing a standard `Result`, as in the example below: 
 
 ```swift
 import Combine
@@ -148,9 +142,10 @@ import GRDB
 import GRDBQuery
 
 struct AllPlayers: Queryable {
-    static var defaultValue: Result<[Player], Error> { .success([]) }
+    typealias Value = Result<[Player], Error>
+    static var defaultValue: Value { .success([]) }
     
-    func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<Result<[Player], Error>, Never> {
+    func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<Value, Never> {
         ValueObservation
             .tracking { db in try Player.fetchAll(db) }
             .publisher(in: dbQueue, scheduling: .immediate)
