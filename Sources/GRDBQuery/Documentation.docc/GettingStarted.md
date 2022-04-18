@@ -90,7 +90,7 @@ The ``Queryable`` protocol has two requirements: a default value, and a Combine 
 
 > Note: In the above sample code, we make sure the views are *immediately* fed with database content with the `scheduling: .immediate` option. This prevents any blank state, "flash of missing content", or unwanted initial animation.
 >
-> The `scheduling: .immediate` option should be removed for database requests that are too slow, because the user interface would be blocked until the database values are fetched.
+> The `scheduling: .immediate` option should be removed for database accesses that are too slow, because the user interface would be blocked until the database values are fetched.
 >
 > If you remove `scheduling: .immediate`, views are initially fed with the default value, and the database content is notified later, when it becomes available. You can for example use a `nil` default value that your view can detect in order to display some waiting indicator, or a [redacted](https://developer.apple.com/documentation/swiftui/view/redacted(reason:)) placeholder.
 
@@ -148,6 +148,35 @@ struct PlayerList: View {
 >     ...
 > }
 > ```
+
+## Interrupting Automatic Updates 
+
+By default, `@Query` automatically updates the database values for the whole duration of the presence of the view in the SwiftUI engine.
+
+You can spare resources by stopping auto-updates when the view disappears, and restarting them when the view appears. To do so, use the `$players.isAutoupdating` SwiftUI binding, as in the example below:
+
+```swift
+import GRDBQuery
+import SwiftUI
+
+struct PlayerList: View {
+    @Query(PlayerRequest(), in: \.dbQueue)
+    var players: [Player]
+    
+    var body: some View {
+        List(players) { player in
+            HStack {
+                Text(player.name)
+                Spacer()
+                Text("\(player.score) points")
+            }
+        }
+        // Stop observing the database when the view disappears,
+        // and start again when the view appears.
+        .mirrorAppearanceState(to: $players.isAutoupdating)
+    }
+}
+```
 
 ## How to Handle Database Errors?
 
