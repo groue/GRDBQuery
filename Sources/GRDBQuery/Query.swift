@@ -309,7 +309,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// A wrapper of the underlying `Query` that creates bindings to
     /// its ``Queryable`` request.
     @dynamicMemberLookup public struct Wrapper {
-        let query: Query
+        fileprivate let query: Query
         
         /// Returns a binding to the ``Queryable`` request.
         ///
@@ -317,12 +317,11 @@ public struct Query<Request: Queryable>: DynamicProperty {
         public var request: Binding<Request> {
             Binding(
                 get: {
-                    if let request = query.tracker.request {
-                        return request
-                    }
                     switch query.configuration {
-                    case let .constant(request), let .initial(request):
+                    case let .constant(request):
                         return request
+                    case let .initial(request):
+                        return query.tracker.request ?? request
                     case let .binding(binding):
                         return binding.wrappedValue
                     }
@@ -333,11 +332,11 @@ public struct Query<Request: Queryable>: DynamicProperty {
                         // Constant request does not change
                         break
                     case .initial:
+                        query.tracker.objectWillChange.send()
                         query.tracker.request = newRequest
-                        query.tracker.objectWillChange.send()
                     case let .binding(binding):
-                        binding.wrappedValue = newRequest
                         query.tracker.objectWillChange.send()
+                        binding.wrappedValue = newRequest
                     }
                 })
         }
@@ -348,19 +347,22 @@ public struct Query<Request: Queryable>: DynamicProperty {
         /// Learn how to use this binding in the <doc:QueryableParameters> guide.
         public subscript<U>(dynamicMember keyPath: WritableKeyPath<Request, U>) -> Binding<U> {
             Binding(
-                get: {
-                    request.wrappedValue[keyPath: keyPath]
-                },
-                set: {
-                    request.wrappedValue[keyPath: keyPath] = $0
-                })
+                get: { request.wrappedValue[keyPath: keyPath] },
+                set: { request.wrappedValue[keyPath: keyPath] = $0 })
         }
     }
     
     /// The object that keeps on observing the database as long as it is alive.
     private class Tracker: ObservableObject {
+        /// The database value. Published so that view is redrawn when
+        /// the value changes.
         @Published var value: Request.Value?
+        
+        /// The request set by the `Wrapper.request` binding.
+        /// When modified, we wait for the next `update` to apply.
         var request: Request?
+        
+        // Actual subscription
         private var trackedRequest: Request?
         private var cancellable: AnyCancellable?
         
@@ -368,8 +370,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
             let newRequest: Request
             switch queryConfiguration {
             case let .initial(initialRequest):
-                // Ignore initial request once request has been set (by a
-                // previous call to this method, or by `Wrapper`).
+                // Ignore initial request once request has been set by `Wrapper`.
                 newRequest = request ?? initialRequest
             case let .constant(constantRequest):
                 newRequest = constantRequest
