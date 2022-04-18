@@ -159,7 +159,7 @@ struct PlayerList: View {
 >
 > To let the enclosing view control the request after `PlayerList` has appeared on screen, you'll need one of the techniques described below.  
 
-## Initializing @Query from a Binding
+## Initializing @Query from a Request Binding
 
 The `@Query` property wrapper can be controlled with a SwiftUI binding, as in the example below:
 
