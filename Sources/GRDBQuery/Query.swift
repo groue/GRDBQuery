@@ -308,10 +308,21 @@ public struct Query<Request: Queryable>: DynamicProperty {
     
     /// A wrapper of the underlying `Query` that creates bindings to
     /// its ``Queryable`` request.
+    ///
+    /// ## Topics
+    ///
+    /// ### Modifying the Request
+    ///
+    /// - ``request``
+    /// - ``subscript(dynamicMember:)``
+    ///
+    /// ### Controlling Automatic Updates
+    ///
+    /// - ``isAutoupdating``
     @dynamicMemberLookup public struct Wrapper {
         fileprivate let query: Query
         
-        /// Returns a binding to the ``Queryable`` request.
+        /// Returns a binding to the ``Queryable`` request itself.
         ///
         /// Learn how to use this binding in the <doc:QueryableParameters> guide.
         public var request: Binding<Request> {
@@ -332,7 +343,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
                         // Constant request does not change
                         break
                     case .initial:
-                        query.tracker.objectWillChange.send()
                         query.tracker.request = newRequest
                     case let .binding(binding):
                         query.tracker.objectWillChange.send()
@@ -350,6 +360,29 @@ public struct Query<Request: Queryable>: DynamicProperty {
                 get: { request.wrappedValue[keyPath: keyPath] },
                 set: { request.wrappedValue[keyPath: keyPath] = $0 })
         }
+        
+        /// Controls whether `@Query` automatically updates the SwiftUI view
+        /// or not.
+        ///
+        /// You can use this binding in order to stop tracking the database when
+        /// a view is not on screen:
+        ///
+        /// ```swift
+        /// struct PlayerList: View {
+        ///     @Query(PlayerRequest())
+        ///     var players: [Player]
+        ///
+        ///     var body: some View {
+        ///         List(players) { player in ... }
+        ///             .mirrorAppearanceState(to: $players.isAutoupdating)
+        ///     }
+        /// }
+        /// ```
+        public var isAutoupdating: Binding<Bool> {
+            Binding(
+                get: { query.tracker.isAutoupdating },
+                set: { query.tracker.isAutoupdating = $0 })
+        }
     }
     
     /// The object that keeps on observing the database as long as it is alive.
@@ -358,15 +391,26 @@ public struct Query<Request: Queryable>: DynamicProperty {
         /// the value changes.
         @Published var value: Request.Value?
         
+        /// Whether the request should be subscribed or not.
+        /// When modified, we wait for the next `update` to apply.
+        @Published var isAutoupdating = true
+        
         /// The request set by the `Wrapper.request` binding.
         /// When modified, we wait for the next `update` to apply.
-        var request: Request?
+        @Published var request: Request?
         
         // Actual subscription
         private var trackedRequest: Request?
         private var cancellable: AnyCancellable?
         
         func update(configuration queryConfiguration: Configuration, database: Request.DatabaseContext) {
+            // Give up if the request is already tracked.
+            guard isAutoupdating else {
+                trackedRequest = nil
+                cancellable = nil
+                return
+            }
+            
             let newRequest: Request
             switch queryConfiguration {
             case let .initial(initialRequest):
