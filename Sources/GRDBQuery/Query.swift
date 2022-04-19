@@ -395,7 +395,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
         
         /// Whether the request should be subscribed or not.
         /// When modified, we wait for the next `update` to apply.
-        @Published var isAutoupdating = true
+        @Published var isAutoupdating = false
         
         /// The request set by the `Wrapper.request` binding.
         /// When modified, we wait for the next `update` to apply.
@@ -407,7 +407,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
         
         func update(configuration queryConfiguration: Configuration, database: Request.DatabaseContext) {
             // Give up if the request is already tracked.
-            guard isAutoupdating else {
+            guard isAutoupdating || value == nil else {
                 trackedRequest = nil
                 cancellable = nil
                 return
@@ -440,6 +440,10 @@ public struct Query<Request: Queryable>: DynamicProperty {
                 },
                 receiveValue: { [weak self] value in
                     guard let self = self else { return }
+                    if self.value == nil && !self.isAutoupdating {
+                        self.trackedRequest = nil
+                        self.cancellable = nil
+                    }
                     self.value = value
                 })
         }
