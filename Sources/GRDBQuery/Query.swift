@@ -364,8 +364,10 @@ public struct Query<Request: Queryable>: DynamicProperty {
         /// Controls whether `@Query` automatically updates the SwiftUI view
         /// or not.
         ///
-        /// You can use this binding in order to stop tracking the database when
-        /// a view is not on screen:
+        /// You can use this binding to stop tracking the database when a view
+        /// disappears, and restart when the view appears again, with the
+        /// `mirrorAppearanceState(to:)` method (based on the `onAppear` and
+        /// `onDisappear` built-in `View` methods):
         ///
         /// ```swift
         /// struct PlayerList: View {
