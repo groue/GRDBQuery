@@ -158,6 +158,7 @@ extension Queryable {
 /// ### SwiftUI Integration
 ///
 /// - ``update()``
+@available(iOS 14.0, *)
 @propertyWrapper
 public struct Query<Request: Queryable>: DynamicProperty {
     /// For a full discussion of these cases, see <doc:QueryableParameters>.
@@ -171,7 +172,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     @Environment private var database: Request.DatabaseContext
     
     /// The object that keeps on observing the database as long as it is alive.
-    @StateObject private var tracker = Tracker()
+    @StateObject private var tracker: Tracker
     
     /// The `Query` configuration.
     private let configuration: Configuration
@@ -216,9 +217,11 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///   database in the environment, see <doc:GettingStarted>.
     public init(
         _ request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>,
+        isAutoupdating: Bool = true)
     {
         self._database = Environment(keyPath)
+        self._tracker = StateObject(wrappedValue: Tracker(isAutoupdating: isAutoupdating))
         self.configuration = .initial(request)
     }
     
@@ -251,9 +254,11 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///   database in the environment, see <doc:GettingStarted>.
     public init(
         constant request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>,
+        isAutoupdating: Bool = true)
     {
         self._database = Environment(keyPath)
+        self._tracker = StateObject(wrappedValue: Tracker(isAutoupdating: isAutoupdating))
         self.configuration = .constant(request)
     }
     
@@ -295,9 +300,11 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///   database in the environment, see <doc:GettingStarted>.
     public init(
         _ request: Binding<Request>,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>,
+        isAutoupdating: Bool = true)
     {
         self._database = Environment(keyPath)
+        self._tracker = StateObject(wrappedValue: Tracker(isAutoupdating: isAutoupdating))
         self.configuration = .binding(request)
     }
     
@@ -395,11 +402,15 @@ public struct Query<Request: Queryable>: DynamicProperty {
         
         /// Whether the request should be subscribed or not.
         /// When modified, we wait for the next `update` to apply.
-        @Published var isAutoupdating = false
+        @Published var isAutoupdating: Bool
         
         /// The request set by the `Wrapper.request` binding.
         /// When modified, we wait for the next `update` to apply.
         @Published var request: Request?
+        
+        init(isAutoupdating: Bool) {
+            self.isAutoupdating = isAutoupdating
+        }
         
         // Actual subscription
         private var trackedRequest: Request?
