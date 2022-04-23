@@ -11,7 +11,7 @@ import SwiftUI
 ///
 /// If you imagine a timeline of view events:
 ///
-///        Initial rendering
+///        Initial body rendering
 ///        |        onAppear         onAppear
 ///        |        |    onDisappear |      onDisappear
 ///        |        |    |           |      |
@@ -35,7 +35,7 @@ import SwiftUI
 /// The default is `.always`.
 ///
 /// Only `.onRender` and `.always` have `@Query` feed a view on its
-/// initial rendering.
+/// initial `body` rendering.
 ///
 /// For more precise control of the request observation, do not use
 /// `View.queryObservation(_:)`, and deal manually with the
@@ -49,8 +49,8 @@ public enum QueryObservation {
     /// Requests are always observed.
     case always
     
-    /// Request observation starts on the first rendering of the view, and is
-    /// later stopped and restarted according to the `onAppear` and
+    /// Request observation starts on the first `body` rendering of the view,
+    /// and is later stopped and restarted according to the `onAppear` and
     /// `onDisappear` View events.
     case onRender
     
@@ -65,7 +65,7 @@ extension View {
     ///
     /// If you imagine a timeline of view events:
     ///
-    ///     Initial rendering
+    ///     Initial body rendering
     ///     |        onAppear         onAppear
     ///     |        |    onDisappear |      onDisappear
     ///     |        |    |           |      |
@@ -79,7 +79,7 @@ extension View {
     ///     •--------•****•-----------•******•--------- .onAppear
     ///
     /// The default is `.always`. Only `.onRender` and `.always` have `@Query`
-    /// feed your views on the initial rendering.
+    /// feed your views on the initial `body` rendering.
     @ViewBuilder public func queryObservation(_ queryObservation: QueryObservation) -> some View {
         Group {
             switch queryObservation {
