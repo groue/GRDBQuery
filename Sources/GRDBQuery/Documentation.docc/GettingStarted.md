@@ -149,6 +149,20 @@ struct PlayerList: View {
 > }
 > ```
 
+> Tip: You can further refine your api and turn `@Query(PlayerRequest())` into `@Query(.players)` by defining an extra extension:
+>
+> ```swift
+> extension Queryable where Self == PlayerRequest {
+>     static var players: Self { PlayerRequest() }
+> }
+>
+> struct PlayerList: View {
+>     @Query(.players) var players: [Player]
+>
+>     ...
+> }
+> ```
+
 ## Interrupting Automatic Updates 
 
 By default, `@Query` automatically updates the database values for the whole duration of the presence of the view in the SwiftUI engine.
