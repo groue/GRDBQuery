@@ -170,6 +170,9 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// Database access
     @Environment private var database: Request.DatabaseContext
     
+    /// Database access
+    @Environment(\.queryObservationEnabled) private var queryObservationEnabled
+    
     /// The object that keeps on observing the database as long as it is alive.
     @StateObject private var tracker = Tracker()
     
@@ -303,7 +306,10 @@ public struct Query<Request: Queryable>: DynamicProperty {
     
     /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
     public func update() {
-        tracker.update(configuration: configuration, database: database)
+        tracker.update(
+            queryObservationEnabled: queryObservationEnabled,
+            configuration: configuration,
+            database: database)
     }
     
     /// A wrapper of the underlying `Query` that creates bindings to
@@ -315,10 +321,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///
     /// - ``request``
     /// - ``subscript(dynamicMember:)``
-    ///
-    /// ### Controlling Automatic Updates
-    ///
-    /// - ``isAutoupdating``
     @dynamicMemberLookup public struct Wrapper {
         fileprivate let query: Query
         
@@ -360,31 +362,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
                 get: { request.wrappedValue[keyPath: keyPath] },
                 set: { request.wrappedValue[keyPath: keyPath] = $0 })
         }
-        
-        /// Controls whether `@Query` automatically updates the SwiftUI view
-        /// or not.
-        ///
-        /// You can use this binding to stop tracking the database when a view
-        /// disappears, and restart when the view appears again, with the
-        /// `mirrorAppearanceState(to:)` method (based on the `onAppear` and
-        /// `onDisappear` built-in `View` methods):
-        ///
-        /// ```swift
-        /// struct PlayerList: View {
-        ///     @Query(PlayerRequest())
-        ///     var players: [Player]
-        ///
-        ///     var body: some View {
-        ///         List(players) { player in ... }
-        ///             .mirrorAppearanceState(to: $players.isAutoupdating)
-        ///     }
-        /// }
-        /// ```
-        public var isAutoupdating: Binding<Bool> {
-            Binding(
-                get: { query.tracker.isAutoupdating },
-                set: { query.tracker.isAutoupdating = $0 })
-        }
     }
     
     /// The object that keeps on observing the database as long as it is alive.
@@ -392,10 +369,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
         /// The database value. Published so that view is redrawn when
         /// the value changes.
         @Published var value: Request.Value?
-        
-        /// Whether the request should be subscribed or not.
-        /// When modified, we wait for the next `update` to apply.
-        @Published var isAutoupdating = true
         
         /// The request set by the `Wrapper.request` binding.
         /// When modified, we wait for the next `update` to apply.
@@ -405,9 +378,13 @@ public struct Query<Request: Queryable>: DynamicProperty {
         private var trackedRequest: Request?
         private var cancellable: AnyCancellable?
         
-        func update(configuration queryConfiguration: Configuration, database: Request.DatabaseContext) {
-            // Give up if the request is already tracked.
-            guard isAutoupdating else {
+        func update(
+            queryObservationEnabled: Bool,
+            configuration queryConfiguration: Configuration,
+            database: Request.DatabaseContext)
+        {
+            // Give up if observation is disabled
+            guard queryObservationEnabled else {
                 trackedRequest = nil
                 cancellable = nil
                 return
@@ -443,5 +420,18 @@ public struct Query<Request: Queryable>: DynamicProperty {
                     self.value = value
                 })
         }
+    }
+}
+
+private struct QueryObservationEnabledKey: EnvironmentKey {
+    static let defaultValue = true
+}
+
+extension EnvironmentValues {
+    /// A Boolean value that indicates whether `@Query` property wrappers are
+    /// observing their requests.
+    public var queryObservationEnabled: Bool {
+        get { self[QueryObservationEnabledKey.self] }
+        set { self[QueryObservationEnabledKey.self] = newValue }
     }
 }

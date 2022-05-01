@@ -163,34 +163,11 @@ struct PlayerList: View {
 > }
 > ```
 
-## Interrupting Automatic Updates 
+## Controlling Request Observation 
 
-By default, `@Query` automatically updates the database values for the whole duration of the presence of the view in the SwiftUI engine.
+By default, `@Query` observes its request for the whole duration of the presence of the view in the SwiftUI engine.
 
-You can spare resources by stopping auto-updates when the view disappears, and restarting them when the view appears. To do so, use the `$players.isAutoupdating` SwiftUI binding, as in the example below:
-
-```swift
-import GRDBQuery
-import SwiftUI
-
-struct PlayerList: View {
-    @Query(PlayerRequest(), in: \.dbQueue)
-    var players: [Player]
-    
-    var body: some View {
-        List(players) { player in
-            HStack {
-                Text(player.name)
-                Spacer()
-                Text("\(player.score) points")
-            }
-        }
-        // Stop observing the database when the view disappears,
-        // and start again when the view appears.
-        .mirrorAppearanceState(to: $players.isAutoupdating)
-    }
-}
-```
+You can spare resources by stopping request observation when views are not on screen: see ``QueryObservation``.
 
 ## How to Handle Database Errors?
 

@@ -33,6 +33,7 @@ struct PlayerList: View {
 ### The @Query property wrapper
 
 - ``Query``
+- ``QueryObservation``
 
 ### Feeding @Query with database content
 
