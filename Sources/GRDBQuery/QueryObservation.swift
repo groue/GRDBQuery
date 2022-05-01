@@ -111,15 +111,13 @@ extension View {
     ///
     /// See ``QueryObservation`` for a complete discussion.
     @ViewBuilder public func queryObservation(_ queryObservation: QueryObservation) -> some View {
-        Group {
-            switch queryObservation {
-            case .always:
-                self.environment(\.queryObservationEnabled, true)
-            case .onRender:
-                QueryObservationWrapper(queryObservationEnabled: true, content: self)
-            case .onAppear:
-                QueryObservationWrapper(queryObservationEnabled: false, content: self)
-            }
+        switch queryObservation {
+        case .always:
+            self.environment(\.queryObservationEnabled, true)
+        case .onRender:
+            QueryObservationWrapper(queryObservationEnabled: true, content: self)
+        case .onAppear:
+            QueryObservationWrapper(queryObservationEnabled: false, content: self)
         }
     }
 }
