@@ -1,5 +1,12 @@
 # Release Notes
 
+## v0.3.0
+
+Released on 2022/05/01
+
+- [#23](https://github.com/groue/GRDBQuery/pull/23) Request Observation Control
+- Breaking Change: the `isAutoupdating` binding and `View.mirrorAppearanceState` methods have been replaced with `QueryObservation`.
+
 ## v0.2.0
 
 Released on 2022/04/18
