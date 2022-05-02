@@ -113,15 +113,15 @@ struct PlayerList: View {
     var players: [Player]
 
     /// Explicit initial request
-    init(initialOrdering: PlayersRequest.Ordering) {
-        _players = Query(PlayersRequest(ordering: initialOrdering))
+    init(initialRequest: PlayersRequest) {
+        _players = Query(initialRequest)
     }
 
     var body: some View { ... }
 }
 ```
 
-Defining a default ordering is still possible:
+Defining a default request is still possible:
 
 ```swift
 struct PlayerList: View {
@@ -133,31 +133,30 @@ struct PlayerList: View {
     init() { }
     
     /// Explicit initial request
-    init(initialOrdering ordering: PlayersRequest.Ordering) {
-        _players = Query(PlayersRequest(ordering: ordering))
+    init(initialRequest: PlayersRequest) {
+        _players = Query(initialRequest)
     }
 
     var body: some View { ... }
 }
 ```
 
-> IMPORTANT: The initial request is only used when `PlayerList` appears on screen. After that, and until `PlayerList` disappears, the request is only controlled by the `$players` bindings described above.
+> IMPORTANT: The initial request is only used when `PlayerList` becomes rendered by SwiftUI. After that, and until `PlayerList` is no longer rendered, the request is only controlled by the `$players` bindings described above.
 >
-> This means that calling the `PlayerList(initialOrdering:)` with a different ordering will have no effect:
+> This means that calling the `PlayerList(initialRequest:)` with a different request will have _no effect_:
 > 
 > ```swift
 > struct Container {
->     @State var ordering = PlayersRequest.Ordering.byScore
+>     @State var request = PlayersRequest(ordering: .byScore)
 > 
 >     var body: some View {
->         // No effect when the ordering State changes after the `PlayerList`
->         // has appeared on screen:
->         PlayerList(initialOrdering: ordering)
+>         // Changes in the `request` state have no effect:
+>         PlayerList(initialRequest: request)
 >     }
 > }
 > ```
 >
-> To let the enclosing view control the request after `PlayerList` has appeared on screen, you'll need one of the techniques described below.  
+> To let the enclosing view control the request after the initial `PlayerList` rendering, you'll need one of the techniques described below: a *request binding*, or a *constant request*.   
 
 ## Initializing @Query from a Request Binding
 
@@ -165,10 +164,10 @@ The `@Query` property wrapper can be controlled with a SwiftUI binding, as in th
 
 ```swift
 struct Container {
-    @State var ordering = PlayersRequest.Ordering.byScore
+    @State var request = PlayersRequest(ordering: .byScore)
 
     var body: some View {
-        PlayerList(ordering: $ordering) // Note the `$ordering` binding here
+        PlayerList(request: $request) // Note the `$request` binding here
     }
 }
 
@@ -176,17 +175,15 @@ struct PlayerList: View {
     @Query<PlayersRequest>
     var players: [Player]
 
-    init(ordering: Binding<PlayersRequest.Ordering>) {
-        _players = Query(Binding(
-            get: { PlayersRequest(ordering: ordering.wrappedValue) },
-            set: { request in ordering.wrappedValue = request.ordering }))
+    init(request: Binding<PlayersRequest>) {
+        _players = Query(request)
     }
 
     var body: some View { ... }
 }
 ```
 
-With such a setup, `@Query` updates the database content whenever a change is performed by the `$ordering` Container binding, or the `$players` PlayerList bindings.
+With such a setup, `@Query` updates the database content whenever a change is performed by the `$request` Container binding, or the `$players` PlayerList bindings.
 
 This is the classic two-way connection enabled by SwiftUI `Binding`.
 
@@ -196,10 +193,10 @@ Finally, the ``Query/init(constant:in:)`` initializer allows the enclosing Conta
 
 ```swift
 struct Container {
-    var ordering: PlayersRequest.Ordering
+    var request: PlayersRequest
 
     var body: some View {
-        PlayerList(constantOrdering: ordering)
+        PlayerList(constantRequest: request)
     }
 }
 
@@ -207,8 +204,8 @@ struct PlayerList: View {
     @Query<PlayersRequest>
     var players: [Player]
 
-    init(constantOrdering ordering: PlayersRequest.Ordering) {
-        _players = Query(constant: PlayersRequest(ordering: ordering))
+    init(constantRequest: PlayersRequest) {
+        _players = Query(constant: constantRequest)
     }
 
     var body: some View { ... }
@@ -229,20 +226,18 @@ struct PlayerList: View {
     init() { }
     
     /// Initial request
-    init(initialOrdering ordering: PlayersRequest.Ordering) {
-        _players = Query(PlayersRequest(ordering: ordering))
+    init(initialRequest: PlayersRequest) {
+        _players = Query(initialRequest)
     }
 
     /// Request binding
-    init(ordering: Binding<PlayersRequest.Ordering>) {
-        _players = Query(Binding(
-            get: { PlayersRequest(ordering: ordering.wrappedValue) },
-            set: { request in ordering.wrappedValue = request.ordering }))
+    init(request: Binding<PlayersRequest>) {
+        _players = Query(request)
     }
 
     /// Constant request
-    init(constantOrdering ordering: PlayersRequest.Ordering) {
-        _players = Query(constant: PlayersRequest(ordering: ordering))
+    init(constantRequest: PlayersRequest) {
+        _players = Query(constant: constantRequest)
     }
 
     var body: some View { ... }
