@@ -14,7 +14,7 @@ import SwiftUI
 
 /// A view that displays an always up-to-date list of players in the database.
 struct PlayerList: View {
-    @Query(PlayerRequest())
+    @Query(PlayersRequest())
     var players: [Player]
     
     var body: some View {

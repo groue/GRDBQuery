@@ -47,7 +47,7 @@ import SwiftUI
 ///
 /// ## Example
 ///
-/// The sample code below defines `PlayerRequest`, a `Queryable` type that
+/// The sample code below defines `PlayersRequest`, a `Queryable` type that
 /// publishes the list of players found in the database:
 ///
 /// ```swift
@@ -56,7 +56,7 @@ import SwiftUI
 /// import GRDBQuery
 ///
 /// /// Tracks the full list of players
-/// struct PlayerRequest: Queryable {
+/// struct PlayersRequest: Queryable {
 ///     static var defaultValue: [Player] { [] }
 ///
 ///     func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
@@ -68,7 +68,7 @@ import SwiftUI
 /// }
 /// ```
 ///
-/// This `PlayerRequest` type will automatically update a SwiftUI view on every
+/// This `PlayersRequest` type will automatically update a SwiftUI view on every
 /// database changes, when wrapped by the `@Query` property wrapper:
 ///
 /// ```swift
@@ -76,7 +76,7 @@ import SwiftUI
 /// import SwiftUI
 ///
 /// struct PlayerList: View {
-///     @Query(PlayerRequest())
+///     @Query(PlayersRequest())
 ///     var players: [Player]
 ///
 ///     var body: some View {
@@ -199,7 +199,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///
     /// ```swift
     /// struct PlayerList: View {
-    ///     @Query(PlayerRequest(), in: \.dbQueue)
+    ///     @Query(PlayersRequest(), in: \.dbQueue)
     ///     var players: [Player]
     ///
     ///     var body: some View {
@@ -232,9 +232,9 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///
     /// ```swift
     /// struct PlayerList: View {
-    ///     @Query<PlayerRequest> var players: [Player]
+    ///     @Query<PlayersRequest> var players: [Player]
     ///
-    ///     init(constantRequest request: Binding<PlayerRequest>) {
+    ///     init(constantRequest request: Binding<PlayersRequest>) {
     ///         _players = Query(constant: request, in: \.dbQueue)
     ///     }
     ///
@@ -267,7 +267,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///
     /// ```swift
     /// struct Container {
-    ///     @State var request: PlayerRequest
+    ///     @State var request: PlayersRequest
     ///
     ///     var body: some View {
     ///         PlayerList($request) // Note the `$request` binding here
@@ -275,9 +275,9 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query<PlayerRequest> var players: [Player]
+    ///     @Query<PlayersRequest> var players: [Player]
     ///
-    ///     init(_ request: Binding<PlayerRequest>) {
+    ///     init(_ request: Binding<PlayersRequest>) {
     ///         _players = Query(request, in: \.dbQueue)
     ///     }
     ///

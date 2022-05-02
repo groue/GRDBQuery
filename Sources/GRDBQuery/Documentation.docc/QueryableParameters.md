@@ -10,10 +10,10 @@ Such configuration can be performed by the view that declares a `@Query` propert
 
 ## A Configurable Queryable Type
 
-As an example, let's extend the `PlayerRequest` request type we have seen in <doc:GettingStarted>. It can now sort players by score, or by name, depending on its `ordering` property.
+As an example, let's extend the `PlayersRequest` request type we have seen in <doc:GettingStarted>. It can now sort players by score, or by name, depending on its `ordering` property.
 
 ```swift
-struct PlayerRequest: Queryable {
+struct PlayersRequest: Queryable {
     enum Ordering {
         case byScore
         case byName
@@ -60,7 +60,7 @@ import SwiftUI
 
 struct PlayerList: View {
     // Ordering can change through the $players.ordering binding.
-    @Query(PlayerRequest(ordering: .byScore))
+    @Query(PlayersRequest(ordering: .byScore))
     var players: [Player]
 
     var body: some View {
@@ -80,7 +80,7 @@ struct PlayerList: View {
 }
 
 struct ToggleOrderingButton: View {
-    @Binding var ordering: PlayerRequest.Ordering
+    @Binding var ordering: PlayersRequest.Ordering
 
     var body: some View {
         switch ordering {
@@ -93,11 +93,11 @@ struct ToggleOrderingButton: View {
 }
 ```
 
-In the above example, `$players.ordering` is a SwiftUI binding to the `ordering` property of the `PlayerRequest` request.
+In the above example, `$players.ordering` is a SwiftUI binding to the `ordering` property of the `PlayersRequest` request.
 
 This binding feeds `ToggleOrderingButton`, which lets the user change the ordering of the request. `@Query` then redraws the view with an updated database content. 
 
-When appropriate, you can also use `$players.request`, a SwiftUI binding to the `PlayerRequest` request itself.
+When appropriate, you can also use `$players.request`, a SwiftUI binding to the `PlayersRequest` request itself.
 
 
 ## Configuring the Initial Request
@@ -109,12 +109,12 @@ When you want to provide the initial request as a parameter to your view, provid
 ```swift
 struct PlayerList: View {
     /// No default request
-    @Query<PlayerRequest>
+    @Query<PlayersRequest>
     var players: [Player]
 
     /// Explicit initial request
-    init(initialOrdering: PlayerRequest.Ordering) {
-        _players = Query(PlayerRequest(ordering: initialOrdering))
+    init(initialOrdering: PlayersRequest.Ordering) {
+        _players = Query(PlayersRequest(ordering: initialOrdering))
     }
 
     var body: some View { ... }
@@ -126,15 +126,15 @@ Defining a default ordering is still possible:
 ```swift
 struct PlayerList: View {
     /// Defines the default initial request (ordered by score)
-    @Query(PlayerRequest(ordering: .byScore))
+    @Query(PlayersRequest(ordering: .byScore))
     var players: [Player]
 
     /// Default initial request (by score)
     init() { }
     
     /// Explicit initial request
-    init(initialOrdering ordering: PlayerRequest.Ordering) {
-        _players = Query(PlayerRequest(ordering: ordering))
+    init(initialOrdering ordering: PlayersRequest.Ordering) {
+        _players = Query(PlayersRequest(ordering: ordering))
     }
 
     var body: some View { ... }
@@ -147,7 +147,7 @@ struct PlayerList: View {
 > 
 > ```swift
 > struct Container {
->     @State var ordering = PlayerRequest.Ordering.byScore
+>     @State var ordering = PlayersRequest.Ordering.byScore
 > 
 >     var body: some View {
 >         // No effect when the ordering State changes after the `PlayerList`
@@ -165,7 +165,7 @@ The `@Query` property wrapper can be controlled with a SwiftUI binding, as in th
 
 ```swift
 struct Container {
-    @State var ordering = PlayerRequest.Ordering.byScore
+    @State var ordering = PlayersRequest.Ordering.byScore
 
     var body: some View {
         PlayerList(ordering: $ordering) // Note the `$ordering` binding here
@@ -173,12 +173,12 @@ struct Container {
 }
 
 struct PlayerList: View {
-    @Query<PlayerRequest>
+    @Query<PlayersRequest>
     var players: [Player]
 
-    init(ordering: Binding<PlayerRequest.Ordering>) {
+    init(ordering: Binding<PlayersRequest.Ordering>) {
         _players = Query(Binding(
-            get: { PlayerRequest(ordering: ordering.wrappedValue) },
+            get: { PlayersRequest(ordering: ordering.wrappedValue) },
             set: { request in ordering.wrappedValue = request.ordering }))
     }
 
@@ -196,7 +196,7 @@ Finally, the ``Query/init(constant:in:)`` initializer allows the enclosing Conta
 
 ```swift
 struct Container {
-    var ordering: PlayerRequest.Ordering
+    var ordering: PlayersRequest.Ordering
 
     var body: some View {
         PlayerList(constantOrdering: ordering)
@@ -204,11 +204,11 @@ struct Container {
 }
 
 struct PlayerList: View {
-    @Query<PlayerRequest>
+    @Query<PlayersRequest>
     var players: [Player]
 
-    init(constantOrdering ordering: PlayerRequest.Ordering) {
-        _players = Query(constant: PlayerRequest(ordering: ordering))
+    init(constantOrdering ordering: PlayersRequest.Ordering) {
+        _players = Query(constant: PlayersRequest(ordering: ordering))
     }
 
     var body: some View { ... }
@@ -222,27 +222,27 @@ struct PlayerList: View {
 ```swift
 struct PlayerList: View {
     /// Defines the default initial request (ordered by score)
-    @Query(PlayerRequest(ordering: .byScore))
+    @Query(PlayersRequest(ordering: .byScore))
     var players: [Player]
 
     /// Default initial request (by score)
     init() { }
     
     /// Initial request
-    init(initialOrdering ordering: PlayerRequest.Ordering) {
-        _players = Query(PlayerRequest(ordering: ordering))
+    init(initialOrdering ordering: PlayersRequest.Ordering) {
+        _players = Query(PlayersRequest(ordering: ordering))
     }
 
     /// Request binding
-    init(ordering: Binding<PlayerRequest.Ordering>) {
+    init(ordering: Binding<PlayersRequest.Ordering>) {
         _players = Query(Binding(
-            get: { PlayerRequest(ordering: ordering.wrappedValue) },
+            get: { PlayersRequest(ordering: ordering.wrappedValue) },
             set: { request in ordering.wrappedValue = request.ordering }))
     }
 
     /// Constant request
-    init(constantOrdering ordering: PlayerRequest.Ordering) {
-        _players = Query(constant: PlayerRequest(ordering: ordering))
+    init(constantOrdering ordering: PlayersRequest.Ordering) {
+        _players = Query(constant: PlayersRequest(ordering: ordering))
     }
 
     var body: some View { ... }

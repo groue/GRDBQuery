@@ -72,7 +72,7 @@ import GRDB
 import GRDBQuery
 
 /// Tracks the full list of players
-struct PlayerRequest: Queryable {
+struct PlayersRequest: Queryable {
     static var defaultValue: [Player] { [] }
     
     func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
@@ -103,7 +103,7 @@ import GRDBQuery
 import SwiftUI
 
 struct PlayerList: View {
-    @Query(PlayerRequest(), in: \.dbQueue)
+    @Query(PlayersRequest(), in: \.dbQueue)
     var players: [Player]
     
     var body: some View {
@@ -142,18 +142,18 @@ struct PlayerList: View {
 >
 > ```swift
 > struct PlayerList: View {
->     @Query(PlayerRequest()) // Implicit key path to the database
+>     @Query(PlayersRequest()) // Implicit key path to the database
 >     var players: [Player]
 >
 >     ...
 > }
 > ```
 
-> Tip: You can further refine your api and turn `@Query(PlayerRequest())` into `@Query(.players)` by defining an extra extension:
+> Tip: You can further refine your api and turn `@Query(PlayersRequest())` into `@Query(.players)` by defining an extra extension:
 >
 > ```swift
-> extension Queryable where Self == PlayerRequest {
->     static var players: Self { PlayerRequest() }
+> extension Queryable where Self == PlayersRequest {
+>     static var players: Self { PlayersRequest() }
 > }
 >
 > struct PlayerList: View {
@@ -180,7 +180,7 @@ import Combine
 import GRDB
 import GRDBQuery
 
-struct PlayerRequest: Queryable {
+struct PlayersRequest: Queryable {
     typealias Value = Result<[Player], Error>
     static var defaultValue: Value { .success([]) }
     
