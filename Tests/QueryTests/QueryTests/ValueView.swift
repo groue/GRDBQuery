@@ -40,6 +40,11 @@ struct ValueView: View {
                 $value.request.wrappedValue.second = 7
             }
             .accessibilityIdentifier("\(accessibilityIdentifier).button")
+            
+            Button("Send Test Notification") {
+                NotificationCenter.default.post(name: .test, object: nil)
+            }
+            .accessibilityIdentifier("\(accessibilityIdentifier).notificationButton")
         }
         .padding()
     }

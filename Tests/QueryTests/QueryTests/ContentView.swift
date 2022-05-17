@@ -13,33 +13,49 @@ struct ContentView: View {
     @State var queryObservationEnabled = true
     
     var body: some View {
-        VStack {
-            Button("Change First") {
-                request.first = 5
-            }
-            
-            Button("Send Test Notification") {
-                NotificationCenter.default.post(name: .test, object: nil)
-            }
-            
-            Button("Change ID") {
-                id += 1
-            }
-            
-            Button("Toggle Query Observation") {
-                queryObservationEnabled.toggle()
-            }
-            
+        TabView {
             VStack {
-                // Default request
-                ValueView(accessibilityIdentifier: "default")
-                ValueView(initialRequest: request, accessibilityIdentifier: "initial")
-                ValueView(constantRequest: request, accessibilityIdentifier: "constant")
-                ValueView($request, accessibilityIdentifier: "binding")
+                Button("Change First") {
+                    request.first = 5
+                }
+                
+                Button("Send Test Notification") {
+                    NotificationCenter.default.post(name: .test, object: nil)
+                }
+                .accessibilityIdentifier("shared.notificationButton")
+
+                Button("Change ID") {
+                    id += 1
+                }
+                
+                Button("Toggle Query Observation") {
+                    queryObservationEnabled.toggle()
+                }
+                
+                VStack {
+                    // Default request
+                    ValueView(accessibilityIdentifier: "default")
+                    ValueView(initialRequest: request, accessibilityIdentifier: "initial")
+                    ValueView(constantRequest: request, accessibilityIdentifier: "constant")
+                    ValueView($request, accessibilityIdentifier: "binding")
+                }
+                .id(id)
             }
-            .id(id)
+            .tabItem { Label("Tab 1", image: "info") }
+            .environment(\.queryObservationEnabled, queryObservationEnabled)
+            
+            ValueView(accessibilityIdentifier: "queryObservation.always")
+                .queryObservation(.always)
+                .tabItem { Label("queryObservation.always", image: "info") }
+            
+            ValueView(accessibilityIdentifier: "queryObservation.onAppear")
+                .queryObservation(.onAppear)
+                .tabItem { Label("queryObservation.onAppear", image: "info") }
+
+            ValueView(accessibilityIdentifier: "queryObservation.onRender")
+                .queryObservation(.onRender)
+                .tabItem { Label("queryObservation.onRender", image: "info") }
         }
-        .environment(\.queryObservationEnabled, queryObservationEnabled)
     }
 }
 
