@@ -34,11 +34,11 @@ class QueryTestsUITests: XCTestCase {
         // `n + (first * second)` where n is zero
         XCTAssertEqual(text.value as? String, "6")
         
-        // `n + (first * second)` where `first` was changed
+        // `n + (first * second)` where `first` was set to 5 from container view
         app.buttons["Change First"].tap()
         XCTAssertEqual(text.value as? String, "6")
         
-        // `n + (first * second)` where `second` was changed
+        // `n + (first * second)` where `second` was set to 7 from ValueView
         changeSecondButton.tap()
         XCTAssertEqual(text.value as? String, "14")
         
@@ -46,7 +46,7 @@ class QueryTestsUITests: XCTestCase {
         sharedNotificationButton.tap()
         XCTAssertEqual(text.value as? String, "15")
         
-        // `n + (first * second)` where publisher was reset due to View ID change
+        // `n + (first * second)` where publisher was reset due to ValueView ID change
         app.buttons["Change ID"].tap()
         XCTAssertEqual(text.value as? String, "6")
         
@@ -82,11 +82,11 @@ class QueryTestsUITests: XCTestCase {
         // `n + (first * second)` where n is zero
         XCTAssertEqual(text.value as? String, "1")
         
-        // `n + (first * second)` where `first` was changed
+        // `n + (first * second)` where `first` was set to 5 from container view
         app.buttons["Change First"].tap()
         XCTAssertEqual(text.value as? String, "1")
         
-        // `n + (first * second)` where `second` was changed
+        // `n + (first * second)` where `second` was set to 7 from ValueView
         changeSecondButton.tap()
         XCTAssertEqual(text.value as? String, "7")
         
@@ -94,7 +94,7 @@ class QueryTestsUITests: XCTestCase {
         sharedNotificationButton.tap()
         XCTAssertEqual(text.value as? String, "8")
         
-        // `n + (first * second)` where publisher was reset due to View ID change
+        // `n + (first * second)` where publisher was reset due to ValueView ID change
         app.buttons["Change ID"].tap()
         XCTAssertEqual(text.value as? String, "5")
         
@@ -130,11 +130,11 @@ class QueryTestsUITests: XCTestCase {
         // `n + (first * second)` where n is zero
         XCTAssertEqual(text.value as? String, "1")
         
-        // `n + (first * second)` where `first` was changed
+        // `n + (first * second)` where `first` was set to 5 from container view
         app.buttons["Change First"].tap()
         XCTAssertEqual(text.value as? String, "5")
         
-        // `n + (first * second)` where `second` was changed
+        // `n + (first * second)` where `second` was set to 7 from ValueView
         changeSecondButton.tap()
         XCTAssertEqual(text.value as? String, "5")
         
@@ -142,7 +142,7 @@ class QueryTestsUITests: XCTestCase {
         sharedNotificationButton.tap()
         XCTAssertEqual(text.value as? String, "6")
         
-        // `n + (first * second)` where publisher was reset due to View ID change
+        // `n + (first * second)` where publisher was reset due to ValueView ID change
         app.buttons["Change ID"].tap()
         XCTAssertEqual(text.value as? String, "5")
         
@@ -178,11 +178,11 @@ class QueryTestsUITests: XCTestCase {
         // `n + (first * second)` where n is zero
         XCTAssertEqual(text.value as? String, "1")
         
-        // `n + (first * second)` where `first` was changed
+        // `n + (first * second)` where `first` was set to 5 from container view
         app.buttons["Change First"].tap()
         XCTAssertEqual(text.value as? String, "5")
         
-        // `n + (first * second)` where `second` was changed
+        // `n + (first * second)` where `second` was set to 7 from ValueView
         changeSecondButton.tap()
         XCTAssertEqual(text.value as? String, "35")
         
@@ -190,7 +190,7 @@ class QueryTestsUITests: XCTestCase {
         sharedNotificationButton.tap()
         XCTAssertEqual(text.value as? String, "36")
         
-        // `n + (first * second)` where publisher was reset due to View ID change
+        // `n + (first * second)` where publisher was reset due to ValueView ID change
         app.buttons["Change ID"].tap()
         XCTAssertEqual(text.value as? String, "35")
         
