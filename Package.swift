@@ -27,8 +27,5 @@ let package = Package(
         .target(
             name: "GRDBQuery",
             dependencies: []),
-        .testTarget(
-            name: "GRDBQueryTests",
-            dependencies: ["GRDBQuery"]),
     ]
 )
