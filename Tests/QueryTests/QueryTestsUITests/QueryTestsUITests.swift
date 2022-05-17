@@ -19,6 +19,12 @@ class QueryTestsUITests: XCTestCase {
     func testDefaultRequest() throws {
         let app = XCUIApplication()
         app.launch()
+        
+        // Make sure all ui elements are hittable
+        XCUIElement.perform(withKeyModifiers: .option) {
+            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+        }
+        
         app.tabs["Tab 1"].tap()
         
         let text = app.staticTexts["default.value"]
@@ -61,6 +67,12 @@ class QueryTestsUITests: XCTestCase {
     func testInitialRequest() throws {
         let app = XCUIApplication()
         app.launch()
+        
+        // Make sure all ui elements are hittable
+        XCUIElement.perform(withKeyModifiers: .option) {
+            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+        }
+        
         app.tabs["Tab 1"].tap()
         
         let text = app.staticTexts["initial.value"]
@@ -103,6 +115,12 @@ class QueryTestsUITests: XCTestCase {
     func testConstantRequest() throws {
         let app = XCUIApplication()
         app.launch()
+        
+        // Make sure all ui elements are hittable
+        XCUIElement.perform(withKeyModifiers: .option) {
+            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+        }
+        
         app.tabs["Tab 1"].tap()
         
         let text = app.staticTexts["constant.value"]
@@ -145,6 +163,12 @@ class QueryTestsUITests: XCTestCase {
     func testBindingRequest() throws {
         let app = XCUIApplication()
         app.launch()
+        
+        // Make sure all ui elements are hittable
+        XCUIElement.perform(withKeyModifiers: .option) {
+            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+        }
+        
         app.tabs["Tab 1"].tap()
         
         let text = app.staticTexts["binding.value"]
@@ -184,6 +208,12 @@ class QueryTestsUITests: XCTestCase {
     func testQueryObservationAlways() {
         let app = XCUIApplication()
         app.launch()
+        
+        // Make sure all ui elements are hittable
+        XCUIElement.perform(withKeyModifiers: .option) {
+            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+        }
+        
         let text = app.staticTexts["queryObservation.always.value"]
         let notificationButton = app.buttons["queryObservation.always.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
@@ -209,6 +239,12 @@ class QueryTestsUITests: XCTestCase {
         // TODO: find a way to have a testable difference between onRender and onAppear
         let app = XCUIApplication()
         app.launch()
+        
+        // Make sure all ui elements are hittable
+        XCUIElement.perform(withKeyModifiers: .option) {
+            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+        }
+        
         let text = app.staticTexts["queryObservation.onRender.value"]
         let notificationButton = app.buttons["queryObservation.onRender.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
@@ -233,6 +269,12 @@ class QueryTestsUITests: XCTestCase {
     func testQueryObservationOnAppear() {
         let app = XCUIApplication()
         app.launch()
+        
+        // Make sure all ui elements are hittable
+        XCUIElement.perform(withKeyModifiers: .option) {
+            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+        }
+        
         let text = app.staticTexts["queryObservation.onAppear.value"]
         let notificationButton = app.buttons["queryObservation.onAppear.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
@@ -252,14 +294,5 @@ class QueryTestsUITests: XCTestCase {
         
         app.tabs["queryObservation.onAppear"].tap()
         XCTAssertEqual(text.value as? String, "6")
-    }
-}
-
-extension Array {
-    mutating func popFirst() -> Element? {
-        if isEmpty {
-            return nil
-        }
-        return removeFirst()
     }
 }
