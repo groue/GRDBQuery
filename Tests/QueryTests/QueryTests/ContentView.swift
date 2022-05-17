@@ -15,15 +15,16 @@ struct ContentView: View {
     var body: some View {
         TabView {
             VStack {
-                Button("Change First") {
+                Button("Change Request") {
                     request.first = 5
                 }
+                .accessibilityIdentifier("container.changeRequestButton")
                 
                 Button("Send Test Notification") {
                     NotificationCenter.default.post(name: .test, object: nil)
                 }
                 .accessibilityIdentifier("shared.notificationButton")
-
+                
                 Button("Change ID") {
                     id += 1
                 }
@@ -33,7 +34,6 @@ struct ContentView: View {
                 }
                 
                 VStack {
-                    // Default request
                     ValueView(accessibilityIdentifier: "default")
                     ValueView(initialRequest: request, accessibilityIdentifier: "initial")
                     ValueView(constantRequest: request, accessibilityIdentifier: "constant")
@@ -51,7 +51,7 @@ struct ContentView: View {
             ValueView(accessibilityIdentifier: "queryObservation.onAppear")
                 .queryObservation(.onAppear)
                 .tabItem { Label("queryObservation.onAppear", image: "info") }
-
+            
             ValueView(accessibilityIdentifier: "queryObservation.onRender")
                 .queryObservation(.onRender)
                 .tabItem { Label("queryObservation.onRender", image: "info") }

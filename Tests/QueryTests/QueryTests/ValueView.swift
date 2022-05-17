@@ -12,20 +12,24 @@ struct ValueView: View {
     var accessibilityIdentifier: String
     @Query(Request(first: 2, second: 3), in: \.void) var value
     
+    /// Default request
     init(accessibilityIdentifier: String) {
         self.accessibilityIdentifier = accessibilityIdentifier
     }
     
+    /// Initial request
     init(initialRequest request: Request, accessibilityIdentifier: String) {
         self.accessibilityIdentifier = accessibilityIdentifier
         _value = Query(request, in: \.void)
     }
     
+    /// Constant request
     init(constantRequest request: Request, accessibilityIdentifier: String) {
         self.accessibilityIdentifier = accessibilityIdentifier
         _value = Query(constant: request, in: \.void)
     }
     
+    /// Request binding
     init(_ request: Binding<Request>, accessibilityIdentifier: String) {
         self.accessibilityIdentifier = accessibilityIdentifier
         _value = Query(request, in: \.void)
@@ -36,10 +40,10 @@ struct ValueView: View {
             Text(verbatim: "\(value)")
                 .accessibilityIdentifier("\(accessibilityIdentifier).value")
             
-            Button("Change Second") {
+            Button("Change Request") {
                 $value.request.wrappedValue.second = 7
             }
-            .accessibilityIdentifier("\(accessibilityIdentifier).button")
+            .accessibilityIdentifier("\(accessibilityIdentifier).changeRequestButton")
             
             Button("Send Test Notification") {
                 NotificationCenter.default.post(name: .test, object: nil)

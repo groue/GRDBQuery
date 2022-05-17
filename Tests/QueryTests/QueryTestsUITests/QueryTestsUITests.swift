@@ -28,18 +28,19 @@ class QueryTestsUITests: XCTestCase {
         app.tabs["Tab 1"].tap()
         
         let text = app.staticTexts["default.value"]
-        let changeSecondButton = app.buttons["default.button"]
+        let changeRequestButton = app.buttons["default.changeRequestButton"]
+        let containerChangeRequestButton = app.buttons["container.changeRequestButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
         // `n + (first * second)` where n is zero
         XCTAssertEqual(text.value as? String, "6")
         
         // `n + (first * second)` where `first` was set to 5 from container view
-        app.buttons["Change First"].tap()
+        containerChangeRequestButton.tap()
         XCTAssertEqual(text.value as? String, "6")
         
         // `n + (first * second)` where `second` was set to 7 from ValueView
-        changeSecondButton.tap()
+        changeRequestButton.tap()
         XCTAssertEqual(text.value as? String, "14")
         
         // `n + (first * second)` where `n` was incremented
@@ -76,18 +77,19 @@ class QueryTestsUITests: XCTestCase {
         app.tabs["Tab 1"].tap()
         
         let text = app.staticTexts["initial.value"]
-        let changeSecondButton = app.buttons["initial.button"]
+        let changeRequestButton = app.buttons["initial.changeRequestButton"]
+        let containerChangeRequestButton = app.buttons["container.changeRequestButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
         // `n + (first * second)` where n is zero
         XCTAssertEqual(text.value as? String, "1")
         
         // `n + (first * second)` where `first` was set to 5 from container view
-        app.buttons["Change First"].tap()
+        containerChangeRequestButton.tap()
         XCTAssertEqual(text.value as? String, "1")
         
         // `n + (first * second)` where `second` was set to 7 from ValueView
-        changeSecondButton.tap()
+        changeRequestButton.tap()
         XCTAssertEqual(text.value as? String, "7")
         
         // `n + (first * second)` where `n` was incremented
@@ -124,18 +126,19 @@ class QueryTestsUITests: XCTestCase {
         app.tabs["Tab 1"].tap()
         
         let text = app.staticTexts["constant.value"]
-        let changeSecondButton = app.buttons["constant.button"]
+        let changeRequestButton = app.buttons["constant.changeRequestButton"]
+        let containerChangeRequestButton = app.buttons["container.changeRequestButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
         // `n + (first * second)` where n is zero
         XCTAssertEqual(text.value as? String, "1")
         
         // `n + (first * second)` where `first` was set to 5 from container view
-        app.buttons["Change First"].tap()
+        containerChangeRequestButton.tap()
         XCTAssertEqual(text.value as? String, "5")
         
         // `n + (first * second)` where `second` was set to 7 from ValueView
-        changeSecondButton.tap()
+        changeRequestButton.tap()
         XCTAssertEqual(text.value as? String, "5")
         
         // `n + (first * second)` where `n` was incremented
@@ -172,18 +175,19 @@ class QueryTestsUITests: XCTestCase {
         app.tabs["Tab 1"].tap()
         
         let text = app.staticTexts["binding.value"]
-        let changeSecondButton = app.buttons["binding.button"]
+        let changeRequestButton = app.buttons["binding.changeRequestButton"]
+        let containerChangeRequestButton = app.buttons["container.changeRequestButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
         // `n + (first * second)` where n is zero
         XCTAssertEqual(text.value as? String, "1")
         
         // `n + (first * second)` where `first` was set to 5 from container view
-        app.buttons["Change First"].tap()
+        containerChangeRequestButton.tap()
         XCTAssertEqual(text.value as? String, "5")
         
         // `n + (first * second)` where `second` was set to 7 from ValueView
-        changeSecondButton.tap()
+        changeRequestButton.tap()
         XCTAssertEqual(text.value as? String, "35")
         
         // `n + (first * second)` where `n` was incremented
