@@ -6,6 +6,20 @@ DOCS_PATH := ./docs/$(DOCS_VERSION)
 XCRUN := $(shell command -v xcrun)
 SWIFT = $(shell $(XCRUN) --find swift 2> /dev/null)
 
+XCPRETTY_PATH := $(shell command -v xcpretty 2> /dev/null)
+XCPRETTY = 
+ifdef XCPRETTY_PATH
+  XCPRETTY = | xcpretty -c
+endif
+
+test:
+	xcodebuild \
+	  -project Tests/QueryTests/QueryTests.xcodeproj \
+	  -scheme QueryTests \
+	  -destination 'platform=macOS,arch=x86_64' \
+	  clean build build-for-testing test-without-building \
+	  $(XCPRETTY)
+
 docs:
 	# https://apple.github.io/swift-docc-plugin/documentation/swiftdoccplugin/publishing-to-github-pages/
 	mkdir -p $(DOCS_PATH)
