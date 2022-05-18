@@ -32,17 +32,6 @@ docs:
 	  --transform-for-static-hosting \
 	  --hosting-base-path GRDBQuery/$(DOCS_VERSION)
 
-docs-main:
-	mkdir -p ./docs/main
-	$(SWIFT) package \
-	  --allow-writing-to-directory ./docs/main \
-	  generate-documentation \
-	  --output-path ./docs/main \
-	  --target GRDBQuery \
-	  --disable-indexing \
-	  --transform-for-static-hosting \
-	  --hosting-base-path GRDBQuery/main
-
 docs-localhost:
 	# Generates documentation in ~/Sites/GRDBQuery
 	# See https://discussions.apple.com/docs/DOC-3083 for Apache setup on the mac
@@ -60,4 +49,4 @@ docs-localhost:
 distclean:
 	git -dfx .
 
-.PHONY: distclean docs docs-main docs-localhost
+.PHONY: test docs docs-localhost distclean
