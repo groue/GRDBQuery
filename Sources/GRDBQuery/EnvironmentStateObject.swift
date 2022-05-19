@@ -26,8 +26,8 @@
 import Combine
 import SwiftUI
 
-/// `@EnvironmentStateObject` is a property wrapper type that instantiates an
-/// observable object from an environment value.
+/// A property wrapper type that instantiates an observable object from an
+/// environment value.
 ///
 /// `@EnvironmentStateObject` is similar to SwiftUI `@StateObject`, and
 /// provides the same essential services:
@@ -50,6 +50,8 @@ import SwiftUI
 ///
 /// ```swift
 /// import GRDBQuery
+///
+/// class MyModel: ObservableObject { ... }
 ///
 /// struct MyView: View {
 ///     @EnvironmentStateObject var model: MyModel
@@ -101,7 +103,7 @@ import SwiftUI
 /// ties the lifetime of the observable object to the lifetime of the
 /// view identity.
 @propertyWrapper
-public struct EnvironmentStateObject<Context, ObjectType>: DynamicProperty
+public struct EnvironmentStateObject<ObjectType, Context>: DynamicProperty
 where ObjectType: ObservableObject
 {
     /// The environment context.
