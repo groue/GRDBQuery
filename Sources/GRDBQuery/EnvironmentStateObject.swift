@@ -26,7 +26,7 @@
 import Combine
 import SwiftUI
 
-/// A property wrapper type that instantiates an observable object from the
+/// A property wrapper that instantiates an observable object from the
 /// SwiftUI environment.
 ///
 /// `@EnvironmentStateObject` is similar to SwiftUI `@StateObject`, and
@@ -53,8 +53,8 @@ import SwiftUI
 ///
 /// > Important: Just as `@StateObject`, `@EnvironmentStateObject`
 /// > ties the lifetime of the observable object to the lifetime of the
-/// > view identity. Once the observable object has been instantiated, right
-/// > before the initial `body` rendering, changes in environment values or
+/// > view identity. Once the observable object has been instantiated (right
+/// > before the initial `body` rendering), changes in environment values or
 /// > other parameters are just ignored.
 /// >
 /// > Just like `@StateObject`, you can force a new instantiation of the

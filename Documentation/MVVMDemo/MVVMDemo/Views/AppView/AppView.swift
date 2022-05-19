@@ -34,7 +34,7 @@ struct AppView: View {
             .sheet(item: $viewModel.editedPlayer) { player in
                 PlayerEditionView(id: player.id)
             }
-            .navigationTitle("@Query Demo")
+            .navigationTitle("MVVM Demo")
         }
     }
     

@@ -34,7 +34,8 @@ struct PlayerList: View {
 
 - ``Query``
 - ``QueryObservation``
-
-### Feeding @Query with database content
-
 - ``Queryable``
+
+### MVVM architecture
+
+- ``EnvironmentStateObject``

@@ -71,6 +71,7 @@
 		5640152E28364E2C00EEA9BC /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		564015312836508500EEA9BC /* PlayerFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerFormViewModel.swift; sourceTree = "<group>"; };
 		564015342836657400EEA9BC /* PlayerEditionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEditionViewModel.swift; sourceTree = "<group>"; };
+		5640153A2836921900EEA9BC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +104,7 @@
 		564014D828364A5200EEA9BC = {
 			isa = PBXGroup;
 			children = (
+				5640153A2836921900EEA9BC /* README.md */,
 				564014E328364A5200EEA9BC /* MVVMDemo */,
 				564014F428364A5300EEA9BC /* MVVMDemoTests */,
 				564014FE28364A5300EEA9BC /* MVVMDemoUITests */,
