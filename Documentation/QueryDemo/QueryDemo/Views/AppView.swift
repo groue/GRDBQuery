@@ -34,7 +34,7 @@ struct AppView: View {
             }
             .padding(.horizontal)
             .sheet(item: $editedPlayer) { player in
-                PlayerPresenceView(id: player.id)
+                PlayerEditionView(id: player.id)
             }
             .navigationTitle("@Query Demo")
         }

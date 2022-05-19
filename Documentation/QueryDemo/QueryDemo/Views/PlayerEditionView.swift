@@ -6,7 +6,7 @@ import SwiftUI
 ///
 /// In this demo app, this view don't want to remain on screen
 /// whenever the edited player no longer exists in the database.
-struct PlayerPresenceView: View {
+struct PlayerEditionView: View {
     @Environment(\.dismiss) private var dismiss
     
     @Query<PlayerPresenceRequest>
@@ -28,7 +28,7 @@ struct PlayerPresenceView: View {
                     
                     if playerPresence.exists {
                         VStack(spacing: 10) {
-                            Text("What if another application component deletes the player at the most unexpected moment?s")
+                            Text("What if another application component deletes the player at the most unexpected moment?")
                                 .informationStyle()
                             DeleteButton("Delete Player")
                         }
@@ -62,11 +62,11 @@ struct PlayerPresenceView: View {
     }
 }
 
-struct PlayerPresenceView_Previews: PreviewProvider {
+struct PlayerEditionView_Previews: PreviewProvider {
     static var previews: some View {
         let playerId: Int64 = 1
         let dbQueue = populatedDatabaseQueue(playerId: playerId)
-        PlayerPresenceView(id: playerId).environment(\.dbQueue, dbQueue)
-        PlayerPresenceView(id: -1)
+        PlayerEditionView(id: playerId).environment(\.dbQueue, dbQueue)
+        PlayerEditionView(id: -1)
     }
 }
