@@ -26,65 +26,185 @@
 import Combine
 import SwiftUI
 
-/// A property wrapper type that instantiates an observable object from an
-/// environment value.
+/// A property wrapper type that instantiates an observable object from the
+/// SwiftUI environment.
 ///
 /// `@EnvironmentStateObject` is similar to SwiftUI `@StateObject`, and
 /// provides the same essential services:
 ///
-/// - SwiftUI creates a new instance of the observable object only once for each
-///   instance of the view that declares the object.
+/// - `@EnvironmentStateObject` instantiates the observable object right before
+///   the initial `body` rendering, and deallocates its when the view is no
+///   longer rendered.
 /// - When published properties of the observable object change, SwiftUI updates
 ///   the parts of any view that depend on those properties.
 /// - Get a `Binding` to one of the observable object’s properties using the
 ///   `$` operator.
 ///
 /// What `@EnvironmentStateObject` brings on top of `@StateObject` is the
-/// ability to instantiate the observable object from an environment value.
+/// ability to instantiate the observable object from the SwiftUI environment.
 ///
-/// **If you do not need to instantiate your observable object from an
-/// environment value, then `EnvironmentStateObject` is probably not what you
-/// need.** Just use the plain `@StateObject` instead.
+/// **If you do not need to instantiate your observable object from the SwiftUI
+/// environment**, then `@EnvironmentStateObject` is not what you need. Just use
+/// the plain `@StateObject` instead.
 ///
-/// A typical setup is:
+/// **If the lifetime of your observable object is different from the one
+/// `@StateObject` would provide**, then `@EnvironmentStateObject` is not what
+/// you need. Have a look at `@ObservedObject`, `@EnvironmentObject`, etc.
+///
+/// > Important: Just as `@StateObject`, `@EnvironmentStateObject`
+/// > ties the lifetime of the observable object to the lifetime of the
+/// > view identity. Once the observable object has been instantiated, right
+/// > before the initial `body` rendering, changes in environment values or
+/// > other parameters are just ignored.
+/// >
+/// > Just like `@StateObject`, you can force a new instantiation of the
+/// > observable object by changing the view identity.
+///
+/// ## Usage
+///
+/// A typical setup starts from an observable object that requires some
+/// "service" (for example, access to the network, or to a database):
+///
+/// ```swift
+/// import Combine // For ObservableObject
+///
+/// class MyModel: ObservableObject {
+///     let fieldTitle: String
+///     @Published var fieldValue: String
+///
+///     init(service: MyService) { ... }
+///
+///     func save() { ... }
+/// }
+/// ```
+///
+/// The application defines an [EnvironmentKey](https://developer.apple.com/documentation/swiftui/environmentkey)
+/// that provides access to this "service" from the SwiftUI environment:
+///
+/// ```swift
+/// import SwiftUI
+///
+/// extension EnvironmentValues {
+///     var service: MyService { ... }
+/// }
+/// ```
+///
+/// An example of such environment setup is shown in <doc:GettingStarted>.
+///
+/// Now a view can use the `@EnvironmentStateObject` property wrapper:
 ///
 /// ```swift
 /// import GRDBQuery
-///
-/// class MyModel: ObservableObject { ... }
+/// import SwiftUI
 ///
 /// struct MyView: View {
 ///     @EnvironmentStateObject var model: MyModel
 ///
 ///     init() {
-///         _model = EnvironmentStateObject(\.dbQueue) { dbQueue in
-///             MyModel(dbQueue: dbQueue)
+///         _model = EnvironmentStateObject { env in
+///             MyModel(service: env.service)
 ///         }
 ///     }
 ///
 ///     var body: some View {
-///         Text(model.title)
-///         TextField("some field", text: $model.someField)
+///         HStack {
+///             TextField(viewModel.fieldTitle, text: $model.fieldValue)
+///             Button("save") { viewModel.save() }
+///         }
 ///     }
 /// }
 /// ```
 ///
-/// You can add more configuration in the view initializer:
+/// ### Configuring the Observable Object
+///
+/// When the observable object needs a "service" as well as some configuration,
+/// just update the initializers:
+///
+/// ```swift
+/// class MyModel: ObservableObject {
+///     init(service: MyService, myParameter: Int) { ... }
+/// }
+///
+/// struct MyView: View {
+///     @EnvironmentStateObject var model: MyModel
+///
+///     init(myParameter: Int) {
+///         _model = EnvironmentStateObject { env in
+///             MyModel(service: env.service, myParameter: myParameter)
+///         }
+///     }
+///
+///     var body: some View { ... }
+/// }
+/// ```
+///
+/// ### Decoupling the View from its Observable Object
+///
+/// You can have the container view responsible for instantiating the
+/// observable object:
 ///
 /// ```swift
 /// struct MyView: View {
 ///     @EnvironmentStateObject var model: MyModel
 ///
-///     init(myParameter: ...) {
-///         _model = EnvironmentStateObject(\.dbQueue) { dbQueue in
-///             MyModel(myParameter: myParameter, dbQueue: dbQueue)
-///         }
+///     init(model: @escaping (EnvironmentValue) -> MyModel) {
+///         _model = EnvironmentStateObject(model)
+///     }
+///
+///     var body: some View { ... }
+/// }
+///
+/// struct Container: View {
+///     var body: some View {
+///         MyView { env in MyModel(service: env.service) }
 ///     }
 /// }
 /// ```
 ///
-/// `MyView` can be previewed with specific environment values. The observable
-/// object will be instantiated with this specific environment. For example:
+/// This technique helps observable objects create other ones:
+///
+/// ```swift
+/// struct Container: View {
+///     @EnvironmentStateObject var containerModel: ContainerModel
+///
+///     var body: some View {
+///         MyView(model: containerModel.makeMyModel)
+///     }
+/// }
+/// ```
+///
+/// This technique is also useful for generic views that accept various types of
+/// observable objects:
+///
+/// ```swift
+/// protocol MyModelProtocol: ObservableObject { ... }
+///
+/// struct MyView<Model: MyModelProtocol>: View {
+///     @EnvironmentStateObject var model: Model
+///
+///     init(_ makeObject: @escaping (EnvironmentValues) -> Model) {
+///         _model = EnvironmentStateObject(makeObject)
+///     }
+///
+///     var body: some View { ... }
+/// }
+///
+/// class MyModelA: MyModelProtocol { ... }
+/// class MyModelB: MyModelProtocol { ... }
+///
+/// struct Container: View {
+///     var body: some View {
+///         MyView { env in MyModelA(service: env.service) }
+///         MyView { env in MyModelB(service: env.service) }
+///     }
+/// }
+/// ```
+///
+/// ### SwiftUI Previews
+///
+/// `@EnvironmentStateObject` supports SwiftUI previews very well. It
+/// instantiates observable objects with the expected environment values.
+/// For example:
 ///
 /// ```swift
 /// struct MyView_Previews: PreviewProvider {
@@ -93,36 +213,28 @@ import SwiftUI
 ///         MyView()
 ///
 ///         // Specific environment
-///         MyView().environment(\.dbQueue, ...)
+///         MyView().environment(\.service, ...)
 ///     }
 /// }
 /// ```
-///
-/// Note that environment changes are not reflected by the instantiation of a
-/// new observable object. Just as `@StateObject`, `@EnvironmentStateObject`
-/// ties the lifetime of the observable object to the lifetime of the
-/// view identity.
 @propertyWrapper
-public struct EnvironmentStateObject<ObjectType, Context>: DynamicProperty
+public struct EnvironmentStateObject<ObjectType>: DynamicProperty
 where ObjectType: ObservableObject
 {
-    /// The environment context.
-    @Environment private var context: Context
+    /// The environment values.
+    @Environment private var environmentValues: EnvironmentValues
     
     /// The SwiftUI `StateObject` that deals with the lifetime of the
     /// observable object.
     @StateObject private var core = Core()
     
     /// The closure that creates an instance of the observable object.
-    private let makeObject: (Context) -> ObjectType
+    private let makeObject: (EnvironmentValues) -> ObjectType
     
-    /// Creates a new ``EnvironmentStateObject`` with a closure that builds a
-    /// object from a context.
-    public init(
-        _ keyPath: KeyPath<EnvironmentValues, Context>,
-        _ makeObject: @escaping (Context) -> ObjectType)
-    {
-        self._context = Environment(keyPath)
+    /// Creates a new ``EnvironmentStateObject`` with a closure that builds an
+    /// object from environment values.
+    public init(_ makeObject: @escaping (EnvironmentValues) -> ObjectType) {
+        self._environmentValues = Environment(\.self)
         self.makeObject = makeObject
     }
     
@@ -138,7 +250,7 @@ where ObjectType: ObservableObject
             //
             // We count on the SwiftUI runtime to emit a warning: don't crash
             // and just return some object initialized from an invalid context.
-            return makeObject(context)
+            return makeObject(environmentValues)
         }
     }
     
@@ -150,7 +262,7 @@ where ObjectType: ObservableObject
     /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
     public func update() {
         if core.object == nil {
-            core.object = makeObject(context)
+            core.object = makeObject(environmentValues)
         }
     }
     

@@ -30,18 +30,10 @@ extension EnvironmentValues {
     }
 }
 
-// Convenience `EnvironmentStateObject` initializers for observable objects that
-// feed from `AppDatabase`.
-extension EnvironmentStateObject where Context == AppDatabase {
-    init(_ makeObject: @escaping (AppDatabase) -> ObjectType) {
-        self.init(\.appDatabase, makeObject)
-    }
-}
+// In this demo app, some views observe the database with the @Query property
+// wrapper. Its documentation recommends to define a dedicated initializer for
+// `appDatabase` access, so we comply:
 
-// Convenience typealias for observable objects that feed from `AppDatabase`.
-typealias DatabaseStateObject<ObjectType: ObservableObject> = EnvironmentStateObject<ObjectType, AppDatabase>
-
-// Convenience `Query` initializer for requests that feed from `AppDatabase`.
 extension Query where Request.DatabaseContext == AppDatabase {
     init(_ request: Request) {
         self.init(request, in: \.appDatabase)

@@ -1,13 +1,16 @@
 import GRDB
+import GRDBQuery
 import SwiftUI
 
 /// The view that edits a player
 struct PlayerFormView: View {
-    @DatabaseStateObject private var viewModel: PlayerFormViewModel
+    @EnvironmentStateObject private var viewModel: PlayerFormViewModel
     
     init(player: Player) {
-        _viewModel = DatabaseStateObject { appDatabase in
-            PlayerFormViewModel(appDatabase: appDatabase, editedPlayer: player)
+        _viewModel = EnvironmentStateObject {
+            PlayerFormViewModel(
+                appDatabase: $0.appDatabase,
+                editedPlayer: player)
         }
     }
     

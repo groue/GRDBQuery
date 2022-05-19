@@ -4,10 +4,12 @@ import GRDBQuery
 
 /// The main application view
 struct AppView: View {
-    @DatabaseStateObject private var viewModel: AppViewModel
+    @EnvironmentStateObject private var viewModel: AppViewModel
     
     init() {
-        _viewModel = DatabaseStateObject(AppViewModel.init)
+        _viewModel = EnvironmentStateObject {
+            AppViewModel(appDatabase: $0.appDatabase)
+        }
     }
     
     var body: some View {

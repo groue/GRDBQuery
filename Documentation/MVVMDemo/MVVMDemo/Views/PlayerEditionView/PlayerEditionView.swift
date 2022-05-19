@@ -8,11 +8,11 @@ import SwiftUI
 /// whenever the edited player no longer exists in the database.
 struct PlayerEditionView: View {
     @Environment(\.dismiss) private var dismiss
-    @DatabaseStateObject private var viewModel: PlayerEditionViewModel
+    @EnvironmentStateObject private var viewModel: PlayerEditionViewModel
     
     init(id: Int64) {
-        _viewModel = DatabaseStateObject { appDatabase in
-            PlayerEditionViewModel(appDatabase: appDatabase, id: id)
+        _viewModel = EnvironmentStateObject {
+            PlayerEditionViewModel(appDatabase: $0.appDatabase, id: id)
         }
     }
     
