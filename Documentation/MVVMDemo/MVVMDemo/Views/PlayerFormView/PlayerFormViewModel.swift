@@ -11,24 +11,24 @@ final class PlayerFormViewModel: ObservableObject {
     }
     
     func incrementScore() {
-        updateScore { $0 += 10 }
+        updatePlayer { $0.score += 10 }
     }
     
     func decrementScore() {
-        updateScore { $0 = max(0, $0 - 10) }
+        updatePlayer { $0.score = max(0, $0.score - 10) }
     }
     
-    private func updateScore(_ transform: (inout Int) -> Void) {
+    private func updatePlayer(_ transform: (inout Player) -> Void) {
         do {
-            transform(&player.score)
-            try appDatabase.update(player)
+            var updatedPlayer = player
+            transform(&updatedPlayer)
+            try appDatabase.update(updatedPlayer)
+            
+            // Only update view if update was succesfull in the database
+            player = updatedPlayer
         } catch PersistenceError.recordNotFound {
             // Oops, player does not exist.
             // Ignore this error: `PlayerEditionView` will dismiss.
-            //
-            // You can comment out this specific handling of
-            // `PersistenceError.recordNotFound`, run the preview, change the
-            // score, and see what happens.
         } catch {
             fatalError("\(error)")
         }
