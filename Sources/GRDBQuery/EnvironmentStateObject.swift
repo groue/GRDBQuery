@@ -225,6 +225,22 @@ import SwiftUI
 /// `@EnvironmentStateObject` exists as a support for MVVM applications that use
 /// the SwiftUI environment as a solution for dependency injection. See
 /// <doc:MVVM> for more information.
+///
+/// ## Topics
+///
+/// ### Creating an Environment State Object
+///
+/// - ``init(_:)``
+///
+/// ### Getting the Value
+///
+/// - ``wrappedValue``
+/// - ``projectedValue``
+/// - ``Wrapper``
+///
+/// ### SwiftUI Integration
+///
+/// - ``update()``
 @propertyWrapper
 public struct EnvironmentStateObject<ObjectType>: DynamicProperty
 where ObjectType: ObservableObject
