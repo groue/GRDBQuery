@@ -48,8 +48,10 @@ struct PlayerEditionView: View {
 
 struct PlayerEditionView_Previews: PreviewProvider {
     static var previews: some View {
-        let playerId: Int64 = 1
-        PlayerEditionView(id: playerId).environment(\.appDatabase, .populated(playerId: playerId))
+        PlayerEditionView(id: 1)
+            .environment(\.appDatabase, .populated(playerId: 1))
+        
         PlayerEditionView(id: -1)
+            .environment(\.appDatabase, .empty())
     }
 }

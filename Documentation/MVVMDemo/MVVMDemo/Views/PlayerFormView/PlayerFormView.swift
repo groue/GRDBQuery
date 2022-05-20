@@ -24,7 +24,16 @@ struct PlayerFormView: View {
 
 struct PlayerFormView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerFormView(player: .makeRandom())
-            .padding()
+        List {
+            Section("Player exists in the database") {
+                PlayerFormView(player: .makeRandom(id: 1))
+                    .environment(\.appDatabase, .populated(playerId: 1))
+            }
+            
+            Section("Player does not exist in the database") {
+                PlayerFormView(player: .makeRandom())
+                    .environment(\.appDatabase, .empty())
+            }
+        }
     }
 }
