@@ -1,5 +1,12 @@
 # Release Notes
 
+## v0.5.0
+
+Released on 2022/05/20
+
+- [#25](https://github.com/groue/GRDBQuery/pull/25) `@EnvironmentStateObject` and support for MVVM applications
+- [#24](https://github.com/groue/GRDBQuery/pull/24) Tests
+
 ## v0.3.0
 
 Released on 2022/05/01
