@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// A button that creates players in the database
-struct CreateButton: View {
+struct CreatePlayerButton: View {
     @Environment(\.dbQueue) private var dbQueue
     private var titleKey: LocalizedStringKey
     
@@ -21,7 +21,7 @@ struct CreateButton: View {
 }
 
 /// A button that deletes players in the database
-struct DeleteButton: View {
+struct DeletePlayersButton: View {
     private enum Mode {
         case deleteAfter
         case deleteBefore
@@ -87,8 +87,8 @@ struct DatabaseButtons_Previews: PreviewProvider {
         var body: some View {
             VStack {
                 Text("Number of players: \(playerCount)")
-                CreateButton("Create Player")
-                DeleteButton("Delete Players")
+                CreatePlayerButton("Create Player")
+                DeletePlayersButton("Delete Players")
             }
             .informationBox()
             .padding()

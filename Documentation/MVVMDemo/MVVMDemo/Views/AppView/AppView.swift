@@ -43,7 +43,7 @@ struct AppView: View {
             Text("The demo application observes the database and displays information about the player.")
                 .informationStyle()
             
-            CreateButton("Create a Player")
+            CreatePlayerButton("Create a Player")
         }
         .informationBox()
     }
@@ -52,19 +52,19 @@ struct AppView: View {
         VStack(spacing: 10) {
             Text("What if another application component deletes the player at the most unexpected moment?")
                 .informationStyle()
-            DeleteButton("Delete Player")
+            DeletePlayersButton("Delete Player")
             
             Spacer().frame(height: 10)
             Text("What if the player is deleted soon after the Edit button is hit?")
                 .informationStyle()
-            DeleteButton("Delete After Editing", after: {
+            DeletePlayersButton("Delete After Editing", after: {
                 viewModel.editPlayer()
             })
             
             Spacer().frame(height: 10)
             Text("What if the player is deleted right before the Edit button is hit?")
                 .informationStyle()
-            DeleteButton("Delete Before Editing", before: {
+            DeletePlayersButton("Delete Before Editing", before: {
                 viewModel.editPlayer()
             })
         }

@@ -25,7 +25,7 @@ struct PlayerEditionView: View {
                     VStack(spacing: 10) {
                         Text("What if another application component deletes the player at the most unexpected moment?")
                             .informationStyle()
-                        DeleteButton("Delete Player")
+                        DeletePlayersButton("Delete Player")
                     }
                     .informationBox()
                 }
