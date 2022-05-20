@@ -222,7 +222,7 @@ public struct EnvironmentStateObject<ObjectType>: DynamicProperty
 where ObjectType: ObservableObject
 {
     /// The environment values.
-    @Environment private var environmentValues: EnvironmentValues
+    @Environment(\.self) private var environmentValues
     
     /// The SwiftUI `StateObject` that deals with the lifetime of the
     /// observable object.
@@ -234,27 +234,25 @@ where ObjectType: ObservableObject
     /// Creates a new ``EnvironmentStateObject`` with a closure that builds an
     /// object from environment values.
     public init(_ makeObject: @escaping (EnvironmentValues) -> ObjectType) {
-        self._environmentValues = Environment(\.self)
         self.makeObject = makeObject
     }
     
     /// The underlying object.
     public var wrappedValue: ObjectType {
-        if let object = core.object {
-            return object
-        } else {
-            // Object is accessed before `update()` was called, and SwiftUI
-            // would provide the expected context in the environment.
-            //
-            // This is a programmer error!
-            //
-            // We count on the SwiftUI runtime to emit a warning: don't crash
-            // and just return some object initialized from an invalid context.
-            return makeObject(environmentValues)
-        }
+        // If `core.object` is nil, this means that `wrappedValue` is accessed
+        // before `update()` was called, and SwiftUI would provide the expected
+        // context in the environment.
+        //
+        // This is a programmer error. We count on SwiftUI to emit a
+        // runtime warning:
+        //
+        // > Accessing StateObject's object without being installed on a
+        // > View. This will create a new instance each time.
+        core.object ?? makeObject(environmentValues)
     }
     
-    /// A projection that creates bindings to the object.
+    /// A projection that creates bindings to the properties of the
+    /// underlying object.
     public var projectedValue: Wrapper {
         Wrapper(object: wrappedValue)
     }
