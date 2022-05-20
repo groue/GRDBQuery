@@ -261,7 +261,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// For example:
     ///
     /// ```swift
-    /// struct Container {
+    /// struct RootView {
     ///     @State var request: PlayersRequest
     ///
     ///     var body: some View {

@@ -63,7 +63,7 @@ import SwiftUI
 /// ## Usage
 ///
 /// A typical setup starts from an observable object that requires some
-/// "service" (for example, access to the network, or to a database):
+/// dependencies (for example, access to the network, or to a database):
 ///
 /// ```swift
 /// import Combine // For ObservableObject
@@ -72,24 +72,23 @@ import SwiftUI
 ///     let fieldTitle: String
 ///     @Published var fieldValue: String
 ///
-///     init(service: MyService) { ... }
+///     init(database: MyDatabase, network: MyNetwork) { ... }
 ///
 ///     func save() { ... }
 /// }
 /// ```
 ///
 /// The application defines an [EnvironmentKey](https://developer.apple.com/documentation/swiftui/environmentkey)
-/// that provides access to this "service" from the SwiftUI environment:
+/// for dependencies in the SwiftUI environment:
 ///
 /// ```swift
 /// import SwiftUI
 ///
 /// extension EnvironmentValues {
-///     var service: MyService { ... }
+///     var database: MyService { ... }
+///     var network: MyNetwork { ... }
 /// }
 /// ```
-///
-/// An example of such environment setup is shown in <doc:GettingStarted>.
 ///
 /// Now a view can use the `@EnvironmentStateObject` property wrapper:
 ///
@@ -102,7 +101,7 @@ import SwiftUI
 ///
 ///     init() {
 ///         _model = EnvironmentStateObject { env in
-///             MyModel(service: env.service)
+///             MyModel(database: env.database, network: env.network)
 ///         }
 ///     }
 ///
@@ -117,24 +116,22 @@ import SwiftUI
 ///
 /// ### Configuring the Observable Object
 ///
-/// When the observable object needs a "service" as well as some configuration,
-/// just update the initializers:
+/// When the observable object needs some extra configuration, update
+/// the initializers:
 ///
 /// ```swift
 /// class MyModel: ObservableObject {
-///     init(service: MyService, myParameter: Int) { ... }
+///     init(database: MyDatabase, network: MyNetwork, id: String) { ... }
 /// }
 ///
 /// struct MyView: View {
 ///     @EnvironmentStateObject var model: MyModel
 ///
-///     init(myParameter: Int) {
+///     init(id: String) {
 ///         _model = EnvironmentStateObject { env in
-///             MyModel(service: env.service, myParameter: myParameter)
+///             MyModel(database: env.database, network: env.network, id: id)
 ///         }
 ///     }
-///
-///     var body: some View { ... }
 /// }
 /// ```
 ///
@@ -147,16 +144,14 @@ import SwiftUI
 /// struct MyView: View {
 ///     @EnvironmentStateObject var model: MyModel
 ///
-///     init(model: @escaping (EnvironmentValue) -> MyModel) {
-///         _model = EnvironmentStateObject(model)
+///     init(_ makeModel: @escaping (EnvironmentValue) -> MyModel) {
+///         _model = EnvironmentStateObject(makeModel)
 ///     }
-///
-///     var body: some View { ... }
 /// }
 ///
-/// struct Container: View {
+/// struct RootView: View {
 ///     var body: some View {
-///         MyView { env in MyModel(service: env.service) }
+///         MyView { env in MyModel(database: env.database, network: env.network) }
 ///     }
 /// }
 /// ```
@@ -164,11 +159,11 @@ import SwiftUI
 /// This technique helps observable objects create other ones:
 ///
 /// ```swift
-/// struct Container: View {
-///     @EnvironmentStateObject var containerModel: ContainerModel
+/// struct RootView: View {
+///     @EnvironmentStateObject var rootModel: RootModel
 ///
 ///     var body: some View {
-///         MyView(model: containerModel.makeMyModel)
+///         MyView { _ in rootModel.makeMyModel() }
 ///     }
 /// }
 /// ```
@@ -180,22 +175,24 @@ import SwiftUI
 /// protocol MyModelProtocol: ObservableObject { ... }
 ///
 /// struct MyView<Model: MyModelProtocol>: View {
-///     @EnvironmentStateObject var model: Model
+///     @EnvironmentStateObject var viewModel: Model
 ///
-///     init(_ makeObject: @escaping (EnvironmentValues) -> Model) {
-///         _model = EnvironmentStateObject(makeObject)
+///     init(_ makeModel: @escaping (EnvironmentValues) -> Model) {
+///         _viewModel = EnvironmentStateObject(makeModel)
 ///     }
-///
-///     var body: some View { ... }
 /// }
 ///
 /// class MyModelA: MyModelProtocol { ... }
 /// class MyModelB: MyModelProtocol { ... }
 ///
-/// struct Container: View {
+/// struct RootView: View {
+///     @EnvironmentStateObject var viewModel: RootModel
+///
 ///     var body: some View {
-///         MyView { env in MyModelA(service: env.service) }
-///         MyView { env in MyModelB(service: env.service) }
+///         HStack {
+///             MyView { _ in viewModel.makeMyModelA() }
+///             MyView { _ in viewModel.makeMyModelB() }
+///         }
 ///     }
 /// }
 /// ```
@@ -209,14 +206,25 @@ import SwiftUI
 /// ```swift
 /// struct MyView_Previews: PreviewProvider {
 ///     static var previews: some View {
-///         // Default environment
+///         // Default database and network
 ///         MyView()
 ///
-///         // Specific environment
-///         MyView().environment(\.service, ...)
+///         // Specific database, default network
+///         MyView().environment(\.database, .empty)
+///
+///         // Specific database and network
+///         MyView()
+///             .environment(\.database, .full)
+///             .environment(\.network, .failingMock)
 ///     }
 /// }
 /// ```
+///
+/// ### MVVM
+///
+/// `@EnvironmentStateObject` exists as a support for MVVM applications that use
+/// the SwiftUI environment as a solution for dependency injection. See
+/// <doc:MVVM> for more information.
 @propertyWrapper
 public struct EnvironmentStateObject<ObjectType>: DynamicProperty
 where ObjectType: ObservableObject
