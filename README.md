@@ -35,10 +35,12 @@ GRDBQuery provides two property wrappers:
     struct PlayerList: View {
         @EnvironmentStateObject var viewModel: PlayerListViewModel
         
-        init(_ makeViewModel: @escaping (EnvironmentValues) -> PlayerListViewModel) {
-            _viewModel = EnvironmentStateObject(makeViewModel)
+        init() {
+            _viewModel = EnvironmentStateObject { env in
+                PlayerListViewModel(database: env.database)
+            }
         }
-
+        
         var body: some View {
             List(viewModel.players) { player in Text(player.name) }
         }

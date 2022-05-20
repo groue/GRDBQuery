@@ -29,14 +29,16 @@ GRDBQuery provides two property wrappers:
 - With **`@EnvironmentStateObject`**, applications can build observable objects that find their dependencies in the SwiftUI environment:
 
     ```swift
-    /// A view that displays the list of players provided by its view model
+    /// A view that displays the list of players provided by its view model.
     struct PlayerList: View {
         @EnvironmentStateObject var viewModel: PlayerListViewModel
         
-        init(_ makeViewModel: @escaping (EnvironmentValues) -> PlayerListViewModel) {
-            _viewModel = EnvironmentStateObject(makeViewModel)
+        init() {
+            _viewModel = EnvironmentStateObject { env in
+                PlayerListViewModel(database: env.database)
+            }
         }
-
+        
         var body: some View {
             List(viewModel.players) { player in Text(player.name) }
         }
