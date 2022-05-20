@@ -146,7 +146,7 @@ struct PlayerList: View {
 > This means that calling the `PlayerList(initialRequest:)` with a different request will have _no effect_:
 > 
 > ```swift
-> struct Container {
+> struct RootView {
 >     @State var request = PlayersRequest(ordering: .byScore)
 > 
 >     var body: some View {
@@ -163,7 +163,7 @@ struct PlayerList: View {
 The `@Query` property wrapper can be controlled with a SwiftUI binding, as in the example below:
 
 ```swift
-struct Container {
+struct RootView {
     @State var request = PlayersRequest(ordering: .byScore)
 
     var body: some View {
@@ -183,16 +183,16 @@ struct PlayerList: View {
 }
 ```
 
-With such a setup, `@Query` updates the database content whenever a change is performed by the `$request` Container binding, or the `$players` PlayerList bindings.
+With such a setup, `@Query` updates the database content whenever a change is performed by the `$request` RootView binding, or the `$players` PlayerList bindings.
 
 This is the classic two-way connection enabled by SwiftUI `Binding`.
 
 ## Initializing @Query from a Constant Request
 
-Finally, the ``Query/init(constant:in:)`` initializer allows the enclosing Container view to control the request without restriction, and without any SwiftUI Binding. However, `$players` binding have no effect: 
+Finally, the ``Query/init(constant:in:)`` initializer allows the enclosing RootView view to control the request without restriction, and without any SwiftUI Binding. However, `$players` binding have no effect: 
 
 ```swift
-struct Container {
+struct RootView {
     var request: PlayersRequest
 
     var body: some View {

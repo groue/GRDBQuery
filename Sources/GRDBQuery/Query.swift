@@ -18,15 +18,10 @@
 // CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 //
-// Query.swift
-//
-// A property wrapper inspired from
-// https://davedelong.com/blog/2021/04/03/core-data-and-swiftui/
+// =============================================================================
 //
 // You can copy this file into your project, source code and license.
-//
 
 import Combine
 import SwiftUI
@@ -266,7 +261,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// For example:
     ///
     /// ```swift
-    /// struct Container {
+    /// struct RootView {
     ///     @State var request: PlayersRequest
     ///
     ///     var body: some View {

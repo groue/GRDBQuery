@@ -1,4 +1,4 @@
-# Getting Started
+# Getting Started with @Query
 
 A step-by-step guide for using `@Query` in your SwiftUI application. 
 

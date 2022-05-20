@@ -6,7 +6,7 @@
 This demo application shows some uses of the `@Query` property wrapper. Mainly:
 
 - The [main view](QueryDemo/Views/AppView.swift) of the app is kept up-to-date with the information stored in the database.
-- [A sheet](QueryDemo/Views/PlayerPresenceView.swift) makes sure it gets dismissed as soon as the value it needs no longer exists in the database.
+- [A sheet](QueryDemo/Views/PlayerEditionView.swift) makes sure it gets dismissed as soon as the value it needs no longer exists in the database.
 
 It is also an opportunity to explore a few practices:
 

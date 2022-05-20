@@ -1,28 +1,25 @@
 import SwiftUI
-import GRDB
 import GRDBQuery
 
 /// The main application view
 struct AppView: View {
-    /// A helper `Identifiable` type that can feed SwiftUI `sheet(item:onDismiss:content:)`
-    private struct EditedPlayer: Identifiable {
-        var id: Int64
+    @EnvironmentStateObject private var viewModel: AppViewModel
+    
+    init() {
+        _viewModel = EnvironmentStateObject {
+            AppViewModel(appDatabase: $0.appDatabase)
+        }
     }
-    
-    @Query(PlayerRequest())
-    private var player: Player?
-    
-    @State private var editedPlayer: EditedPlayer?
     
     var body: some View {
         NavigationView {
             VStack {
-                if let player = player, let id = player.id {
-                    PlayerView(player: player, edit: { editPlayer(id: id) })
+                if let player = viewModel.player {
+                    PlayerView(player: player, edit: viewModel.editPlayer)
                         .padding(.vertical)
                     
                     Spacer()
-                    populatedFooter(id: id)
+                    populatedFooter()
                 } else {
                     PlayerView(player: .placeholder)
                         .padding(.vertical)
@@ -33,10 +30,10 @@ struct AppView: View {
                 }
             }
             .padding(.horizontal)
-            .sheet(item: $editedPlayer) { player in
+            .sheet(item: $viewModel.editedPlayer) { player in
                 PlayerEditionView(id: player.id)
             }
-            .navigationTitle("@Query Demo")
+            .navigationTitle("MVVM Demo")
         }
     }
     
@@ -50,7 +47,7 @@ struct AppView: View {
         .informationBox()
     }
     
-    private func populatedFooter(id: Int64) -> some View {
+    private func populatedFooter() -> some View {
         VStack(spacing: 10) {
             Text("What if another application component deletes the player at the most unexpected moment?")
                 .informationStyle()
@@ -60,27 +57,23 @@ struct AppView: View {
             Text("What if the player is deleted soon after the Edit button is hit?")
                 .informationStyle()
             DeletePlayersButton("Delete After Editing", after: {
-                editPlayer(id: id)
+                viewModel.editPlayer()
             })
             
             Spacer().frame(height: 10)
             Text("What if the player is deleted right before the Edit button is hit?")
                 .informationStyle()
             DeletePlayersButton("Delete Before Editing", before: {
-                editPlayer(id: id)
+                viewModel.editPlayer()
             })
         }
         .informationBox()
-    }
-    
-    private func editPlayer(id: Int64) {
-        editedPlayer = EditedPlayer(id: id)
     }
 }
 
 struct AppView_Previews: PreviewProvider {
     static var previews: some View {
-        AppView()
-        AppView().environment(\.dbQueue, populatedDatabaseQueue())
+        AppView().environment(\.appDatabase, .empty())
+        AppView().environment(\.appDatabase, .populated())
     }
 }

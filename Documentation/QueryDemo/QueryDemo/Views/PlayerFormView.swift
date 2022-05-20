@@ -23,7 +23,7 @@ struct PlayerFormView: View {
             }
         } catch PersistenceError.recordNotFound {
             // Oops, player does not exist.
-            // Ignore this error: `PlayerPresenceView` will dismiss.
+            // Ignore this error: `PlayerEditionView` will dismiss.
             //
             // You can comment out this specific handling of
             // `PersistenceError.recordNotFound`, run the preview, change the

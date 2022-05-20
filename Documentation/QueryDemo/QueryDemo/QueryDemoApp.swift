@@ -30,9 +30,9 @@ extension EnvironmentValues {
     }
 }
 
-// In this demo app, views observe the database with the @Query property
-// wrapper, defined in the local Query package. Its documentation recommends to
-// define a dedicated initializer for `dbQueue` access, so we comply:
+// In this demo app, some views observe the database with the @Query property
+// wrapper. Its documentation recommends to define a dedicated initializer for
+// `dbQueue` access, so we comply:
 
 extension Query where Request.DatabaseContext == DatabaseQueue {
     init(_ request: Request) {
