@@ -67,7 +67,7 @@ Techniques based on [`onAppear(perform:)`](https://developer.apple.com/documenta
 
 Learn how to use `@Query` and `@EnvironmentStateObject` in the **[Documentation]**.
 
-Check out the **[demo app]**, and the **[GRDB demo apps]** for various examples.
+Check out the **[GRDBQuery demo apps]**, and the **[GRDB demo apps]** for various examples.
 
 ## Thanks
 
@@ -77,4 +77,4 @@ Check out the **[demo app]**, and the **[GRDB demo apps]** for various examples.
 [GRDB]: http://github.com/groue/GRDB.swift
 [GRDB demo apps]: https://github.com/groue/GRDB.swift/tree/master/Documentation/DemoApps
 [Documentation]: https://groue.github.io/GRDBQuery/0.4/documentation/grdbquery/
-[demo app]: Documentation/QueryDemo
+[GRDBQuery demo apps]: Documentation
