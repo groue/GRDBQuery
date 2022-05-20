@@ -34,7 +34,7 @@ In the context of databases, the application uses a database persisted on disk, 
 
 There exist many available DI solutions for Swift, but this guide focuses on the one that is built-in with SwiftUI: **the SwiftUI environment**. Please refer to the [SwiftUI documentation](https://developer.apple.com/documentation/swiftui/environment) to learn more about the environment.
 
-The SwifUI environment has great developer ergonomics. For example, it is easy to configure previews:
+The SwiftUI environment has great developer ergonomics. For example, it is easy to configure previews:
 
 ```swift
 struct MyView_Previews: PreviewProvider {
@@ -48,7 +48,7 @@ struct MyView_Previews: PreviewProvider {
 }
 ```
 
-The SwifUI environment only applies to view hierarchies, and does not rely on any global or shared DI container. It can't mess with other parts of the application: 
+The SwiftUI environment only applies to view hierarchies, and does not rely on any global or shared DI container. It can't mess with other parts of the application: 
 
 ```swift
 var body: some View {
@@ -59,7 +59,7 @@ var body: some View {
 }
 ```
 
-Using the SwifUI environment as a DI solution does not force your view models to depend on SwiftUI, and it does not mean that the SwiftUI environment is the only way to access dependencies. In the code snippet below, the view model only depends on Combine (for `ObservableObject`), and does not depend on SwiftUI at all:
+Using the SwiftUI environment as a DI solution does not force your view models to depend on SwiftUI, and it does not mean that the SwiftUI environment is the only way to access dependencies. In the code snippet below, the view model only depends on Combine (for `ObservableObject`), and does not depend on SwiftUI at all:
 
 ```swift
 import Combine // for ObservableObject
@@ -75,7 +75,7 @@ class MyViewModel: ObservableObject {
 
 In a MVVM application, a view relies on its view model for grabbing on-screen values, and handling user actions. Keeping the view model alive is important as long as a view is on screen.
 
-SwiftUI ships with a lot of ready-made property wrappers that control the lifetime of view models, and you are probably already using them in you MVVM SwiftUI applications:
+SwiftUI ships with a lot of ready-made property wrappers that control the lifetime of view models, and you are probably already using them in your MVVM SwiftUI applications:
  
 - [`@Environment`](https://developer.apple.com/documentation/swiftui/environment) and [`@EnvironmentObject`](https://developer.apple.com/documentation/swiftui/environmentobject) support well view models that outlive the views they feed.
 
