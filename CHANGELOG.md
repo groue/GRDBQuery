@@ -1,6 +1,6 @@
 # Release Notes
 
-## v0.5.0
+## v0.4.0
 
 Released on 2022/05/20
 
