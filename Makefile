@@ -3,8 +3,6 @@ DOCS_VERSION := 0.4
 
 # Setup
 DOCS_PATH := ./docs/$(DOCS_VERSION)
-XCRUN := $(shell command -v xcrun)
-SWIFT = $(shell $(XCRUN) --find swift 2> /dev/null)
 
 XCPRETTY_PATH := $(shell command -v xcpretty 2> /dev/null)
 XCPRETTY = 
@@ -23,7 +21,7 @@ test:
 docs:
 	# https://apple.github.io/swift-docc-plugin/documentation/swiftdoccplugin/publishing-to-github-pages/
 	mkdir -p $(DOCS_PATH)
-	$(SWIFT) package \
+	swift package \
 	  --allow-writing-to-directory $(DOCS_PATH) \
 	  generate-documentation \
 	  --output-path $(DOCS_PATH) \
@@ -36,7 +34,7 @@ docs-localhost:
 	# Generates documentation in ~/Sites/GRDBQuery
 	# See https://discussions.apple.com/docs/DOC-3083 for Apache setup on the mac
 	mkdir -p ~/Sites/GRDBQuery
-	$(SWIFT) package \
+	swift package \
 	  --allow-writing-to-directory ~/Sites/GRDBQuery \
 	  generate-documentation \
 	  --output-path ~/Sites/GRDBQuery \
