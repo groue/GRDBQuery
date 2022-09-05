@@ -1,5 +1,5 @@
 # Configuration
-DOCS_VERSION := 0.4
+DOCS_VERSION := 0.5
 
 # Setup
 DOCS_PATH := ./docs/$(DOCS_VERSION)

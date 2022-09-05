@@ -1,6 +1,6 @@
 # GRDBQuery
 
-**Latest release**: May 20, 2022 • [version 0.4.0](https://github.com/groue/GRDBQuery/tree/0.4.0) • [CHANGELOG](CHANGELOG.md)
+**Latest release**: September 5, 2022 • [version 0.5.0](https://github.com/groue/GRDBQuery/tree/0.5.0) • [CHANGELOG](CHANGELOG.md)
 
 **Requirements**: iOS 13.0+ / macOS 10.15+ / tvOS 13.0+ / watchOS 6.0+ &bull; Swift 5.5+ / Xcode 13+
 
@@ -76,5 +76,5 @@ Check out the **[GRDBQuery demo apps]**, and the **[GRDB demo apps]** for variou
 
 [GRDB]: http://github.com/groue/GRDB.swift
 [GRDB demo apps]: https://github.com/groue/GRDB.swift/tree/master/Documentation/DemoApps
-[Documentation]: https://groue.github.io/GRDBQuery/0.4/documentation/grdbquery/
+[Documentation]: https://groue.github.io/GRDBQuery/0.5/documentation/grdbquery/
 [GRDBQuery demo apps]: Documentation

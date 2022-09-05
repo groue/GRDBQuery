@@ -1,5 +1,11 @@
 # Release Notes
 
+## v0.5.0
+
+Released on 2022/09/04
+
+- Fix Xcode 14 runtime warnings that read "Publishing changes from within view updates is not allowed, this will cause undefined behavior."
+
 ## v0.4.0
 
 Released on 2022/05/20
