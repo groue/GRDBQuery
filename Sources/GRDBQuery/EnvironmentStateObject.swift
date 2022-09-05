@@ -283,9 +283,7 @@ where ObjectType: ObservableObject
     
     /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
     public func update() {
-        if core.object == nil {
-            core.object = makeObject(environmentValues)
-        }
+        core.update(makeObject: { makeObject(environmentValues) })
     }
     
     /// A wrapper of the underlying object that can create bindings to its
@@ -306,15 +304,26 @@ where ObjectType: ObservableObject
     private class Core: ObservableObject {
         let objectWillChange = PassthroughSubject<ObjectType.ObjectWillChangePublisher.Output, Never>()
         private var cancellable: AnyCancellable?
+        private(set) var object: ObjectType?
         
-        var object: ObjectType? {
-            didSet {
-                assert(cancellable == nil, "setter should be called once")
-                if let object = object {
-                    // Transmit all object changes
-                    cancellable = object.objectWillChange.subscribe(objectWillChange)
+        func update(makeObject: () -> ObjectType) {
+            guard object == nil else { return }
+            let object = makeObject()
+            self.object = object
+            
+            // Transmit all object changes
+            var isUpdating = true
+            cancellable = object.objectWillChange.sink { [weak self] value in
+                guard let self = self else { return }
+                if !isUpdating {
+                    // Avoid the runtime warning in the case of publishers
+                    // that publish values right on subscription:
+                    // > Publishing changes from within view updates is not
+                    // > allowed, this will cause undefined behavior.
+                    self.objectWillChange.send(value)
                 }
             }
+            isUpdating = false
         }
     }
 }
