@@ -12,7 +12,7 @@ Its main purpose is to help users of the [GRDB] SQLite toolkit. Yet GRDBQuery ha
 
 GRDBQuery provides two property wrappers:
 
-- With **`@Query`**, SwiftUI views can automatically update their content when the database changes. Generally speaking, `@Query` helps subscribing to Combine publishers defined from the SwiftUI environment:
+- With **`@Query`**, SwiftUI views can display database values, and automatically update when database content changes. Generally speaking, `@Query` helps subscribing to Combine publishers defined from the SwiftUI environment:
 
     ```swift
     /// A view that displays an always up-to-date list of players in the database.

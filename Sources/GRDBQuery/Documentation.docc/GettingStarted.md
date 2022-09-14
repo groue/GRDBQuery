@@ -62,9 +62,9 @@ See the [GRDB demo apps] for examples of such setups.
 
 ## Define a Queryable type
 
-**Next, define a ``Queryable`` type for each database request you want to observe.**
+**Next, define a ``Queryable`` type that publishes database values.**
 
-For example:
+For example, let's build a Queryable type that observes a database request, and publishes fresh values whenever the database changes:
 
 ```swift
 import Combine
@@ -86,7 +86,7 @@ struct PlayersRequest: Queryable {
 }
 ```
 
-The ``Queryable`` protocol has two requirements: a default value, and a Combine publisher. The publisher is built from the `DatabaseQueue` stored in the environment (you'll adapt this sample code if you prefer another type). The publisher tracks database changes with GRDB [ValueObservation]. The default value is used until the publisher publishes its initial value.
+The ``Queryable`` protocol has two requirements: a default value, and a Combine publisher. The publisher is built from the `DatabaseQueue` stored in the environment (you'll adapt this sample code if you prefer another type). In the sample code, the publisher tracks database changes with GRDB [ValueObservation]. The default value is used until the publisher publishes its initial value.
 
 > Note: In the above sample code, we make sure the views are *immediately* fed with database content with the `scheduling: .immediate` option. This prevents any blank state, "flash of missing content", or unwanted initial animation.
 >
@@ -163,13 +163,51 @@ struct PlayerList: View {
 > }
 > ```
 
+## Other Kinds of Publishers
+
+The previous example subscribes to database changes with [ValueObservation], so that the SwiftUI view displays always up-to-date database values. This is a frequent need of applications.
+
+Generally speaking, ``Queryable`` types can build any kind of Combine publisher.
+
+For example, you can publish one single database value, and ignore future database changes. In the sample code below, the list of players is fetched only once, and delivered to the view asynchronously:
+
+```swift
+struct PlayersRequest: Queryable {
+    static var defaultValue: [Player] { [] }
+    
+    func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
+        // Publishes the list of players, once, asynchronously.
+        dbQueue
+            .readPublisher { db in try Player.fetchAll(db) }
+            .eraseToAnyPublisher()
+    }
+}
+```
+
+If you need to perform one single fetch, and have the view render the value *immediately*, prefer this sample code:
+
+```swift
+struct PlayersRequest: Queryable {
+    static var defaultValue: [Player] { [] }
+    
+    func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
+        // Publishes the list of players, once, right on subscription.
+        Deferred {
+            Result {
+                try dbQueue.read { db in try Player.fetchAll(db) }
+            }.publisher
+        }.eraseToAnyPublisher()
+    }
+}
+```
+
 ## Controlling Request Observation 
 
-By default, `@Query` observes its request for the whole duration of the presence of the view in the SwiftUI engine.
+By default, `@Query` subscribes to the request's publisher for the whole duration of the presence of the view in the SwiftUI engine.
 
-You can spare resources by stopping request observation when views are not on screen: see ``QueryObservation``.
+You can spare resources by cancelling the subscription when views are not on screen: see ``QueryObservation``.
 
-## How to Handle Database Errors?
+## How to Handle Errors?
 
 **By default, `@Query` ignores errors** published by `Queryable` types. The SwiftUI views are just not updated whenever an error occurs. If the database is unavailable when the view appears, `@Query` will just output the default value.
 
