@@ -4,6 +4,8 @@
 
 **Requirements**: iOS 13.0+ / macOS 10.15+ / tvOS 13.0+ / watchOS 6.0+ &bull; Swift 5.5+ / Xcode 13+
 
+📖 **[Documentation]**
+
 ---
 
 This library helps building SwiftUI applications that access "services", such as a local database, through the SwiftUI environment.
@@ -76,5 +78,5 @@ Check out the **[GRDBQuery demo apps]**, and the **[GRDB demo apps]** for variou
 
 [GRDB]: http://github.com/groue/GRDB.swift
 [GRDB demo apps]: https://github.com/groue/GRDB.swift/tree/master/Documentation/DemoApps
-[Documentation]: https://groue.github.io/GRDBQuery/0.5/documentation/grdbquery/
+[Documentation]: https://swiftpackageindex.com/groue/GRDBQuery/documentation
 [GRDBQuery demo apps]: Documentation
