@@ -1,5 +1,11 @@
 # Release Notes
 
+## v0.5.1
+
+Released on 2022/10/08
+
+- Prepare for documentation hosting on http://swiftpackageindex.com/
+
 ## v0.5.0
 
 Released on 2022/09/04
