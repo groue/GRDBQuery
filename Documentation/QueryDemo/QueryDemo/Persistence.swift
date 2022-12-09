@@ -2,7 +2,7 @@ import GRDB
 
 /// Returns an empty in-memory database for the application.
 func emptyDatabaseQueue() -> DatabaseQueue {
-    let dbQueue = DatabaseQueue()
+    let dbQueue = try! DatabaseQueue()
     try! migrator().migrate(dbQueue)
     return dbQueue
 }

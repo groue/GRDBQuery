@@ -32,7 +32,8 @@ extension Player {
 }
 
 extension Player: FetchableRecord, MutablePersistableRecord {
-    mutating func didInsert(with rowID: Int64, for column: String?) {
-        id = rowID
+    // Update auto-incremented id upon successful insertion
+    mutating func didInsert(_ inserted: InsertionSuccess) {
+        id = inserted.rowID
     }
 }

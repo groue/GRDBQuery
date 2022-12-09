@@ -21,7 +21,7 @@ struct PlayerFormView: View {
                     transform(&$0.score)
                 }
             }
-        } catch PersistenceError.recordNotFound {
+        } catch RecordError.recordNotFound {
             // Oops, player does not exist.
             // Ignore this error: `PlayerEditionView` will dismiss.
             //

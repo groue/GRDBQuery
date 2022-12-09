@@ -24,9 +24,9 @@ final class PlayerFormViewModel: ObservableObject {
             transform(&updatedPlayer)
             try appDatabase.update(updatedPlayer)
             
-            // Only update view if update was succesfull in the database
+            // Only update view if update was successful in the database
             player = updatedPlayer
-        } catch PersistenceError.recordNotFound {
+        } catch RecordError.recordNotFound {
             // Oops, player does not exist.
             // Ignore this error: `PlayerEditionView` will dismiss.
         } catch {

@@ -17,19 +17,19 @@ final class AppDatabase {
     
     /// The DatabaseMigrator that defines the database schema.
     ///
-    /// See <https://github.com/groue/GRDB.swift/blob/master/Documentation/Migrations.md>
+    /// See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/migrations>
     private var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
         
 #if DEBUG
         // Speed up development by nuking the database when migrations change
-        // See https://github.com/groue/GRDB.swift/blob/master/Documentation/Migrations.md#the-erasedatabaseonschemachange-option
+        // See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/migrations#The-eraseDatabaseOnSchemaChange-Option>
         migrator.eraseDatabaseOnSchemaChange = true
 #endif
         
         migrator.registerMigration("createPlayer") { db in
             // Create a table
-            // See https://github.com/groue/GRDB.swift#create-tables
+            // See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/databaseschema>
             try db.create(table: "player") { t in
                 t.autoIncrementedPrimaryKey("id")
                 t.column("name", .text).notNull()
