@@ -243,6 +243,6 @@ struct PlayersRequest: Queryable {
 
 - ``Queryable``
 
-[DatabaseQueue]: https://github.com/groue/GRDB.swift/blob/master/README.md#database-queues
-[ValueObservation]: https://github.com/groue/GRDB.swift/blob/master/README.md#valueobservation
+[DatabaseQueue]: https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/databasequeue
+[ValueObservation]: https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/valueobservation
 [GRDB demo apps]: https://github.com/groue/GRDB.swift/tree/master/Documentation/DemoApps
