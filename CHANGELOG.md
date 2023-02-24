@@ -1,5 +1,11 @@
 # Release Notes
 
+## v0.6.0
+
+Released on 2023/02/24
+
+- [#37](https://github.com/groue/GRDBQuery/pull/37): Bump OS dependencies
+
 ## v0.5.1
 
 Released on 2022/10/08
