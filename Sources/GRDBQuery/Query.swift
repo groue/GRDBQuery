@@ -44,7 +44,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// ```swift
     /// struct PlayerList: View {
     ///     @Query(PlayersRequest(), in: \.dbQueue)
-    ///     var players: [Player]
+    ///     private var players: [Player]
     ///
     ///     var body: some View {
     ///         List(players) { player in ... }
@@ -52,10 +52,17 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// }
     /// ```
     ///
-    /// > NOTE: After the view has appeared on screen, only the SwiftUI bindings
-    /// > returned by the ``projectedValue`` wrapper (`$players`) can update
-    /// > the database content visible on screen by changing the request.
-    /// > See <doc:QueryableParameters> for more details.
+    /// The returned `@Query` is akin to the SwiftUI `@State`: it is the
+    /// single source of truth for the request. In the above example, the
+    /// request has no parameter, so it does not matter much. But when the
+    /// request can be modified, it starts to be relevant. In particular,
+    /// at runtime, after the view has appeared on screen, only the SwiftUI
+    /// bindings returned by the ``projectedValue`` wrapper (`$players`)
+    /// can update the database content visible on screen by changing the
+    /// request.
+    ///
+    /// See <doc:QueryableParameters> for a longer discussion about
+    /// `@Query` initializers.
     ///
     /// - parameter request: An initial ``Queryable`` request.
     /// - parameter keyPath: A key path to the database in the environment. To
@@ -72,11 +79,15 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// Creates a `Query`, given a ``Queryable`` request, and a key path to the
     /// database in the SwiftUI environment.
     ///
+    /// The SwiftUI bindings returned by the ``projectedValue`` wrapper
+    /// (`$players`) can not update the database content: the request is
+    /// "constant". See <doc:QueryableParameters> for more details.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayerList: View {
-    ///     @Query<PlayersRequest> var players: [Player]
+    ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(constantRequest request: Binding<PlayersRequest>) {
     ///         _players = Query(constant: request, in: \.dbQueue)
@@ -87,10 +98,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///     }
     /// }
     /// ```
-    ///
-    /// > NOTE: The SwiftUI bindings returned by the ``projectedValue`` wrapper
-    /// > (`$players`) can not update the database content: the request is
-    /// > "constant". See <doc:QueryableParameters> for more details.
     ///
     /// - parameter request: A ``Queryable`` request.
     /// - parameter keyPath: A key path to the database in the environment. To
@@ -107,11 +114,16 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// Creates a `Query`, given a SwiftUI binding to its ``Queryable`` request,
     /// and a key path to the database in the SwiftUI environment.
     ///
+    /// Both the `request` Binding argument, and the SwiftUI bindings
+    /// returned by the ``projectedValue`` wrapper (`$players`) can update
+    /// the database content visible on screen by changing the request.
+    /// See <doc:QueryableParameters> for more details.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct RootView {
-    ///     @State var request: PlayersRequest
+    ///     @State private var request: PlayersRequest
     ///
     ///     var body: some View {
     ///         PlayerList($request) // Note the `$request` binding here
@@ -119,7 +131,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query<PlayersRequest> var players: [Player]
+    ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(_ request: Binding<PlayersRequest>) {
     ///         _players = Query(request, in: \.dbQueue)
@@ -130,11 +142,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///     }
     /// }
     /// ```
-    ///
-    /// > NOTE: Both the `request` Binding argument, and the SwiftUI bindings
-    /// > returned by the ``projectedValue`` wrapper (`$players`) can update
-    /// > the database content visible on screen by changing the request.
-    /// > See <doc:QueryableParameters> for more details.
     ///
     /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
     /// - parameter keyPath: A key path to the database in the environment. To

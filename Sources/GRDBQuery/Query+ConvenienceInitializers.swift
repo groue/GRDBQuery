@@ -6,27 +6,29 @@ extension Query where Request.DatabaseContext == EnvironmentValues {
     /// Creates a `Query`, given an initial ``Queryable`` request that feeds
     /// from `EnvironmentValues`.
     ///
+    /// See ``init(_:in:)-4ubsz`` for more information about the runtime
+    /// behavior of the returned `Query`.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
+    ///
+    ///     // PlayersRequest feeds from EnvironmentValues
     ///     func publisher(in env: EnvironmentValues) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query(PlayersRequest())
-    ///     var players: [Player]
+    ///     @Query(PlayersRequest()) private var players: [Player]
     ///
     ///     var body: some View {
     ///         List(players) { player in ... }
     ///     }
     /// }
     /// ```
-    ///
-    /// See ``init(_:in:)-4ubsz`` for more information.
     ///
     /// - parameter request: An initial ``Queryable`` request.
     public init(_ request: Request) {
@@ -36,11 +38,16 @@ extension Query where Request.DatabaseContext == EnvironmentValues {
     /// Creates a `Query`, given a SwiftUI binding to a ``Queryable``
     /// request that feeds from `EnvironmentValues`.
     ///
+    /// See ``init(_:in:)-2knwm`` for more information about the runtime
+    /// behavior of the returned `Query`.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
+    ///
+    ///     // PlayersRequest feeds from EnvironmentValues
     ///     func publisher(in env: EnvironmentValues) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
@@ -55,7 +62,7 @@ extension Query where Request.DatabaseContext == EnvironmentValues {
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query<PlayersRequest> var players: [Player]
+    ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(_ request: Binding<PlayersRequest>) {
     ///         _players = Query(request)
@@ -67,8 +74,6 @@ extension Query where Request.DatabaseContext == EnvironmentValues {
     /// }
     /// ```
     ///
-    /// See ``init(_:in:)-2knwm`` for more information.
-    ///
     /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
     public init(_ request: Binding<Request>) {
         self.init(request, in: \.self)
@@ -77,18 +82,23 @@ extension Query where Request.DatabaseContext == EnvironmentValues {
     /// Creates a `Query`, given a ``Queryable`` request that feeds
     /// from `EnvironmentValues`.
     ///
+    /// See ``init(constant:in:)`` for more information about the runtime
+    /// behavior of the returned `Query`.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
+    ///
+    ///     // PlayersRequest feeds from EnvironmentValues
     ///     func publisher(in env: EnvironmentValues) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query<PlayersRequest> var players: [Player]
+    ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(constantRequest request: Binding<PlayersRequest>) {
     ///         _players = Query(constant: request)
@@ -99,8 +109,6 @@ extension Query where Request.DatabaseContext == EnvironmentValues {
     ///     }
     /// }
     /// ```
-    ///
-    /// See ``init(constant:in:)`` for more information.
     ///
     /// - parameter request: A ``Queryable`` request.
     public init(constant request: Request) {
@@ -114,27 +122,29 @@ extension Query where Request.DatabaseContext == Void {
     /// Creates a `Query`, given an initial ``Queryable`` request that feeds
     /// from `Void`.
     ///
+    /// See ``init(_:in:)-4ubsz`` for more information about the runtime
+    /// behavior of the returned `Query`.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
+    ///
+    ///     // PlayersRequest feeds from nothing (Void)
     ///     func publisher(in _: Void) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query(PlayersRequest())
-    ///     var players: [Player]
+    ///     @Query(PlayersRequest()) private var players: [Player]
     ///
     ///     var body: some View {
     ///         List(players) { player in ... }
     ///     }
     /// }
     /// ```
-    ///
-    /// See ``init(_:in:)-4ubsz`` for more information.
     ///
     /// - parameter request: An initial ``Queryable`` request.
     public init(_ request: Request) {
@@ -144,11 +154,16 @@ extension Query where Request.DatabaseContext == Void {
     /// Creates a `Query`, given a SwiftUI binding to a ``Queryable``
     /// request that feeds from `Void`.
     ///
+    /// See ``init(_:in:)-2knwm`` for more information about the runtime
+    /// behavior of the returned `Query`.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
+    ///
+    ///     // PlayersRequest feeds from nothing (Void)
     ///     func publisher(in _: Void) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
@@ -163,7 +178,7 @@ extension Query where Request.DatabaseContext == Void {
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query<PlayersRequest> var players: [Player]
+    ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(_ request: Binding<PlayersRequest>) {
     ///         _players = Query(request)
@@ -175,8 +190,6 @@ extension Query where Request.DatabaseContext == Void {
     /// }
     /// ```
     ///
-    /// See ``init(_:in:)-2knwm`` for more information.
-    ///
     /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
     public init(_ request: Binding<Request>) {
         self.init(request, in: \.void)
@@ -185,18 +198,23 @@ extension Query where Request.DatabaseContext == Void {
     /// Creates a `Query`, given a ``Queryable`` request that feeds
     /// from `Void`.
     ///
+    /// See ``init(constant:in:)`` for more information about the runtime
+    /// behavior of the returned `Query`.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
+    ///
+    ///     // PlayersRequest feeds from nothing (Void)
     ///     func publisher(in _: Void) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query<PlayersRequest> var players: [Player]
+    ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(constantRequest request: Binding<PlayersRequest>) {
     ///         _players = Query(constant: request)
@@ -207,8 +225,6 @@ extension Query where Request.DatabaseContext == Void {
     ///     }
     /// }
     /// ```
-    ///
-    /// See ``init(constant:in:)`` for more information.
     ///
     /// - parameter request: A ``Queryable`` request.
     public init(constant request: Request) {

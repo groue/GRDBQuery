@@ -40,7 +40,7 @@ import SwiftUI
 
 struct PlayerList: View {
     @Query(PlayersRequest())
-    var players: [Player]
+    private var players: [Player]
 
     var body: some View {
         List(players) { player in ... }
