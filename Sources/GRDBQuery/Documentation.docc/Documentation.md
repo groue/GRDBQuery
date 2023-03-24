@@ -60,8 +60,8 @@ Both property wrappers can work together, so that developers can run quick exper
 - <doc:GettingStarted>
 - <doc:QueryableParameters>
 - ``Query``
-- ``QueryObservation``
 - ``Queryable``
+- ``QueryObservation``
 
 ### The MVVM architecture
 
