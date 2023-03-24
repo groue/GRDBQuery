@@ -10,17 +10,6 @@ import Foundation
 import GRDBQuery
 import SwiftUI
 
-private struct VoidKey: EnvironmentKey {
-    static var defaultValue: Void { () }
-}
-
-extension EnvironmentValues {
-    var void: Void {
-        get { self[VoidKey.self] }
-        set { self[VoidKey.self] = newValue }
-    }
-}
-
 extension Notification.Name {
     static let test = Notification.Name("test")
 }

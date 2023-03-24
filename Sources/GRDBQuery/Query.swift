@@ -144,6 +144,20 @@ extension Queryable {
 /// - ``init(_:in:)-2knwm``
 /// - ``init(constant:in:)``
 ///
+/// ### Convenience @Query initializers
+///
+/// Those convenience initializers don't need a key path, and require a
+/// `Queryable` type that feeds from `EnvironmentValues` or `Void`. See
+/// <doc:GettingStarted> if you are want to build such convenience
+/// initializers for specific `EnvironmentValues` properties.
+///
+/// - ``init(_:)-5ucm5``
+/// - ``init(_:)-1fkla``
+/// - ``init(constant:)-1vqnm``
+/// - ``init(_:)-53zrh``
+/// - ``init(_:)-10boc``
+/// - ``init(constant:)-8ijp1``
+///
 /// ### Getting the Value
 ///
 /// - ``wrappedValue``
