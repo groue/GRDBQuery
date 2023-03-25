@@ -1,5 +1,13 @@
 # Release Notes
 
+## v0.7.0
+
+Released on 2023/03/25
+
+- **New** [#41](https://github.com/groue/GRDBQuery/pull/41): Convenience `@Query` initializers for `Void` DatabaseContext
+- **New** [#42](https://github.com/groue/GRDBQuery/pull/42): Demo apps access the database via a PlayerRepository package
+- **Breaking Change** [#43](https://github.com/groue/GRDBQuery/pull/43): Bump minimum Swift version to 5.7
+
 ## v0.6.0
 
 Released on 2023/02/24
