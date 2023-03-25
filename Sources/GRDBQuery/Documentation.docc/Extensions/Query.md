@@ -14,26 +14,16 @@ Learn how to use `@Query` in <doc:GettingStarted>.
 - ``init(_:in:)-2knwm``
 - ``init(constant:in:)``
 
-### Convenience @Query initializers
-
-Those convenience initializers don't need a key path, and require a
-`Queryable` type that feeds from `EnvironmentValues` or `Void`. See
-<doc:GettingStarted> if you are want to build such convenience
-initializers for specific `EnvironmentValues` properties.
-
-- ``init(_:)-53zrh``
-- ``init(_:)-10boc``
-- ``init(constant:)-8ijp1``
-- ``init(_:)-5ucm5``
-- ``init(_:)-1fkla``
-- ``init(constant:)-1vqnm``
-
 ### Getting the Value
 
 - ``wrappedValue``
 - ``projectedValue``
 - ``Wrapper``
 
-### SwiftUI Integration
+### Debugging Initializers
 
-- ``update()``
+Those convenience initializers don't need any key path. They fit `Queryable` types that ignore environment values and use `Void` as their `DatabaseContext`.
+
+- ``init(_:)-5ucm5``
+- ``init(_:)-1fkla``
+- ``init(constant:)``
