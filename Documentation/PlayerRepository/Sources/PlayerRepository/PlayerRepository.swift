@@ -1,8 +1,14 @@
+import Foundation
 import GRDB
+import os.log
 
 /// A repository of players.
 public final class PlayerRepository {
-    /// Creates an `PlayerRepository`, and makes sure the database schema is ready.
+    /// Creates an `PlayerRepository`, and makes sure the database schema
+    /// is ready.
+    ///
+    /// - important: Create the `DatabaseWriter` with a configuration
+    ///   returned by ``makeConfiguration(_:)``.
     public init(_ dbWriter: some GRDB.DatabaseWriter) throws {
         self.dbWriter = dbWriter
         try migrator.migrate(dbWriter)
@@ -48,21 +54,66 @@ public final class PlayerRepository {
     }
 }
 
-// MARK: - Database Access: Writes
+// MARK: - Database Configuration
 
 extension PlayerRepository {
-    public func insert(_ player: Player) throws {
+    /// Returns a database configuration suited for `PlayerRepository`.
+    ///
+    /// SQL statements are logged if the `SQL_TRACE` environment value is set.
+    ///
+    /// - parameter base: A base configuration.
+    public static func makeConfiguration(_ base: Configuration = Configuration()) -> Configuration {
+        var config = base
+        
+        // An opportunity to add required custom SQL functions or
+        // collations, if needed:
+        // config.prepareDatabase { db in
+        //     db.add(function: ...)
+        // }
+        
+        // Log SQL statements if the `SQL_TRACE` environment value is set.
+        // See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/database/trace(options:_:)>
+        if ProcessInfo.processInfo.environment["SQL_TRACE"] != nil {
+            let subsystem = Bundle.main.bundleIdentifier!
+            let logger = OSLog(subsystem: subsystem, category: "SQL")
+            
+            config.prepareDatabase { db in
+                db.trace {
+                    os_log("%{public}@", log: logger, type: .debug, String(describing: $0))
+                }
+            }
+        }
+        
+#if DEBUG
+        // Protect sensitive information by enabling verbose debugging in
+        // DEBUG builds only.
+        // See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/configuration/publicstatementarguments>
+        config.publicStatementArguments = true
+#endif
+        return config
+    }
+}
+
+// MARK: - Database Access: Writes
+// The write methods execute invariant-preserving database transactions.
+// In this demo repository, they are pretty simple.
+
+extension PlayerRepository {
+    /// Returns the inserted player.
+    public func insert(_ player: Player) throws -> Player {
         try dbWriter.write { db in
-            _ = try player.inserted(db)
+            try player.inserted(db)
         }
     }
     
+    /// Updates the player.
     public func update(_ player: Player) throws {
         try dbWriter.write { db in
             try player.update(db)
         }
     }
     
+    /// Deletes all players.
     public func deleteAllPlayer() throws {
         try dbWriter.write { db in
             _ = try Player.deleteAll(db)

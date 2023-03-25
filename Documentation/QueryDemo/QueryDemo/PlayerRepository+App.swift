@@ -23,7 +23,10 @@ extension PlayerRepository {
             // Open or create the database
             let databaseURL = directoryURL.appendingPathComponent("db.sqlite")
             NSLog("Database stored at \(databaseURL.path)")
-            let dbPool = try DatabasePool(path: databaseURL.path)
+            let dbPool = try DatabasePool(
+                path: databaseURL.path,
+                // Use default PlayerRepository configuration
+                configuration: PlayerRepository.makeConfiguration())
 
             // Create the PlayerRepository
             let playerRepository = try PlayerRepository(dbPool)
@@ -45,7 +48,7 @@ extension PlayerRepository {
     
     /// Returns an empty in-memory repository, for previews and tests.
     static func empty() -> PlayerRepository {
-        try! PlayerRepository(DatabaseQueue())
+        try! PlayerRepository(DatabaseQueue(configuration: PlayerRepository.makeConfiguration()))
     }
     
     /// Returns an in-memory repository that contains one player,
@@ -53,8 +56,8 @@ extension PlayerRepository {
     ///
     /// - parameter playerId: The ID of the inserted player.
     static func populated(playerId: Int64? = nil) -> PlayerRepository {
-        let dbManager = self.empty()
-        try! dbManager.insert(Player.makeRandom(id: playerId))
-        return dbManager
+        let repo = self.empty()
+        _ = try! repo.insert(Player.makeRandom(id: playerId))
+        return repo
     }
 }

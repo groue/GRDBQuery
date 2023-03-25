@@ -12,7 +12,7 @@ struct CreatePlayerButton: View {
     
     var body: some View {
         Button {
-            try! playerRepository.insert(Player.makeRandom())
+            _ = try! playerRepository.insert(Player.makeRandom())
         } label: {
             Label(titleKey, systemImage: "plus")
         }
