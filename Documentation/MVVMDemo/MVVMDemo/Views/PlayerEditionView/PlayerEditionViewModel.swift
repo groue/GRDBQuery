@@ -1,5 +1,6 @@
 import Combine
 import GRDB
+import PlayerRepository
 
 /// The view model for ``PlayerEditionView``.
 final class PlayerEditionViewModel: ObservableObject {
@@ -44,13 +45,13 @@ final class PlayerEditionViewModel: ObservableObject {
     @Published private var playerPresence: PlayerPresence = .missing
     private var observationCancellable: AnyCancellable?
     
-    init(appDatabase: AppDatabase, id: Int64) {
+    init(playerRepository: PlayerRepository, id: Int64) {
         observationCancellable = ValueObservation
-            .tracking(Player.filter(id: id).fetchOne)
-            .publisher(in: appDatabase.databaseReader, scheduling: .immediate)
-            // Use scan in order to detect the three cases of user presence
+            .tracking(Player.filter(key: id).fetchOne)
+            .publisher(in: playerRepository.reader, scheduling: .immediate)
+            // Use scan in order to detect the three cases of player presence
             .scan(.missing) { (previous, player) in
-                if let player = player {
+                if let player {
                     return .existing(player)
                 } else if let player = previous.player {
                     return .gone(player)

@@ -1,8 +1,9 @@
+import PlayerRepository
 import SwiftUI
 
-/// A button that creates players in the database
+/// A helper button that creates players in the database
 struct CreatePlayerButton: View {
-    @Environment(\.dbQueue) private var dbQueue
+    @Environment(\.playerRepository) private var playerRepository
     private var titleKey: LocalizedStringKey
     
     init(_ titleKey: LocalizedStringKey) {
@@ -11,23 +12,21 @@ struct CreatePlayerButton: View {
     
     var body: some View {
         Button {
-            try! dbQueue.write { db in
-                _ = try Player.makeRandom().inserted(db)
-            }
+            try! playerRepository.insert(Player.makeRandom())
         } label: {
             Label(titleKey, systemImage: "plus")
         }
     }
 }
 
-/// A button that deletes players in the database
+/// A helper button that deletes players in the database
 struct DeletePlayersButton: View {
     private enum Mode {
         case deleteAfter
         case deleteBefore
     }
     
-    @Environment(\.dbQueue) private var dbQueue
+    @Environment(\.playerRepository) private var playerRepository
     private var titleKey: LocalizedStringKey
     private var action: (() -> Void)?
     private var mode: Mode
@@ -64,11 +63,11 @@ struct DeletePlayersButton: View {
             case .deleteAfter:
                 action?()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    _ = try! dbQueue.write(Player.deleteAll)
+                    _ = try! playerRepository.deleteAllPlayer()
                 }
                 
             case .deleteBefore:
-                _ = try! dbQueue.write(Player.deleteAll)
+                _ = try! playerRepository.deleteAllPlayer()
                 action?()
             }
         } label: {
@@ -77,9 +76,20 @@ struct DeletePlayersButton: View {
     }
 }
 
+import GRDB
 import GRDBQuery // For tracking the player count in the preview
 
 struct DatabaseButtons_Previews: PreviewProvider {
+    struct PlayerCountRequest: Queryable {
+        static var defaultValue: Int { 0 }
+        
+        func publisher(in playerRepository: PlayerRepository) -> DatabasePublishers.Value<Int> {
+            ValueObservation
+                .tracking(Player.fetchCount)
+                .publisher(in: playerRepository.reader, scheduling: .immediate)
+        }
+    }
+    
     struct Preview: View {
         @Query(PlayerCountRequest())
         var playerCount: Int

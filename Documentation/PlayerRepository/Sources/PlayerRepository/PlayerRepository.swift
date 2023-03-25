@@ -1,8 +1,9 @@
 import GRDB
 
-final class AppDatabase {
-    /// Creates an `AppDatabase`, and make sure the database schema is ready.
-    init(_ dbWriter: DatabaseWriter) throws {
+/// A repository of players.
+public final class PlayerRepository {
+    /// Creates an `PlayerRepository`, and makes sure the database schema is ready.
+    public init(_ dbWriter: some GRDB.DatabaseWriter) throws {
         self.dbWriter = dbWriter
         try migrator.migrate(dbWriter)
     }
@@ -13,7 +14,7 @@ final class AppDatabase {
     /// can use a fast in-memory `DatabaseQueue`.
     ///
     /// See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/databaseconnections>
-    private let dbWriter: DatabaseWriter
+    private let dbWriter: any DatabaseWriter
     
     /// The DatabaseMigrator that defines the database schema.
     ///
@@ -49,20 +50,20 @@ final class AppDatabase {
 
 // MARK: - Database Access: Writes
 
-extension AppDatabase {
-    func insert(_ player: Player) throws {
+extension PlayerRepository {
+    public func insert(_ player: Player) throws {
         try dbWriter.write { db in
             _ = try player.inserted(db)
         }
     }
     
-    func update(_ player: Player) throws {
+    public func update(_ player: Player) throws {
         try dbWriter.write { db in
             try player.update(db)
         }
     }
     
-    func deleteAllPlayer() throws {
+    public func deleteAllPlayer() throws {
         try dbWriter.write { db in
             _ = try Player.deleteAll(db)
         }
@@ -75,9 +76,9 @@ extension AppDatabase {
 // gives an unrestricted read-only access to the rest of the application.
 // In your app, you are free to choose another path, and define focused
 // reading methods.
-extension AppDatabase {
-    /// Provides a read-only access to the database
-    var databaseReader: DatabaseReader {
+extension PlayerRepository {
+    /// Provides a read-only access to the database.
+    public var reader: any GRDB.DatabaseReader {
         dbWriter
     }
 }

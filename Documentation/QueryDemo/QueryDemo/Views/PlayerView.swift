@@ -1,9 +1,10 @@
+import PlayerRepository
 import SwiftUI
 
 struct PlayerView: View {
     @Environment(\.redactionReasons) var reasons
     var player: Player
-    var edit: (() -> Void)?
+    var editAction: (() -> Void)?
     
     var body: some View {
         HStack {
@@ -16,8 +17,8 @@ struct PlayerView: View {
             
             Spacer()
             
-            if let edit = edit {
-                Button("Edit", action: edit)
+            if let editAction {
+                Button("Edit", action: editAction)
             }
         }
     }
@@ -45,7 +46,7 @@ struct PlayerView: View {
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            PlayerView(player: .makeRandom(), edit: { })
+            PlayerView(player: .makeRandom(), editAction: { })
             PlayerView(player: .placeholder).redacted(reason: .placeholder)
         }
         .padding()

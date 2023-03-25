@@ -1,5 +1,6 @@
 import Combine
 import GRDB
+import PlayerRepository
 
 /// The view model for ``AppView``.
 final class AppViewModel: ObservableObject {
@@ -21,10 +22,10 @@ final class AppViewModel: ObservableObject {
     
     private var observationCancellable: AnyCancellable?
     
-    init(appDatabase: AppDatabase) {
+    init(playerRepository: PlayerRepository) {
         observationCancellable = ValueObservation
             .tracking(Player.fetchOne)
-            .publisher(in: appDatabase.databaseReader, scheduling: .immediate)
+            .publisher(in: playerRepository.reader, scheduling: .immediate)
             .sink(
                 receiveCompletion: { _ in /* ignore error */ },
                 receiveValue: { [weak self] player in

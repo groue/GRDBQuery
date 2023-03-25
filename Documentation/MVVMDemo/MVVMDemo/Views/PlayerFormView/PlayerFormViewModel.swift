@@ -1,15 +1,16 @@
 import Combine
 import GRDB
+import PlayerRepository
 
 /// The view model for ``PlayerFormView``.
 final class PlayerFormViewModel: ObservableObject {
-    private let appDatabase: AppDatabase
+    private let playerRepository: PlayerRepository
     
     /// The player to display.
     @Published private(set) var player: Player
     
-    init(appDatabase: AppDatabase, editedPlayer player: Player) {
-        self.appDatabase = appDatabase
+    init(playerRepository: PlayerRepository, editedPlayer player: Player) {
+        self.playerRepository = playerRepository
         self.player = player
     }
     
@@ -27,7 +28,7 @@ final class PlayerFormViewModel: ObservableObject {
         do {
             var updatedPlayer = player
             transform(&updatedPlayer)
-            try appDatabase.update(updatedPlayer)
+            try playerRepository.update(updatedPlayer)
             
             // Only update view if update was successful in the database
             player = updatedPlayer

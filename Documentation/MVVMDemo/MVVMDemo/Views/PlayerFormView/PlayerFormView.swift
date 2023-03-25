@@ -1,4 +1,5 @@
 import GRDBQuery
+import PlayerRepository
 import SwiftUI
 
 /// The view that edits a player
@@ -8,7 +9,7 @@ struct PlayerFormView: View {
     init(player: Player) {
         _viewModel = EnvironmentStateObject {
             PlayerFormViewModel(
-                appDatabase: $0.appDatabase,
+                playerRepository: $0.playerRepository,
                 editedPlayer: player)
         }
     }
@@ -26,12 +27,12 @@ struct PlayerFormView_Previews: PreviewProvider {
         List {
             Section("Player exists in the database") {
                 PlayerFormView(player: .makeRandom(id: 1))
-                    .environment(\.appDatabase, .populated(playerId: 1))
+                    .environment(\.playerRepository, .populated(playerId: 1))
             }
             
             Section("Player does not exist in the database") {
                 PlayerFormView(player: .makeRandom())
-                    .environment(\.appDatabase, .empty())
+                    .environment(\.playerRepository, .empty())
             }
         }
     }

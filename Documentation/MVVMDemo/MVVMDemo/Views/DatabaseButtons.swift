@@ -1,8 +1,9 @@
+import PlayerRepository
 import SwiftUI
 
-/// A button that creates players in the database
+/// A helper button that creates players in the database
 struct CreatePlayerButton: View {
-    @Environment(\.appDatabase) private var appDatabase
+    @Environment(\.playerRepository) private var playerRepository
     private var titleKey: LocalizedStringKey
     
     init(_ titleKey: LocalizedStringKey) {
@@ -11,21 +12,21 @@ struct CreatePlayerButton: View {
     
     var body: some View {
         Button {
-            try! appDatabase.insert(Player.makeRandom())
+            try! playerRepository.insert(Player.makeRandom())
         } label: {
             Label(titleKey, systemImage: "plus")
         }
     }
 }
 
-/// A button that deletes players in the database
+/// A helper button that deletes players in the database
 struct DeletePlayersButton: View {
     private enum Mode {
         case deleteAfter
         case deleteBefore
     }
     
-    @Environment(\.appDatabase) private var appDatabase
+    @Environment(\.playerRepository) private var playerRepository
     private var titleKey: LocalizedStringKey
     private var action: (() -> Void)?
     private var mode: Mode
@@ -62,11 +63,11 @@ struct DeletePlayersButton: View {
             case .deleteAfter:
                 action?()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    _ = try! appDatabase.deleteAllPlayer()
+                    _ = try! playerRepository.deleteAllPlayer()
                 }
                 
             case .deleteBefore:
-                _ = try! appDatabase.deleteAllPlayer()
+                _ = try! playerRepository.deleteAllPlayer()
                 action?()
             }
         } label: {
@@ -82,10 +83,10 @@ struct DatabaseButtons_Previews: PreviewProvider {
     struct PlayerCountRequest: Queryable {
         static var defaultValue: Int { 0 }
         
-        func publisher(in appDatabase: AppDatabase) -> DatabasePublishers.Value<Int> {
+        func publisher(in playerRepository: PlayerRepository) -> DatabasePublishers.Value<Int> {
             ValueObservation
                 .tracking(Player.fetchCount)
-                .publisher(in: appDatabase.databaseReader, scheduling: .immediate)
+                .publisher(in: playerRepository.reader, scheduling: .immediate)
         }
     }
     

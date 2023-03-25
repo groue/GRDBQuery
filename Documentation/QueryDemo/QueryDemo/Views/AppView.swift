@@ -1,6 +1,7 @@
-import SwiftUI
 import GRDB
 import GRDBQuery
+import PlayerRepository
+import SwiftUI
 
 /// The main application view
 struct AppView: View {
@@ -17,8 +18,8 @@ struct AppView: View {
     var body: some View {
         NavigationView {
             VStack {
-                if let player = player, let id = player.id {
-                    PlayerView(player: player, edit: { editPlayer(id: id) })
+                if let player, let id = player.id {
+                    PlayerView(player: player, editAction: { editPlayer(id: id) })
                         .padding(.vertical)
                     
                     Spacer()
@@ -78,9 +79,20 @@ struct AppView: View {
     }
 }
 
+/// A @Query request that observes the player (any player, actually) in the database
+fileprivate struct PlayerRequest: Queryable {
+    static var defaultValue: Player? { nil }
+    
+    func publisher(in playerRepository: PlayerRepository) -> DatabasePublishers.Value<Player?> {
+        ValueObservation
+            .tracking(Player.fetchOne)
+            .publisher(in: playerRepository.reader, scheduling: .immediate)
+    }
+}
+
 struct AppView_Previews: PreviewProvider {
     static var previews: some View {
-        AppView()
-        AppView().environment(\.dbQueue, populatedDatabaseQueue())
+        AppView().environment(\.playerRepository, .empty())
+        AppView().environment(\.playerRepository, .populated())
     }
 }
