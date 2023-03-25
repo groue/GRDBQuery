@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ValueView: View {
     var accessibilityIdentifier: String
-    @Query(Request(first: 2, second: 3), in: \.void) var value
+    @Query(Request(first: 2, second: 3)) var value
     
     /// Default request
     init(accessibilityIdentifier: String) {
@@ -20,19 +20,19 @@ struct ValueView: View {
     /// Initial request
     init(initialRequest request: Request, accessibilityIdentifier: String) {
         self.accessibilityIdentifier = accessibilityIdentifier
-        _value = Query(request, in: \.void)
+        _value = Query(request)
     }
     
     /// Constant request
     init(constantRequest request: Request, accessibilityIdentifier: String) {
         self.accessibilityIdentifier = accessibilityIdentifier
-        _value = Query(constant: request, in: \.void)
+        _value = Query(constant: request)
     }
     
     /// Request binding
     init(_ request: Binding<Request>, accessibilityIdentifier: String) {
         self.accessibilityIdentifier = accessibilityIdentifier
-        _value = Query(request, in: \.void)
+        _value = Query(request)
     }
     
     var body: some View {

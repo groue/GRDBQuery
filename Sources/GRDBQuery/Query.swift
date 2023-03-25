@@ -1,160 +1,9 @@
-// Copyright (C) 2021 Gwendal Roué
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-// CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-// =============================================================================
-//
-// You can copy this file into your project, source code and license.
-
 import Combine
 import SwiftUI
 
-/// `Queryable` types feed the the ``Query`` property wrapper.
-///
-/// The role of a `Queryable` type is to build a Combine publisher of database
-/// values, with its ``publisher(in:)`` method. The published values feed
-/// SwiftUI views that use the `@Query` property wrapper: each time a new value
-/// is published, the view updates accordingly.
-///
-/// A `Queryable` type also provides a ``defaultValue``, which is displayed
-/// until the publisher publishes its initial value.
-///
-/// The `Queryable` protocol inherits from the standard `Equatable` protocol so
-/// that SwiftUI views can configure the database values they display.
-/// See <doc:QueryableParameters> for more information.
-///
-/// ## Example
-///
-/// The sample code below defines `PlayersRequest`, a `Queryable` type that
-/// publishes the list of players found in the database:
-///
-/// ```swift
-/// import Combine
-/// import GRDB
-/// import GRDBQuery
-///
-/// /// Tracks the full list of players
-/// struct PlayersRequest: Queryable {
-///     static var defaultValue: [Player] { [] }
-///
-///     func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
-///         ValueObservation
-///             .tracking { db in try Player.fetchAll(db) }
-///             .publisher(in: dbQueue, scheduling: .immediate)
-///             .eraseToAnyPublisher()
-///     }
-/// }
-/// ```
-///
-/// This `PlayersRequest` type will automatically update a SwiftUI view on every
-/// database changes, when wrapped by the `@Query` property wrapper:
-///
-/// ```swift
-/// import GRDBQuery
-/// import SwiftUI
-///
-/// struct PlayerList: View {
-///     @Query(PlayersRequest())
-///     var players: [Player]
-///
-///     var body: some View {
-///         List(players) { player in ... }
-///     }
-/// }
-/// ```
-///
-/// For an explanation of how this works, and the required setup, please check
-/// <doc:GettingStarted>.
-///
-/// Learn how a SwiftUI view can configure a `Queryable` type, control the
-/// database values it displays, in <doc:QueryableParameters>.
-///
-/// ## Topics
-///
-/// ### Associated Types
-///
-/// - ``DatabaseContext``
-/// - ``ValuePublisher``
-/// - ``Value``
-///
-/// ### Database Values
-///
-/// - ``defaultValue``
-/// - ``publisher(in:)``
-public protocol Queryable: Equatable {
-    /// The type that provides database access.
-    ///
-    /// Any type can fit, as long as the `Queryable` type can build a Combine
-    /// publisher from an instance of this type, in the
-    /// ``publisher(in:)`` method.
-    ///
-    /// It may be a `GRDB.DatabaseQueue`, or your custom database manager: see
-    /// <doc:GettingStarted> for more guidance.
-    associatedtype DatabaseContext
-    
-    /// The type of the Combine publisher of database values, returned
-    /// from ``publisher(in:)``.
-    associatedtype ValuePublisher: Publisher
-    
-    /// The default value, used until the Combine publisher publishes its
-    /// initial value.
-    ///
-    /// The default value is unused if the publisher successfully publishes its
-    /// initial value right on subscription.
-    static var defaultValue: Value { get }
-    
-    /// Returns a Combine publisher of database values.
-    ///
-    /// - parameter database: Provides access to the database.
-    func publisher(in database: DatabaseContext) -> ValuePublisher
-}
-
-extension Queryable {
-    /// The type of the published values.
-    public typealias Value = ValuePublisher.Output
-}
-
-/// A property wrapper that subscribes to its `Request` (a ``Queryable``
-/// type), and invalidates a SwiftUI view whenever the database values change.
-///
-/// Learn how to use `@Query` in <doc:GettingStarted>.
-///
-/// ## Topics
-///
-/// ### Creating a @Query
-///
-/// - ``init(_:in:)-4ubsz``
-/// - ``init(_:in:)-2knwm``
-/// - ``init(constant:in:)``
-///
-/// ### Getting the Value
-///
-/// - ``wrappedValue``
-/// - ``projectedValue``
-/// - ``Wrapper``
-///
-/// ### SwiftUI Integration
-///
-/// - ``update()``
+// See Documentation.docc/Extensions/Query.md
 @propertyWrapper
-public struct Query<Request: Queryable>: DynamicProperty {
+public struct Query<Request: Queryable> {
     /// For a full discussion of these cases, see <doc:QueryableParameters>.
     private enum Configuration {
         case constant(Request)
@@ -195,7 +44,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// ```swift
     /// struct PlayerList: View {
     ///     @Query(PlayersRequest(), in: \.dbQueue)
-    ///     var players: [Player]
+    ///     private var players: [Player]
     ///
     ///     var body: some View {
     ///         List(players) { player in ... }
@@ -203,10 +52,17 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// }
     /// ```
     ///
-    /// > NOTE: After the view has appeared on screen, only the SwiftUI bindings
-    /// > returned by the ``projectedValue`` wrapper (`$players`) can update
-    /// > the database content visible on screen by changing the request.
-    /// > See <doc:QueryableParameters> for more details.
+    /// The returned `@Query` is akin to the SwiftUI `@State`: it is the
+    /// single source of truth for the request. In the above example, the
+    /// request has no parameter, so it does not matter much. But when the
+    /// request can be modified, it starts to be relevant. In particular,
+    /// at runtime, after the view has appeared on screen, only the SwiftUI
+    /// bindings returned by the ``projectedValue`` wrapper (`$players`)
+    /// can update the database content visible on screen by changing the
+    /// request.
+    ///
+    /// See <doc:QueryableParameters> for a longer discussion about
+    /// `@Query` initializers.
     ///
     /// - parameter request: An initial ``Queryable`` request.
     /// - parameter keyPath: A key path to the database in the environment. To
@@ -223,11 +79,15 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// Creates a `Query`, given a ``Queryable`` request, and a key path to the
     /// database in the SwiftUI environment.
     ///
+    /// The SwiftUI bindings returned by the ``projectedValue`` wrapper
+    /// (`$players`) can not update the database content: the request is
+    /// "constant". See <doc:QueryableParameters> for more details.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayerList: View {
-    ///     @Query<PlayersRequest> var players: [Player]
+    ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(constantRequest request: Binding<PlayersRequest>) {
     ///         _players = Query(constant: request, in: \.dbQueue)
@@ -238,10 +98,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
     ///     }
     /// }
     /// ```
-    ///
-    /// > NOTE: The SwiftUI bindings returned by the ``projectedValue`` wrapper
-    /// > (`$players`) can not update the database content: the request is
-    /// > "constant". See <doc:QueryableParameters> for more details.
     ///
     /// - parameter request: A ``Queryable`` request.
     /// - parameter keyPath: A key path to the database in the environment. To
@@ -258,11 +114,16 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// Creates a `Query`, given a SwiftUI binding to its ``Queryable`` request,
     /// and a key path to the database in the SwiftUI environment.
     ///
+    /// Both the `request` Binding argument, and the SwiftUI bindings
+    /// returned by the ``projectedValue`` wrapper (`$players`) can update
+    /// the database content visible on screen by changing the request.
+    /// See <doc:QueryableParameters> for more details.
+    ///
     /// For example:
     ///
     /// ```swift
     /// struct RootView {
-    ///     @State var request: PlayersRequest
+    ///     @State private var request: PlayersRequest
     ///
     ///     var body: some View {
     ///         PlayerList($request) // Note the `$request` binding here
@@ -270,7 +131,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// }
     ///
     /// struct PlayerList: View {
-    ///     @Query<PlayersRequest> var players: [Player]
+    ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(_ request: Binding<PlayersRequest>) {
     ///         _players = Query(request, in: \.dbQueue)
@@ -282,11 +143,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// }
     /// ```
     ///
-    /// > NOTE: Both the `request` Binding argument, and the SwiftUI bindings
-    /// > returned by the ``projectedValue`` wrapper (`$players`) can update
-    /// > the database content visible on screen by changing the request.
-    /// > See <doc:QueryableParameters> for more details.
-    ///
     /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
     /// - parameter keyPath: A key path to the database in the environment. To
     ///   know which key path you have to provide, and learn how to put the
@@ -297,14 +153,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
     {
         self._database = Environment(keyPath)
         self.configuration = .binding(request)
-    }
-    
-    /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
-    public func update() {
-        tracker.update(
-            queryObservationEnabled: queryObservationEnabled,
-            configuration: configuration,
-            database: database)
     }
     
     /// A wrapper of the underlying `Query` that creates bindings to
@@ -425,6 +273,17 @@ public struct Query<Request: Queryable>: DynamicProperty {
                 })
             isUpdating = false
         }
+    }
+}
+
+// Declare `DynamicProperty` conformance in an extension so that DocC does
+// not show `update` in the `Query` documentation.
+extension Query: DynamicProperty {
+    public func update() {
+        tracker.update(
+            queryObservationEnabled: queryObservationEnabled,
+            configuration: configuration,
+            database: database)
     }
 }
 
