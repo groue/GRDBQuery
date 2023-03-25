@@ -30,8 +30,8 @@ struct AppView: View {
                 }
             }
             .padding(.horizontal)
-            .sheet(item: $viewModel.editedPlayer) { player in
-                PlayerEditionView(id: player.id)
+            .sheet(item: $viewModel.editedPlayer) { editedPlayer in
+                PlayerEditionView(id: editedPlayer.id)
             }
             .navigationTitle("MVVM Demo")
         }

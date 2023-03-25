@@ -39,9 +39,11 @@ struct PlayerEditionView: View {
                 PlayerNotFoundView()
             }
         }
-        .alert("Ooops, player is gone.", isPresented: $viewModel.gonePlayerAlertPresented, actions: {
-            Button("Dismiss") { dismiss() }
-        })
+        .alert(
+            "Ooops, player is gone.",
+            isPresented: $viewModel.gonePlayerAlertPresented) {
+                Button("Dismiss") { dismiss() }
+            }
     }
 }
 
