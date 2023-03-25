@@ -1,5 +1,7 @@
+import Combine
 import GRDB
 import GRDBQuery
+import PlayerRepository
 import SwiftUI
 
 /// The sheet for player edition.
@@ -62,11 +64,69 @@ struct PlayerEditionView: View {
     }
 }
 
+/// A @Query request that observes the presence of the player in the database.
+private struct PlayerPresenceRequest: Queryable {
+    static var defaultValue: PlayerPresence { .missing }
+    
+    var id: Int64
+    
+    func publisher(in playerRepository: PlayerRepository) -> AnyPublisher<PlayerPresence, Error> {
+        ValueObservation
+            .tracking(Player.filter(key: id).fetchOne)
+            .publisher(in: playerRepository.reader, scheduling: .immediate)
+            // Use scan in order to detect the three cases of player presence
+            .scan(.missing) { (previous, player) in
+                if let player {
+                    return .existing(player)
+                } else if let player = previous.player {
+                    return .gone(player)
+                } else {
+                    return .missing
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+}
+
+// We handle three distinct cases regarding the presence of the
+// edited player:
+private enum PlayerPresence {
+    /// The player exists in the database
+    case existing(Player)
+    
+    /// Player no longer exists, but we have its latest value.
+    case gone(Player)
+    
+    /// Player does not exist, and we don't have any information about it.
+    case missing
+    
+    var player: Player? {
+        switch self {
+        case let .existing(player), let .gone(player):
+            return player
+        case .missing:
+            return nil
+        }
+    }
+    
+    var exists: Bool {
+        switch self {
+        case .existing:
+            return true
+        case .gone, .missing:
+            return false
+        }
+    }
+}
+
 struct PlayerEditionView_Previews: PreviewProvider {
     static var previews: some View {
-        let playerId: Int64 = 1
-        let dbQueue = populatedDatabaseQueue(playerId: playerId)
-        PlayerEditionView(id: playerId).environment(\.dbQueue, dbQueue)
+        PlayerEditionView(id: 1)
+            .environment(\.playerRepository, .populated(playerId: 1))
+            .previewDisplayName("Existing player")
+        
         PlayerEditionView(id: -1)
+            .environment(\.playerRepository, .empty())
+            .previewDisplayName("Missing player")
     }
 }

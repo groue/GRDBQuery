@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/groue/GRDB.swift.git",
         "state": {
           "branch": null,
-          "revision": "7b63ddf54232db97943759e2b022cf61c5d9e745",
-          "version": "6.5.0"
+          "revision": "2d19cab2b525f885ee8d7efec96093431f6b5f20",
+          "version": "6.10.0"
         }
       },
       {
@@ -15,7 +15,16 @@
         "repositoryURL": "https://github.com/apple/swift-docc-plugin",
         "state": {
           "branch": null,
-          "revision": "3303b164430d9a7055ba484c8ead67a52f7b74f6",
+          "revision": "9b1258905c21fc1b97bf03d1b4ca12c4ec4e5fda",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "SymbolKit",
+        "repositoryURL": "https://github.com/apple/swift-docc-symbolkit",
+        "state": {
+          "branch": null,
+          "revision": "b45d1f2ed151d057b54504d653e0da5552844e34",
           "version": "1.0.0"
         }
       }

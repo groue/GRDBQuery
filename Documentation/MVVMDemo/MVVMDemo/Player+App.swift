@@ -1,12 +1,6 @@
-import GRDB
+import PlayerRepository
 
-struct Player: Codable, Identifiable {
-    var id: Int64?
-    var name: String
-    var score: Int
-    var photoID: Int
-}
-
+// Convenience `Player` methods for the app.
 extension Player {
     private static let names = [
         "Arthur", "Anita", "Barbara", "Bernard", "Craig", "Chiara", "David",
@@ -19,7 +13,7 @@ extension Player {
         "Zazie", "Zoé"]
     
     /// Creates a new player with random name and random score
-    static func makeRandom(id: ID = nil) -> Player {
+    static func makeRandom(id: Int64? = nil) -> Player {
         Player(
             id: id,
             name: names.randomElement()!,
@@ -31,9 +25,3 @@ extension Player {
     static let placeholder = Player(name: "xxxxxx", score: 100, photoID: 1)
 }
 
-extension Player: FetchableRecord, MutablePersistableRecord {
-    // Update auto-incremented id upon successful insertion
-    mutating func didInsert(_ inserted: InsertionSuccess) {
-        id = inserted.rowID
-    }
-}

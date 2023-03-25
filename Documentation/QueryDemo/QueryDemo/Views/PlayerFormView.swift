@@ -1,10 +1,11 @@
 import GRDB
+import PlayerRepository
 import SwiftUI
 
 /// The view that edits a player
 struct PlayerFormView: View {
-    @Environment(\.dbQueue) var dbQueue
-    var player: Player
+    @Environment(\.playerRepository) private var playerRepository
+    let player: Player
     
     var body: some View {
         Stepper(
@@ -15,21 +16,14 @@ struct PlayerFormView: View {
     
     private func updateScore(_ transform: (inout Int) -> Void) {
         do {
-            _ = try dbQueue.write { db in
-                var player = player
-                try player.updateChanges(db) {
-                    transform(&$0.score)
-                }
-            }
+            var updatedPlayer = player
+            transform(&updatedPlayer.score)
+            try playerRepository.update(updatedPlayer)
         } catch RecordError.recordNotFound {
             // Oops, player does not exist.
             // Ignore this error: `PlayerEditionView` will dismiss.
-            //
-            // You can comment out this specific handling of
-            // `PersistenceError.recordNotFound`, run the preview, change the
-            // score, and see what happens.
         } catch {
-            fatalError("\(error)")
+            // Ignore other errors.
         }
     }
 }

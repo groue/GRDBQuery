@@ -11,7 +11,7 @@ struct PlayerEditionView: View {
     
     init(id: Int64) {
         _viewModel = EnvironmentStateObject {
-            PlayerEditionViewModel(appDatabase: $0.appDatabase, id: id)
+            PlayerEditionViewModel(playerRepository: $0.playerRepository, id: id)
         }
     }
     
@@ -39,18 +39,22 @@ struct PlayerEditionView: View {
                 PlayerNotFoundView()
             }
         }
-        .alert("Ooops, player is gone.", isPresented: $viewModel.gonePlayerAlertPresented, actions: {
-            Button("Dismiss") { dismiss() }
-        })
+        .alert(
+            "Ooops, player is gone.",
+            isPresented: $viewModel.gonePlayerAlertPresented) {
+                Button("Dismiss") { dismiss() }
+            }
     }
 }
 
 struct PlayerEditionView_Previews: PreviewProvider {
     static var previews: some View {
         PlayerEditionView(id: 1)
-            .environment(\.appDatabase, .populated(playerId: 1))
+            .environment(\.playerRepository, .populated(playerId: 1))
+            .previewDisplayName("Existing player")
         
         PlayerEditionView(id: -1)
-            .environment(\.appDatabase, .empty())
+            .environment(\.playerRepository, .empty())
+            .previewDisplayName("Missing player")
     }
 }

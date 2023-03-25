@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56089A1429CF068E003B3D49 /* Player+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A1229CF068E003B3D49 /* Player+App.swift */; };
+		56089A1529CF068E003B3D49 /* PlayerRepository+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A1329CF068E003B3D49 /* PlayerRepository+App.swift */; };
+		56089A1729CF06C5003B3D49 /* PlayerRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 56089A1629CF06C5003B3D49 /* PlayerRepository */; };
+		56089A1C29CF1BF9003B3D49 /* PlayerRepository+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A1B29CF1BF9003B3D49 /* PlayerRepository+SwiftUI.swift */; };
 		564014E528364A5200EEA9BC /* MVVMDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564014E428364A5200EEA9BC /* MVVMDemoApp.swift */; };
 		564014E928364A5300EEA9BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 564014E828364A5300EEA9BC /* Assets.xcassets */; };
 		564014EC28364A5300EEA9BC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 564014EB28364A5300EEA9BC /* Preview Assets.xcassets */; };
@@ -14,7 +18,6 @@
 		5640150028364A5300EEA9BC /* MVVMDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564014FF28364A5300EEA9BC /* MVVMDemoUITests.swift */; };
 		5640150228364A5300EEA9BC /* MVVMDemoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640150128364A5300EEA9BC /* MVVMDemoUITestsLaunchTests.swift */; };
 		5640151028364AB500EEA9BC /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 5640150F28364AB500EEA9BC /* GRDB */; };
-		5640151528364B2500EEA9BC /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151428364B2500EEA9BC /* Player.swift */; };
 		5640151D28364B3D00EEA9BC /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151628364B3D00EEA9BC /* PlayerView.swift */; };
 		5640151E28364B3D00EEA9BC /* PlayerEditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151728364B3D00EEA9BC /* PlayerEditionView.swift */; };
 		5640151F28364B3D00EEA9BC /* DatabaseButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151828364B3D00EEA9BC /* DatabaseButtons.swift */; };
@@ -22,8 +25,6 @@
 		5640152128364B3E00EEA9BC /* PlayerNotFoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151A28364B3D00EEA9BC /* PlayerNotFoundView.swift */; };
 		5640152228364B3E00EEA9BC /* InformationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151B28364B3D00EEA9BC /* InformationStyle.swift */; };
 		5640152328364B3E00EEA9BC /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151C28364B3D00EEA9BC /* AppView.swift */; };
-		5640152528364B7D00EEA9BC /* AppDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640152428364B7D00EEA9BC /* AppDatabase.swift */; };
-		5640152728364B9300EEA9BC /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640152628364B9300EEA9BC /* Persistence.swift */; };
 		5640152C28364DE600EEA9BC /* GRDBQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 5640152B28364DE600EEA9BC /* GRDBQuery */; };
 		5640152F28364E2C00EEA9BC /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640152E28364E2C00EEA9BC /* AppViewModel.swift */; };
 		564015322836508500EEA9BC /* PlayerFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564015312836508500EEA9BC /* PlayerFormViewModel.swift */; };
@@ -48,6 +49,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		56089A0D29CF064C003B3D49 /* PlayerRepository */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = PlayerRepository; path = ../PlayerRepository; sourceTree = "<group>"; };
+		56089A1229CF068E003B3D49 /* Player+App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Player+App.swift"; sourceTree = "<group>"; };
+		56089A1329CF068E003B3D49 /* PlayerRepository+App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerRepository+App.swift"; sourceTree = "<group>"; };
+		56089A1B29CF1BF9003B3D49 /* PlayerRepository+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerRepository+SwiftUI.swift"; sourceTree = "<group>"; };
 		564014E128364A5200EEA9BC /* MVVMDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MVVMDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		564014E428364A5200EEA9BC /* MVVMDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVVMDemoApp.swift; sourceTree = "<group>"; };
 		564014E828364A5300EEA9BC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -57,7 +62,6 @@
 		564014FB28364A5300EEA9BC /* MVVMDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MVVMDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		564014FF28364A5300EEA9BC /* MVVMDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVVMDemoUITests.swift; sourceTree = "<group>"; };
 		5640150128364A5300EEA9BC /* MVVMDemoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVVMDemoUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		5640151428364B2500EEA9BC /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		5640151628364B3D00EEA9BC /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		5640151728364B3D00EEA9BC /* PlayerEditionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEditionView.swift; sourceTree = "<group>"; };
 		5640151828364B3D00EEA9BC /* DatabaseButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseButtons.swift; sourceTree = "<group>"; };
@@ -65,8 +69,6 @@
 		5640151A28364B3D00EEA9BC /* PlayerNotFoundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerNotFoundView.swift; sourceTree = "<group>"; };
 		5640151B28364B3D00EEA9BC /* InformationStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationStyle.swift; sourceTree = "<group>"; };
 		5640151C28364B3D00EEA9BC /* AppView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
-		5640152428364B7D00EEA9BC /* AppDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDatabase.swift; sourceTree = "<group>"; };
-		5640152628364B9300EEA9BC /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		5640152928364D9A00EEA9BC /* GRDBQuery */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = GRDBQuery; path = ../..; sourceTree = "<group>"; };
 		5640152E28364E2C00EEA9BC /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		564015312836508500EEA9BC /* PlayerFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerFormViewModel.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5640152C28364DE600EEA9BC /* GRDBQuery in Frameworks */,
+				56089A1729CF06C5003B3D49 /* PlayerRepository in Frameworks */,
 				5640151028364AB500EEA9BC /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,9 +131,9 @@
 			isa = PBXGroup;
 			children = (
 				564014E428364A5200EEA9BC /* MVVMDemoApp.swift */,
-				5640152428364B7D00EEA9BC /* AppDatabase.swift */,
-				5640152628364B9300EEA9BC /* Persistence.swift */,
-				5640151328364B0800EEA9BC /* Models */,
+				56089A1229CF068E003B3D49 /* Player+App.swift */,
+				56089A1329CF068E003B3D49 /* PlayerRepository+App.swift */,
+				56089A1B29CF1BF9003B3D49 /* PlayerRepository+SwiftUI.swift */,
 				5640151228364B0400EEA9BC /* Views */,
 				564014E828364A5300EEA9BC /* Assets.xcassets */,
 				564014EA28364A5300EEA9BC /* Preview Content */,
@@ -166,29 +169,22 @@
 		5640151228364B0400EEA9BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5640152D28364E2200EEA9BC /* AppView */,
 				5640151828364B3D00EEA9BC /* DatabaseButtons.swift */,
 				5640151B28364B3D00EEA9BC /* InformationStyle.swift */,
-				5640151A28364B3D00EEA9BC /* PlayerNotFoundView.swift */,
-				5640151628364B3D00EEA9BC /* PlayerView.swift */,
-				5640152D28364E2200EEA9BC /* AppView */,
 				564015332836656900EEA9BC /* PlayerEditionView */,
 				564015302836507D00EEA9BC /* PlayerFormView */,
+				5640151A28364B3D00EEA9BC /* PlayerNotFoundView.swift */,
+				5640151628364B3D00EEA9BC /* PlayerView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		5640151328364B0800EEA9BC /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				5640151428364B2500EEA9BC /* Player.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		5640152828364D9A00EEA9BC /* Packages */ = {
 			isa = PBXGroup;
 			children = (
 				5640152928364D9A00EEA9BC /* GRDBQuery */,
+				56089A0D29CF064C003B3D49 /* PlayerRepository */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -246,6 +242,7 @@
 			packageProductDependencies = (
 				5640150F28364AB500EEA9BC /* GRDB */,
 				5640152B28364DE600EEA9BC /* GRDBQuery */,
+				56089A1629CF06C5003B3D49 /* PlayerRepository */,
 			);
 			productName = MVVMDemo;
 			productReference = 564014E128364A5200EEA9BC /* MVVMDemo.app */;
@@ -365,17 +362,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				5640152128364B3E00EEA9BC /* PlayerNotFoundView.swift in Sources */,
-				5640152528364B7D00EEA9BC /* AppDatabase.swift in Sources */,
 				5640152228364B3E00EEA9BC /* InformationStyle.swift in Sources */,
 				5640152F28364E2C00EEA9BC /* AppViewModel.swift in Sources */,
 				564015352836657400EEA9BC /* PlayerEditionViewModel.swift in Sources */,
-				5640151528364B2500EEA9BC /* Player.swift in Sources */,
 				564014E528364A5200EEA9BC /* MVVMDemoApp.swift in Sources */,
+				56089A1429CF068E003B3D49 /* Player+App.swift in Sources */,
 				564015322836508500EEA9BC /* PlayerFormViewModel.swift in Sources */,
 				5640151D28364B3D00EEA9BC /* PlayerView.swift in Sources */,
 				5640151F28364B3D00EEA9BC /* DatabaseButtons.swift in Sources */,
 				5640151E28364B3D00EEA9BC /* PlayerEditionView.swift in Sources */,
-				5640152728364B9300EEA9BC /* Persistence.swift in Sources */,
+				56089A1529CF068E003B3D49 /* PlayerRepository+App.swift in Sources */,
+				56089A1C29CF1BF9003B3D49 /* PlayerRepository+SwiftUI.swift in Sources */,
 				5640152328364B3E00EEA9BC /* AppView.swift in Sources */,
 				5640152028364B3E00EEA9BC /* PlayerFormView.swift in Sources */,
 			);
@@ -709,6 +706,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		56089A1629CF06C5003B3D49 /* PlayerRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PlayerRepository;
+		};
 		5640150F28364AB500EEA9BC /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5640150E28364AB500EEA9BC /* XCRemoteSwiftPackageReference "GRDB.swift" */;

@@ -1,7 +1,11 @@
 import Combine
 import GRDB
+import PlayerRepository
 
+/// The view model for ``PlayerEditionView``.
 final class PlayerEditionViewModel: ObservableObject {
+    // We handle three distinct cases regarding the presence of the
+    // edited player:
     private enum PlayerPresence {
         /// The player exists in the database
         case existing(Player)
@@ -21,7 +25,7 @@ final class PlayerEditionViewModel: ObservableObject {
             }
         }
         
-        var exists: Bool {
+        var playerExists: Bool {
             switch self {
             case .existing:
                 return true
@@ -31,17 +35,23 @@ final class PlayerEditionViewModel: ObservableObject {
         }
     }
     
+    /// The player to display.
     var player: Player? { playerPresence.player }
-    @Published var gonePlayerAlertPresented = false
-    @Published private var playerPresence: PlayerPresence = .missing
-    private var cancellable: AnyCancellable?
     
-    init(appDatabase: AppDatabase, id: Int64) {
-        cancellable = ValueObservation
-            .tracking(Player.filter(id: id).fetchOne)
-            .publisher(in: appDatabase.databaseReader, scheduling: .immediate)
+    /// A boolean indicating whether the "Player is gone" alert should
+    /// be presented.
+    @Published var gonePlayerAlertPresented = false
+    
+    @Published private var playerPresence: PlayerPresence = .missing
+    private var observationCancellable: AnyCancellable?
+    
+    init(playerRepository: PlayerRepository, id: Int64) {
+        observationCancellable = ValueObservation
+            .tracking(Player.filter(key: id).fetchOne)
+            .publisher(in: playerRepository.reader, scheduling: .immediate)
+            // Use scan in order to detect the three cases of player presence
             .scan(.missing) { (previous, player) in
-                if let player = player {
+                if let player {
                     return .existing(player)
                 } else if let player = previous.player {
                     return .gone(player)
@@ -50,11 +60,11 @@ final class PlayerEditionViewModel: ObservableObject {
                 }
             }
             .sink(
-                receiveCompletion: { _ in },
-                receiveValue: { [weak self] (playerPresence: PlayerPresence) in
+                receiveCompletion: { _ in /* ignore error */ },
+                receiveValue: { [weak self] playerPresence in
                     guard let self = self else { return }
                     self.playerPresence = playerPresence
-                    if !playerPresence.exists {
+                    if !playerPresence.playerExists {
                         self.gonePlayerAlertPresented = true
                     }
                 })

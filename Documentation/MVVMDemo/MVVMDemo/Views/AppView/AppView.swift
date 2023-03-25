@@ -1,5 +1,5 @@
-import SwiftUI
 import GRDBQuery
+import SwiftUI
 
 /// The main application view
 struct AppView: View {
@@ -7,7 +7,7 @@ struct AppView: View {
     
     init() {
         _viewModel = EnvironmentStateObject {
-            AppViewModel(appDatabase: $0.appDatabase)
+            AppViewModel(playerRepository: $0.playerRepository)
         }
     }
     
@@ -15,7 +15,7 @@ struct AppView: View {
         NavigationView {
             VStack {
                 if let player = viewModel.player {
-                    PlayerView(player: player, edit: viewModel.editPlayer)
+                    PlayerView(player: player, editAction: viewModel.editPlayer)
                         .padding(.vertical)
                     
                     Spacer()
@@ -30,8 +30,8 @@ struct AppView: View {
                 }
             }
             .padding(.horizontal)
-            .sheet(item: $viewModel.editedPlayer) { player in
-                PlayerEditionView(id: player.id)
+            .sheet(item: $viewModel.editedPlayer) { editedPlayer in
+                PlayerEditionView(id: editedPlayer.id)
             }
             .navigationTitle("MVVM Demo")
         }
@@ -73,7 +73,9 @@ struct AppView: View {
 
 struct AppView_Previews: PreviewProvider {
     static var previews: some View {
-        AppView().environment(\.appDatabase, .empty())
-        AppView().environment(\.appDatabase, .populated())
+        AppView().environment(\.playerRepository, .empty())
+            .previewDisplayName("Database Initially Empty")
+        AppView().environment(\.playerRepository, .populated())
+            .previewDisplayName("Database Initially Populated")
     }
 }

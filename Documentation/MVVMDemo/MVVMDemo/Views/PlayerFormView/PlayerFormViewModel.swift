@@ -1,19 +1,25 @@
 import Combine
 import GRDB
+import PlayerRepository
 
+/// The view model for ``PlayerFormView``.
 final class PlayerFormViewModel: ObservableObject {
-    private var appDatabase: AppDatabase
-    @Published var player: Player
-
-    init(appDatabase: AppDatabase, editedPlayer player: Player) {
-        self.appDatabase = appDatabase
+    private let playerRepository: PlayerRepository
+    
+    /// The player to display.
+    @Published private(set) var player: Player
+    
+    init(playerRepository: PlayerRepository, editedPlayer player: Player) {
+        self.playerRepository = playerRepository
         self.player = player
     }
     
+    /// Increments the player score.
     func incrementScore() {
         updatePlayer { $0.score += 10 }
     }
     
+    /// Decrements the player score.
     func decrementScore() {
         updatePlayer { $0.score = max(0, $0.score - 10) }
     }
@@ -22,7 +28,7 @@ final class PlayerFormViewModel: ObservableObject {
         do {
             var updatedPlayer = player
             transform(&updatedPlayer)
-            try appDatabase.update(updatedPlayer)
+            try playerRepository.update(updatedPlayer)
             
             // Only update view if update was successful in the database
             player = updatedPlayer
@@ -30,7 +36,7 @@ final class PlayerFormViewModel: ObservableObject {
             // Oops, player does not exist.
             // Ignore this error: `PlayerEditionView` will dismiss.
         } catch {
-            fatalError("\(error)")
+            // Ignore other errors.
         }
     }
 }

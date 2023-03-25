@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56089A0929CEFFD6003B3D49 /* PlayerRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 56089A0829CEFFD6003B3D49 /* PlayerRepository */; };
+		56089A0B29CF00ED003B3D49 /* Player+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A0A29CF00ED003B3D49 /* Player+App.swift */; };
+		56089A1A29CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A1929CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift */; };
 		5640153928366D7E00EEA9BC /* PlayerEditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640153828366D7E00EEA9BC /* PlayerEditionView.swift */; };
 		56519D83274CCD1800ED16D8 /* InformationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D82274CCD1800ED16D8 /* InformationStyle.swift */; };
 		56519D92274D611F00ED16D8 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D91274D611F00ED16D8 /* PlayerView.swift */; };
 		56519D94274D623700ED16D8 /* PlayerNotFoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D93274D623700ED16D8 /* PlayerNotFoundView.swift */; };
 		56519D96274D629600ED16D8 /* PlayerFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D95274D629600ED16D8 /* PlayerFormView.swift */; };
-		56519D9D274E1BF100ED16D8 /* PlayerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D9C274E1BF100ED16D8 /* PlayerRequest.swift */; };
-		56519D9F274E1C1A00ED16D8 /* PlayerPresenceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D9E274E1C1A00ED16D8 /* PlayerPresenceRequest.swift */; };
-		56519DB5274EAC7400ED16D8 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519DB4274EAC7400ED16D8 /* Persistence.swift */; };
+		56519DB5274EAC7400ED16D8 /* PlayerRepository+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519DB4274EAC7400ED16D8 /* PlayerRepository+App.swift */; };
 		56519DB7274EAFD700ED16D8 /* DatabaseButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519DB6274EAFD700ED16D8 /* DatabaseButtons.swift */; };
-		56519DB9274EC27500ED16D8 /* PlayerCountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519DB8274EC27500ED16D8 /* PlayerCountRequest.swift */; };
 		56519DC0274FC3F700ED16D8 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 56519DBF274FC3F700ED16D8 /* GRDB */; };
 		56519DC2274FC44500ED16D8 /* GRDBQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 56519DC1274FC44500ED16D8 /* GRDBQuery */; };
 		56F8A189273802970011ACBE /* QueryDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F8A188273802970011ACBE /* QueryDemoApp.swift */; };
@@ -27,7 +27,6 @@
 		56F8A1A4273802980011ACBE /* QueryDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F8A1A3273802980011ACBE /* QueryDemoUITests.swift */; };
 		56F8A1A6273802980011ACBE /* QueryDemoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F8A1A5273802980011ACBE /* QueryDemoUITestsLaunchTests.swift */; };
 		56F8A1BA273803BB0011ACBE /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 56F8A1B9273803BB0011ACBE /* GRDB */; };
-		56F8A1BE273803E90011ACBE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F8A1BD273803E90011ACBE /* Player.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,16 +47,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		56089A0729CEFF5E003B3D49 /* PlayerRepository */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = PlayerRepository; path = ../PlayerRepository; sourceTree = "<group>"; };
+		56089A0A29CF00ED003B3D49 /* Player+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player+App.swift"; sourceTree = "<group>"; };
+		56089A1929CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerRepository+SwiftUI.swift"; sourceTree = "<group>"; };
 		5640153828366D7E00EEA9BC /* PlayerEditionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEditionView.swift; sourceTree = "<group>"; };
 		56519D82274CCD1800ED16D8 /* InformationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationStyle.swift; sourceTree = "<group>"; };
 		56519D91274D611F00ED16D8 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		56519D93274D623700ED16D8 /* PlayerNotFoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerNotFoundView.swift; sourceTree = "<group>"; };
 		56519D95274D629600ED16D8 /* PlayerFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerFormView.swift; sourceTree = "<group>"; };
-		56519D9C274E1BF100ED16D8 /* PlayerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerRequest.swift; sourceTree = "<group>"; };
-		56519D9E274E1C1A00ED16D8 /* PlayerPresenceRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPresenceRequest.swift; sourceTree = "<group>"; };
-		56519DB4274EAC7400ED16D8 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		56519DB4274EAC7400ED16D8 /* PlayerRepository+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerRepository+App.swift"; sourceTree = "<group>"; };
 		56519DB6274EAFD700ED16D8 /* DatabaseButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseButtons.swift; sourceTree = "<group>"; };
-		56519DB8274EC27500ED16D8 /* PlayerCountRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCountRequest.swift; sourceTree = "<group>"; };
 		56519DBA274EC7C300ED16D8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		56519DBD274FC3DA00ED16D8 /* GRDBQuery */ = {isa = PBXFileReference; lastKnownFileType = folder; name = GRDBQuery; path = ../..; sourceTree = "<group>"; };
 		56F8A185273802970011ACBE /* QueryDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QueryDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,7 +69,6 @@
 		56F8A19F273802980011ACBE /* QueryDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QueryDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		56F8A1A3273802980011ACBE /* QueryDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryDemoUITests.swift; sourceTree = "<group>"; };
 		56F8A1A5273802980011ACBE /* QueryDemoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryDemoUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		56F8A1BD273803E90011ACBE /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				56519DC0274FC3F700ED16D8 /* GRDB in Frameworks */,
+				56089A0929CEFFD6003B3D49 /* PlayerRepository in Frameworks */,
 				56F8A1BA273803BB0011ACBE /* GRDB in Frameworks */,
 				56519DC2274FC44500ED16D8 /* GRDBQuery in Frameworks */,
 			);
@@ -115,28 +114,11 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		56519D9A274E1BCB00ED16D8 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				56F8A1BD273803E90011ACBE /* Player.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		56519D9B274E1BDC00ED16D8 /* Requests */ = {
-			isa = PBXGroup;
-			children = (
-				56519D9C274E1BF100ED16D8 /* PlayerRequest.swift */,
-				56519D9E274E1C1A00ED16D8 /* PlayerPresenceRequest.swift */,
-				56519DB8274EC27500ED16D8 /* PlayerCountRequest.swift */,
-			);
-			path = Requests;
-			sourceTree = "<group>";
-		};
 		56519DBC274FC3DA00ED16D8 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
 				56519DBD274FC3DA00ED16D8 /* GRDBQuery */,
+				56089A0729CEFF5E003B3D49 /* PlayerRepository */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -168,10 +150,10 @@
 			isa = PBXGroup;
 			children = (
 				56F8A188273802970011ACBE /* QueryDemoApp.swift */,
-				56519DB4274EAC7400ED16D8 /* Persistence.swift */,
+				56089A0A29CF00ED003B3D49 /* Player+App.swift */,
+				56519DB4274EAC7400ED16D8 /* PlayerRepository+App.swift */,
+				56089A1929CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift */,
 				56519D99274E1B9A00ED16D8 /* Views */,
-				56519D9A274E1BCB00ED16D8 /* Models */,
-				56519D9B274E1BDC00ED16D8 /* Requests */,
 				56F8A18C273802980011ACBE /* Assets.xcassets */,
 				56F8A18E273802980011ACBE /* Preview Content */,
 			);
@@ -232,6 +214,7 @@
 				56F8A1B9273803BB0011ACBE /* GRDB */,
 				56519DBF274FC3F700ED16D8 /* GRDB */,
 				56519DC1274FC44500ED16D8 /* GRDBQuery */,
+				56089A0829CEFFD6003B3D49 /* PlayerRepository */,
 			);
 			productName = QueryDemo;
 			productReference = 56F8A185273802970011ACBE /* QueryDemo.app */;
@@ -350,18 +333,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56519DB5274EAC7400ED16D8 /* Persistence.swift in Sources */,
+				56519DB5274EAC7400ED16D8 /* PlayerRepository+App.swift in Sources */,
 				56F8A18B273802970011ACBE /* AppView.swift in Sources */,
 				56519D83274CCD1800ED16D8 /* InformationStyle.swift in Sources */,
 				56519D96274D629600ED16D8 /* PlayerFormView.swift in Sources */,
-				56519D9F274E1C1A00ED16D8 /* PlayerPresenceRequest.swift in Sources */,
 				56519D94274D623700ED16D8 /* PlayerNotFoundView.swift in Sources */,
-				56519D9D274E1BF100ED16D8 /* PlayerRequest.swift in Sources */,
 				56519D92274D611F00ED16D8 /* PlayerView.swift in Sources */,
 				56519DB7274EAFD700ED16D8 /* DatabaseButtons.swift in Sources */,
-				56519DB9274EC27500ED16D8 /* PlayerCountRequest.swift in Sources */,
+				56089A1A29CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift in Sources */,
 				5640153928366D7E00EEA9BC /* PlayerEditionView.swift in Sources */,
-				56F8A1BE273803E90011ACBE /* Player.swift in Sources */,
+				56089A0B29CF00ED003B3D49 /* Player+App.swift in Sources */,
 				56F8A189273802970011ACBE /* QueryDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -724,6 +705,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		56089A0829CEFFD6003B3D49 /* PlayerRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PlayerRepository;
+		};
 		56519DBF274FC3F700ED16D8 /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
