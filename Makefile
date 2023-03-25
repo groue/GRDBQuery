@@ -27,6 +27,6 @@ docs-localhost:
 	open "http://localhost/~$(USER)/GRDBQuery/documentation/grdbquery/"
 
 distclean:
-	git -dfx .
+	git clean -dffx .
 
 .PHONY: test docs docs-localhost distclean
