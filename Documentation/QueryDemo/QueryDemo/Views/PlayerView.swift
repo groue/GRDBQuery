@@ -2,7 +2,7 @@ import PlayerRepository
 import SwiftUI
 
 struct PlayerView: View {
-    @Environment(\.redactionReasons) var reasons
+    @Environment(\.redactionReasons) var redactionReasons
     var player: Player
     var editAction: (() -> Void)?
     
@@ -25,7 +25,7 @@ struct PlayerView: View {
     
     func avatar() -> some View {
         Group {
-            if reasons.isEmpty {
+            if redactionReasons.isEmpty {
                 AsyncImage(
                     url: URL(string: "https://picsum.photos/seed/\(player.photoID)/200"),
                     content: { image in

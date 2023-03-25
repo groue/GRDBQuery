@@ -123,8 +123,10 @@ struct PlayerEditionView_Previews: PreviewProvider {
     static var previews: some View {
         PlayerEditionView(id: 1)
             .environment(\.playerRepository, .populated(playerId: 1))
+            .previewDisplayName("Existing player")
         
         PlayerEditionView(id: -1)
             .environment(\.playerRepository, .empty())
+            .previewDisplayName("Missing player")
     }
 }

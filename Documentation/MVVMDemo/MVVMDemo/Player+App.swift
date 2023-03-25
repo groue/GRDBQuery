@@ -1,5 +1,6 @@
 import PlayerRepository
 
+// Convenience `Player` methods for the app.
 extension Player {
     private static let names = [
         "Arthur", "Anita", "Barbara", "Bernard", "Craig", "Chiara", "David",

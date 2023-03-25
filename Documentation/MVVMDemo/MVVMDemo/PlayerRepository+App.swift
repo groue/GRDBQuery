@@ -2,11 +2,13 @@ import Foundation
 import GRDB
 import PlayerRepository
 
+// A `PlayerRepository` extension for creating various repositories for the
+// app, tests, and previews.
 extension PlayerRepository {
-    /// The repository for the application
+    /// The on-disk repository for the application.
     static let shared = makeShared()
     
-    /// Returns an on-disk repository for the application
+    /// Returns an on-disk repository for the application.
     private static func makeShared() -> PlayerRepository {
         do {
             // Apply recommendations from

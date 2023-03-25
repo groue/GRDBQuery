@@ -80,7 +80,7 @@ struct AppView: View {
 }
 
 /// A @Query request that observes the player (any player, actually) in the database
-fileprivate struct PlayerRequest: Queryable {
+private struct PlayerRequest: Queryable {
     static var defaultValue: Player? { nil }
     
     func publisher(in playerRepository: PlayerRepository) -> DatabasePublishers.Value<Player?> {
@@ -93,6 +93,8 @@ fileprivate struct PlayerRequest: Queryable {
 struct AppView_Previews: PreviewProvider {
     static var previews: some View {
         AppView().environment(\.playerRepository, .empty())
+            .previewDisplayName("Database Initially Empty")
         AppView().environment(\.playerRepository, .populated())
+            .previewDisplayName("Database Initially Populated")
     }
 }

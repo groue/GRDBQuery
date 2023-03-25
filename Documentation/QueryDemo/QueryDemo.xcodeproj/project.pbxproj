@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		56089A0929CEFFD6003B3D49 /* PlayerRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 56089A0829CEFFD6003B3D49 /* PlayerRepository */; };
 		56089A0B29CF00ED003B3D49 /* Player+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A0A29CF00ED003B3D49 /* Player+App.swift */; };
+		56089A1A29CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A1929CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift */; };
 		5640153928366D7E00EEA9BC /* PlayerEditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640153828366D7E00EEA9BC /* PlayerEditionView.swift */; };
 		56519D83274CCD1800ED16D8 /* InformationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D82274CCD1800ED16D8 /* InformationStyle.swift */; };
 		56519D92274D611F00ED16D8 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D91274D611F00ED16D8 /* PlayerView.swift */; };
@@ -48,6 +49,7 @@
 /* Begin PBXFileReference section */
 		56089A0729CEFF5E003B3D49 /* PlayerRepository */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = PlayerRepository; path = ../PlayerRepository; sourceTree = "<group>"; };
 		56089A0A29CF00ED003B3D49 /* Player+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player+App.swift"; sourceTree = "<group>"; };
+		56089A1929CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerRepository+SwiftUI.swift"; sourceTree = "<group>"; };
 		5640153828366D7E00EEA9BC /* PlayerEditionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEditionView.swift; sourceTree = "<group>"; };
 		56519D82274CCD1800ED16D8 /* InformationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationStyle.swift; sourceTree = "<group>"; };
 		56519D91274D611F00ED16D8 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				56F8A188273802970011ACBE /* QueryDemoApp.swift */,
 				56089A0A29CF00ED003B3D49 /* Player+App.swift */,
 				56519DB4274EAC7400ED16D8 /* PlayerRepository+App.swift */,
+				56089A1929CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift */,
 				56519D99274E1B9A00ED16D8 /* Views */,
 				56F8A18C273802980011ACBE /* Assets.xcassets */,
 				56F8A18E273802980011ACBE /* Preview Content */,
@@ -337,6 +340,7 @@
 				56519D94274D623700ED16D8 /* PlayerNotFoundView.swift in Sources */,
 				56519D92274D611F00ED16D8 /* PlayerView.swift in Sources */,
 				56519DB7274EAFD700ED16D8 /* DatabaseButtons.swift in Sources */,
+				56089A1A29CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift in Sources */,
 				5640153928366D7E00EEA9BC /* PlayerEditionView.swift in Sources */,
 				56089A0B29CF00ED003B3D49 /* Player+App.swift in Sources */,
 				56F8A189273802970011ACBE /* QueryDemoApp.swift in Sources */,
