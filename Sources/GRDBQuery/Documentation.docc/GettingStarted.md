@@ -120,18 +120,26 @@ struct PlayerList: View {
 
 > Tip: Some applications want to use `@Query` without specifying the key path to the database in each and every view.
 >
-> To do so, add somewhere in your application those convenience `Query` initializers:
+> To do so, declare somewhere in your application convenience `Query` initializers as below. To decide if you use one or the other, see <doc:QueryableParameters>: 
 >
 > ```swift
 > // Convenience Query initializers for requests
 > // that feed from `DatabaseQueue`.
 > extension Query where Request.DatabaseContext == DatabaseQueue {
+>     /// Creates a `Query`, given an initial `Queryable` request that
+>     /// uses `DatabaseQueue` as a `DatabaseContext`.
 >     init(_ request: Request) {
 >         self.init(request, in: \.dbQueue)
 >     }
+>
+>     /// Creates a `Query`, given a SwiftUI binding to a `Queryable`
+>     /// request that uses `DatabaseContext` as a `DatabaseContext`.
 >     init(_ request: Binding<Request>) {
 >         self.init(request, in: \.dbQueue)
 >     }
+>
+>     /// Creates a `Query`, given a ``Queryable`` request that uses
+>     /// `DatabaseContext` as a `DatabaseContext`.
 >     init(constant request: Request) {
 >         self.init(constant:request, in: \.dbQueue)
 >     }
