@@ -57,9 +57,12 @@ public final class PlayerRepository {
 // MARK: - Database Configuration
 
 extension PlayerRepository {
+    private static let sqlLogger = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SQL")
+    
     /// Returns a database configuration suited for `PlayerRepository`.
     ///
-    /// SQL statements are logged if the `SQL_TRACE` environment value is set.
+    /// SQL statements are logged if the `SQL_TRACE` environment variable
+    /// is set.
     ///
     /// - parameter base: A base configuration.
     public static func makeConfiguration(_ base: Configuration = Configuration()) -> Configuration {
@@ -71,15 +74,16 @@ extension PlayerRepository {
         //     db.add(function: ...)
         // }
         
-        // Log SQL statements if the `SQL_TRACE` environment value is set.
+        // Log SQL statements if the `SQL_TRACE` environment variable is set.
         // See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/database/trace(options:_:)>
         if ProcessInfo.processInfo.environment["SQL_TRACE"] != nil {
-            let subsystem = Bundle.main.bundleIdentifier!
-            let logger = OSLog(subsystem: subsystem, category: "SQL")
-            
             config.prepareDatabase { db in
                 db.trace {
-                    os_log("%{public}@", log: logger, type: .debug, String(describing: $0))
+                    // It's ok to log statements publicly. Sensitive
+                    // information (statement arguments) are not logged
+                    // unless config.publicStatementArguments is set
+                    // (see below).
+                    os_log("%{public}@", log: sqlLogger, type: .debug, String(describing: $0))
                 }
             }
         }
@@ -90,6 +94,7 @@ extension PlayerRepository {
         // See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/configuration/publicstatementarguments>
         config.publicStatementArguments = true
 #endif
+        
         return config
     }
 }
