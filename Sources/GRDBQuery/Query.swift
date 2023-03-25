@@ -3,7 +3,7 @@ import SwiftUI
 
 // See Documentation.docc/Extensions/Query.md
 @propertyWrapper
-public struct Query<Request: Queryable>: DynamicProperty {
+public struct Query<Request: Queryable> {
     /// For a full discussion of these cases, see <doc:QueryableParameters>.
     private enum Configuration {
         case constant(Request)
@@ -155,14 +155,6 @@ public struct Query<Request: Queryable>: DynamicProperty {
         self.configuration = .binding(request)
     }
     
-    /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
-    public func update() {
-        tracker.update(
-            queryObservationEnabled: queryObservationEnabled,
-            configuration: configuration,
-            database: database)
-    }
-    
     /// A wrapper of the underlying `Query` that creates bindings to
     /// its ``Queryable`` request.
     ///
@@ -281,6 +273,17 @@ public struct Query<Request: Queryable>: DynamicProperty {
                 })
             isUpdating = false
         }
+    }
+}
+
+// Declare `DynamicProperty` conformance in an extension so that DocC does
+// not show `update` in the `Query` documentation.
+extension Query: DynamicProperty {
+    public func update() {
+        tracker.update(
+            queryObservationEnabled: queryObservationEnabled,
+            configuration: configuration,
+            database: database)
     }
 }
 
