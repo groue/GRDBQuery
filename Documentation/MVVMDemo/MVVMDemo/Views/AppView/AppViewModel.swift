@@ -1,6 +1,6 @@
 import Combine
 import GRDB
-import PlayerRepository
+import Players
 
 /// The view model for ``AppView``.
 final class AppViewModel: ObservableObject {

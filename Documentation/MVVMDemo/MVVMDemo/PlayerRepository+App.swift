@@ -1,6 +1,6 @@
 import Foundation
 import GRDB
-import PlayerRepository
+import Players
 
 // A `PlayerRepository` extension for creating various repositories for the
 // app, tests, and previews.

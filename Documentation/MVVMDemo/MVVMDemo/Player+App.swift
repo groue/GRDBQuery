@@ -1,4 +1,4 @@
-import PlayerRepository
+import Players
 
 // Convenience `Player` methods for the app.
 extension Player {

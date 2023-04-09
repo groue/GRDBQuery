@@ -3,8 +3,42 @@ import GRDB
 import os.log
 
 /// A repository of players.
-public final class PlayerRepository {
-    /// Creates an `PlayerRepository`, and makes sure the database schema
+///
+///  `PlayerRepository` applies the practices recommended at
+/// <https://github.com/groue/GRDB.swift/blob/master/Documentation/GoodPracticesForDesigningRecordTypes.md>.
+///
+/// You create a `PlayerRepository` with a
+/// [connection to an SQLite database](https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/databaseconnections),
+/// created with a configuration returned from
+/// ``makeConfiguration(_:)``.
+///
+/// For example:
+///
+/// ```swift
+/// // Create an in-memory PlayerRepository
+/// let config = PlayerRepository.makeConfiguration()
+/// let dbQueue = try DatabaseQueue(configuration: config)
+/// let repository = try PlayerRepository(dbQueue)
+/// ```
+///
+/// ## Topics
+///
+/// ### Creating a repository
+///
+/// - ``init(_:)``
+/// - ``makeConfiguration(_:)``
+///
+/// ### Performing read-only accesses
+///
+/// - ``reader``
+///
+/// ### Performing writes
+///
+/// - ``deleteAllPlayer()``
+/// - ``insert(_:)``
+/// - ``update(_:)``
+public struct PlayerRepository {
+    /// Creates a `PlayerRepository`, and makes sure the database schema
     /// is ready.
     ///
     /// - important: Create the `DatabaseWriter` with a configuration
@@ -104,7 +138,7 @@ extension PlayerRepository {
 // In this demo repository, they are pretty simple.
 
 extension PlayerRepository {
-    /// Returns the inserted player.
+    /// Inserts a player and returns the inserted player.
     public func insert(_ player: Player) throws -> Player {
         try dbWriter.write { db in
             try player.inserted(db)

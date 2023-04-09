@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		56089A0929CEFFD6003B3D49 /* PlayerRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 56089A0829CEFFD6003B3D49 /* PlayerRepository */; };
 		56089A0B29CF00ED003B3D49 /* Player+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A0A29CF00ED003B3D49 /* Player+App.swift */; };
 		56089A1A29CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56089A1929CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift */; };
+		561F2B5929E2C2A900CB7125 /* Players in Frameworks */ = {isa = PBXBuildFile; productRef = 561F2B5829E2C2A900CB7125 /* Players */; };
 		5640153928366D7E00EEA9BC /* PlayerEditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640153828366D7E00EEA9BC /* PlayerEditionView.swift */; };
 		56519D83274CCD1800ED16D8 /* InformationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D82274CCD1800ED16D8 /* InformationStyle.swift */; };
 		56519D92274D611F00ED16D8 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56519D91274D611F00ED16D8 /* PlayerView.swift */; };
@@ -47,7 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		56089A0729CEFF5E003B3D49 /* PlayerRepository */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = PlayerRepository; path = ../PlayerRepository; sourceTree = "<group>"; };
+		56089A0729CEFF5E003B3D49 /* Players */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Players; path = ../Players; sourceTree = "<group>"; };
 		56089A0A29CF00ED003B3D49 /* Player+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player+App.swift"; sourceTree = "<group>"; };
 		56089A1929CF1B81003B3D49 /* PlayerRepository+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerRepository+SwiftUI.swift"; sourceTree = "<group>"; };
 		5640153828366D7E00EEA9BC /* PlayerEditionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEditionView.swift; sourceTree = "<group>"; };
@@ -77,9 +77,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				56519DC0274FC3F700ED16D8 /* GRDB in Frameworks */,
-				56089A0929CEFFD6003B3D49 /* PlayerRepository in Frameworks */,
 				56F8A1BA273803BB0011ACBE /* GRDB in Frameworks */,
 				56519DC2274FC44500ED16D8 /* GRDBQuery in Frameworks */,
+				561F2B5929E2C2A900CB7125 /* Players in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,7 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				56519DBD274FC3DA00ED16D8 /* GRDBQuery */,
-				56089A0729CEFF5E003B3D49 /* PlayerRepository */,
+				56089A0729CEFF5E003B3D49 /* Players */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -214,7 +214,7 @@
 				56F8A1B9273803BB0011ACBE /* GRDB */,
 				56519DBF274FC3F700ED16D8 /* GRDB */,
 				56519DC1274FC44500ED16D8 /* GRDBQuery */,
-				56089A0829CEFFD6003B3D49 /* PlayerRepository */,
+				561F2B5829E2C2A900CB7125 /* Players */,
 			);
 			productName = QueryDemo;
 			productReference = 56F8A185273802970011ACBE /* QueryDemo.app */;
@@ -705,9 +705,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		56089A0829CEFFD6003B3D49 /* PlayerRepository */ = {
+		561F2B5829E2C2A900CB7125 /* Players */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = PlayerRepository;
+			productName = Players;
 		};
 		56519DBF274FC3F700ED16D8 /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;

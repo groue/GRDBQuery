@@ -1,6 +1,6 @@
 import XCTest
 import GRDB
-import PlayerRepository
+import Players
 
 final class PlayerRepositoryTests: XCTestCase {
     func testInsert() throws {

@@ -1,6 +1,6 @@
 import GRDB
 import GRDBQuery
-import PlayerRepository
+import Players
 import SwiftUI
 
 /// The main application view

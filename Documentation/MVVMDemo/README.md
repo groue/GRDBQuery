@@ -12,4 +12,4 @@ It is also an opportunity to explore a few practices:
 
 - _The database is the single source of truth._ All views feed from the database, and communicate through the database. This is not a general rule that fits all applications, but it fits well this demo app.
 - _The application is robust against surprising database changes._ Surprises usually happen as your application evolves, is extended with new features, becomes more complex. In this demo application, all the purple buttons trigger scenarios that could happen in real life. How do we make the app robust in all those scenarios? 
-- _The application accesses the database via the `PlayerRepository` Swift Package.
+- _The application accesses the database via the `Players` Swift Package.

@@ -1,5 +1,5 @@
 import GRDB
-import PlayerRepository
+import Players
 import SwiftUI
 
 /// The view that edits a player

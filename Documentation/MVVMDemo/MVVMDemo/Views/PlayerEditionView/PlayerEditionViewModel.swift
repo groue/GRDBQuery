@@ -1,6 +1,6 @@
 import Combine
 import GRDB
-import PlayerRepository
+import Players
 
 /// The view model for ``PlayerEditionView``.
 final class PlayerEditionViewModel: ObservableObject {
@@ -50,7 +50,7 @@ final class PlayerEditionViewModel: ObservableObject {
             .tracking(Player.filter(key: id).fetchOne)
             .publisher(in: playerRepository.reader, scheduling: .immediate)
             // Use scan in order to detect the three cases of player presence
-            .scan(.missing) { (previous, player) in
+            .scan(PlayerPresence.missing) { (previous, player) in
                 if let player {
                     return .existing(player)
                 } else if let player = previous.player {
