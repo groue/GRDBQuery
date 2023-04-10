@@ -4,9 +4,6 @@ import os.log
 
 /// A repository of players.
 ///
-///  `PlayerRepository` applies the practices recommended at
-/// <https://github.com/groue/GRDB.swift/blob/master/Documentation/GoodPracticesForDesigningRecordTypes.md>.
-///
 /// You create a `PlayerRepository` with a
 /// [connection to an SQLite database](https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/databaseconnections),
 /// created with a configuration returned from
