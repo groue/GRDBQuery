@@ -1,7 +1,6 @@
 # ``GRDBQuery/EnvironmentStateObject``
 
-A property wrapper that instantiates an observable object from the
-SwiftUI environment.
+A property wrapper that instantiates an observable object from the SwiftUI environment.
 
 ## Overview
 
