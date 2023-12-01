@@ -1,5 +1,11 @@
 # Release Notes
 
+## v0.8.0
+
+Released on 2023/12/01
+
+- **New** [#49](https://github.com/groue/GRDBQuery/pull/49): Make Value an associated type of Queryable.
+
 ## v0.7.0
 
 Released on 2023/03/25
