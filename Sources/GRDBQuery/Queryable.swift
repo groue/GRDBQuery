@@ -2,6 +2,9 @@ import Combine
 
 // See Documentation.docc/Extensions/Queryable.md
 public protocol Queryable: Equatable {
+    /// The type of the published values.
+    associatedtype Value
+    
     /// The type that provides database access.
     ///
     /// Any type can fit, as long as the `Queryable` type can build a Combine
@@ -14,7 +17,7 @@ public protocol Queryable: Equatable {
     
     /// The type of the Combine publisher of database values, returned
     /// from ``publisher(in:)``.
-    associatedtype ValuePublisher: Publisher
+    associatedtype ValuePublisher: Publisher where ValuePublisher.Output == Value
     
     /// The default value, used until the Combine publisher publishes its
     /// initial value.
@@ -27,9 +30,4 @@ public protocol Queryable: Equatable {
     ///
     /// - parameter database: Provides access to the database.
     func publisher(in database: DatabaseContext) -> ValuePublisher
-}
-
-extension Queryable {
-    /// The type of the published values.
-    public typealias Value = ValuePublisher.Output
 }
