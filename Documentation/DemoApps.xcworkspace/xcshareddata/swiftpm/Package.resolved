@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "318433453595369aedce0fda99dd2ec5f6ed86ce",
-        "version" : "6.10.1"
+        "revision" : "181ccd8d7dbeaf7ba0fe6c4f752fb14b2be4f550",
+        "version" : "6.24.1"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-docc-plugin",
       "state" : {
-        "revision" : "9b1258905c21fc1b97bf03d1b4ca12c4ec4e5fda",
-        "version" : "1.2.0"
+        "revision" : "26ac5758409154cc448d7ab82389c520fa8a8247",
+        "version" : "1.3.0"
       }
     },
     {
