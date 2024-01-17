@@ -22,12 +22,43 @@ extension EnvironmentValues {
 
 // MARK: - @Query convenience
 
-// Help views and previews observe the database with the @Query property wrapper.
-// See <https://swiftpackageindex.com/groue/grdbquery/documentation/grdbquery/gettingstarted>
+// Convenience `Query` initializers for requests that feed
+// from `PlayerRepository`.
+//
+// ```swift
+// struct MyView {
+//      // Without convenience initializer: verbose declaration.
+//      @Query(MyRequest(), in: \.playerRepository) var myValue
+//
+//      // With convenience initializer: implicit database context.
+//      @Query(MyRequest()) var myValue
+// }
+//
+// private MyRequest: Queryable {
+//     func publisher(in playerRepository: PlayerRepository) -> ... { }
+// }
+// ```
+//
+// When a request has no parameter, use `init(_ request: Request)`. When
+// a request has some varying parameters, pick the initializer that fits the
+// runtime behavior needed by your application, as described in
+// <https://swiftpackageindex.com/groue/grdbquery/documentation/grdbquery/queryableparameters>.
 extension Query where Request.DatabaseContext == PlayerRepository {
     /// Creates a `Query`, given an initial `Queryable` request that
-    /// uses `PlayerRepository` as a `DatabaseContext`.
+    /// feeds from `PlayerRepository`.
     init(_ request: Request) {
         self.init(request, in: \.playerRepository)
+    }
+
+    /// Creates a `Query`, given a SwiftUI binding to a `Queryable`
+    /// request that feeds from `PlayerRepository`.
+    init(_ request: Binding<Request>) {
+        self.init(request, in: \.playerRepository)
+    }
+
+    /// Creates a `Query`, given a `Queryable` request that feeds
+    /// from `PlayerRepository`.
+    init(constant request: Request) {
+        self.init(constant:request, in: \.playerRepository)
     }
 }
