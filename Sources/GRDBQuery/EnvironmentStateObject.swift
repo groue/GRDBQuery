@@ -3,7 +3,7 @@ import SwiftUI
 
 // See Documentation.docc/Extensions/EnvironmentStateObject.md
 @propertyWrapper
-public struct EnvironmentStateObject<ObjectType>: DynamicProperty
+public struct EnvironmentStateObject<ObjectType>
 where ObjectType: ObservableObject
 {
     /// The environment values.
@@ -40,11 +40,6 @@ where ObjectType: ObservableObject
     /// underlying object.
     public var projectedValue: Wrapper {
         Wrapper(object: wrappedValue)
-    }
-    
-    /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
-    public func update() {
-        core.update(makeObject: { makeObject(environmentValues) })
     }
     
     /// A wrapper of the underlying object that can create bindings to its
@@ -86,5 +81,11 @@ where ObjectType: ObservableObject
             }
             isUpdating = false
         }
+    }
+}
+
+extension EnvironmentStateObject: DynamicProperty {
+    public func update() {
+        core.update(makeObject: { makeObject(environmentValues) })
     }
 }
