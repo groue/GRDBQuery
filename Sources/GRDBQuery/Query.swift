@@ -24,7 +24,7 @@ public struct Query<Request: Queryable> {
     private let configuration: Configuration
     
     /// The last published database value.
-    public var wrappedValue: Request.Value {
+    @MainActor public var wrappedValue: Request.Value {
         tracker.value ?? Request.defaultValue
     }
     
@@ -170,7 +170,7 @@ public struct Query<Request: Queryable> {
         /// Returns a binding to the ``Queryable`` request itself.
         ///
         /// Learn how to use this binding in the <doc:QueryableParameters> guide.
-        public var request: Binding<Request> {
+        @MainActor public var request: Binding<Request> {
             Binding(
                 get: {
                     switch query.configuration {
@@ -201,7 +201,7 @@ public struct Query<Request: Queryable> {
         /// a given key path.
         ///
         /// Learn how to use this binding in the <doc:QueryableParameters> guide.
-        public subscript<U>(dynamicMember keyPath: WritableKeyPath<Request, U>) -> Binding<U> {
+        @MainActor public subscript<U>(dynamicMember keyPath: WritableKeyPath<Request, U>) -> Binding<U> {
             Binding(
                 get: { request.wrappedValue[keyPath: keyPath] },
                 set: { request.wrappedValue[keyPath: keyPath] = $0 })
@@ -209,7 +209,7 @@ public struct Query<Request: Queryable> {
     }
     
     /// The object that keeps on observing the database as long as it is alive.
-    private class Tracker: ObservableObject {
+    @MainActor private class Tracker: ObservableObject {
         /// The database value. Published so that view is redrawn when
         /// the value changes.
         var value: Request.Value?
@@ -221,6 +221,8 @@ public struct Query<Request: Queryable> {
         // Actual subscription
         private var trackedRequest: Request?
         private var cancellable: AnyCancellable?
+        
+        nonisolated init() { }
         
         func update(
             queryObservationEnabled: Bool,
@@ -280,10 +282,12 @@ public struct Query<Request: Queryable> {
 // not show `update` in the `Query` documentation.
 extension Query: DynamicProperty {
     public func update() {
-        tracker.update(
-            queryObservationEnabled: queryObservationEnabled,
-            configuration: configuration,
-            database: database)
+        MainActor.assumeIsolated {
+            tracker.update(
+                queryObservationEnabled: queryObservationEnabled,
+                configuration: configuration,
+                database: database)
+        }
     }
 }
 
