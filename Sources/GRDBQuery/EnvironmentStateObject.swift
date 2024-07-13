@@ -23,7 +23,7 @@ where ObjectType: ObservableObject
     }
     
     /// The underlying object.
-    public var wrappedValue: ObjectType {
+    @MainActor public var wrappedValue: ObjectType {
         // If `core.object` is nil, this means that `wrappedValue` is accessed
         // before `update()` was called, and SwiftUI would provide the expected
         // context in the environment.
@@ -38,13 +38,15 @@ where ObjectType: ObservableObject
     
     /// A projection that creates bindings to the properties of the
     /// underlying object.
-    public var projectedValue: Wrapper {
+    @MainActor public var projectedValue: Wrapper {
         Wrapper(object: wrappedValue)
     }
     
     /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
     public func update() {
-        core.update(makeObject: { makeObject(environmentValues) })
+        MainActor.assumeIsolated {
+            core.update(makeObject: { makeObject(environmentValues) })
+        }
     }
     
     /// A wrapper of the underlying object that can create bindings to its
