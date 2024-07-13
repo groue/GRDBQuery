@@ -24,10 +24,10 @@ public protocol Queryable: Equatable {
     ///
     /// The default value is unused if the publisher successfully publishes its
     /// initial value right on subscription.
-    static var defaultValue: Value { get }
+    @MainActor static var defaultValue: Value { get }
     
     /// Returns a Combine publisher of database values.
     ///
     /// - parameter database: Provides access to the database.
-    func publisher(in database: DatabaseContext) -> ValuePublisher
+    @MainActor func publisher(in database: Context) -> ValuePublisher
 }
