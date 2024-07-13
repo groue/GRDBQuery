@@ -5,6 +5,7 @@ ifdef XCPRETTY_PATH
 endif
 
 test:
+	swift test
 	xcodebuild \
 	  -project Tests/QueryTests/QueryTests.xcodeproj \
 	  -scheme QueryTests \

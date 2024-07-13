@@ -30,6 +30,12 @@ let package = Package(
             dependencies: [
                 .product(name: "GRDB", package: "GRDB.swift"),
             ]),
+        .testTarget(
+            name: "GRDBQueryTests",
+            dependencies: [
+                "GRDBQuery",
+                .product(name: "GRDB", package: "GRDB.swift"),
+            ]),
     ]
 )
 
