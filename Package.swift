@@ -29,3 +29,16 @@ let package = Package(
             dependencies: []),
     ]
 )
+
+for target in package.targets {
+    var settings = target.swiftSettings ?? []
+    settings.append(contentsOf: [
+        // <https://github.com/apple/swift-evolution/blob/main/proposals/0337-support-incremental-migration-to-concurrency-checking.md>
+        .enableExperimentalFeature("StrictConcurrency"),
+        // <https://github.com/apple/swift-evolution/blob/main/proposals/0354-regex-literals.md>
+        .enableUpcomingFeature("BareSlashRegexLiterals"),
+        // <https://github.com/apple/swift-evolution/blob/main/proposals/0401-remove-property-wrapper-isolation.md>
+        .enableUpcomingFeature("DisableOutwardActorInference"),
+    ])
+    target.swiftSettings = settings
+}
