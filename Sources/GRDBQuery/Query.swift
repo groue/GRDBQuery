@@ -197,6 +197,11 @@ public struct Query<Request: Queryable> {
                 })
         }
         
+        /// Returns the latest request publisher error.
+        @MainActor public var error: Error? {
+            query.tracker.error
+        }
+        
         /// Returns a binding to the property of the ``Queryable`` request, at
         /// a given key path.
         ///
@@ -210,9 +215,11 @@ public struct Query<Request: Queryable> {
     
     /// The object that keeps on observing the database as long as it is alive.
     @MainActor private class Tracker: ObservableObject {
-        /// The database value. Published so that view is redrawn when
-        /// the value changes.
+        /// The database value.
         var value: Request.Value?
+        
+        /// The latest eventual error.
+        var error: Error?
         
         /// The request set by the `Wrapper.request` binding.
         /// When modified, we wait for the next `update` to apply.
@@ -255,12 +262,23 @@ public struct Query<Request: Queryable> {
             // Update inner state.
             trackedRequest = newRequest
             request = newRequest
-            
+            error = nil
+
             // Start tracking the new request
             var isUpdating = true
             cancellable = newRequest.publisher(in: database).sink(
-                receiveCompletion: { _ in
-                    // Ignore errors
+                receiveCompletion: { [weak self] completion in
+                    guard let self = self else { return }
+                    if case .failure(let error) = completion {
+                        if !isUpdating {
+                            // Avoid the runtime warning in the case of publishers
+                            // that publish values right on subscription:
+                            // > Publishing changes from within view updates is not
+                            // > allowed, this will cause undefined behavior.
+                            self.objectWillChange.send()
+                        }
+                        self.error = error
+                    }
                 },
                 receiveValue: { [weak self] value in
                     guard let self = self else { return }

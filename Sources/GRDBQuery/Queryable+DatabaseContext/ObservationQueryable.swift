@@ -114,6 +114,11 @@ private struct Preview: View {
                 Text(verbatim: "Increment")
             }
             .buttonStyle(.borderedProminent)
+            
+            if let error = $value.error {
+                Text(String(describing: error))
+                    .foregroundStyle(.red)
+            }
         }
         .padding()
     }
@@ -128,7 +133,7 @@ private struct Request: ObservationQueryable {
 }
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, visionOS 1.0, watchOS 10.0, *)
-#Preview {
+#Preview("Success") {
     let dbQueue = try! DatabaseQueue()
     try! dbQueue.write { db in
         try db.create(table: "preview") { t in
@@ -139,5 +144,10 @@ private struct Request: ObservationQueryable {
     
     return Preview()
         .databaseContext(context)
+}
+
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, visionOS 1.0, watchOS 10.0, *)
+#Preview("Missing database context") {
+    Preview()
 }
 #endif
