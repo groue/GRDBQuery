@@ -17,8 +17,8 @@ struct PlayerNotFoundView: View {
     }
 }
 
-struct PlayerNotFoundView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerNotFoundView()
-    }
+// MARK: - Previews
+
+#Preview {
+    PlayerNotFoundView()
 }

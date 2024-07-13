@@ -34,7 +34,7 @@ import os.log
 /// - ``deleteAllPlayer()``
 /// - ``insert(_:)``
 /// - ``update(_:)``
-public struct PlayerRepository {
+public struct PlayerRepository: Sendable {
     /// Creates a `PlayerRepository`, and makes sure the database schema
     /// is ready.
     ///

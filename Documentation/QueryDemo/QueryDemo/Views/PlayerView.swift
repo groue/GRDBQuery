@@ -43,12 +43,13 @@ struct PlayerView: View {
     }
 }
 
-struct PlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            PlayerView(player: .makeRandom(), editAction: { })
-            PlayerView(player: .placeholder).redacted(reason: .placeholder)
-        }
-        .padding()
+
+// MARK: - Previews
+
+#Preview {
+    VStack {
+        PlayerView(player: .makeRandom(), editAction: { })
+        PlayerView(player: .placeholder).redacted(reason: .placeholder)
     }
+    .padding()
 }

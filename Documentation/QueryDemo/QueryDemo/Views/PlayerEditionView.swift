@@ -11,13 +11,14 @@ import SwiftUI
 struct PlayerEditionView: View {
     @Environment(\.dismiss) private var dismiss
     
-    @Query<PlayerPresenceRequest>
-    private var playerPresence: PlayerPresence
+    @Query<PlayerRequest>
+    private var player: Player?
     
-    @State var gonePlayerAlertPresented = false
+    @State private var playerPresence: PlayerPresence = .missing
+    @State private var gonePlayerAlertPresented = false
     
     init(id: Int64) {
-        _playerPresence = Query(PlayerPresenceRequest(id: id))
+        _player = Query(PlayerRequest(id: id))
     }
     
     var body: some View {
@@ -48,43 +49,27 @@ struct PlayerEditionView: View {
                 PlayerNotFoundView()
             }
         }
-        .alert("Ooops, player is gone.", isPresented: $gonePlayerAlertPresented, actions: {
-            Button("Dismiss") { dismiss() }
-        })
-        .onAppear {
-            if !playerPresence.exists {
+        .onChange(of: player?.id, initial: true) {
+            if let player {
+                playerPresence = .existing(player)
+            } else if let oldPlayer = playerPresence.player {
+                playerPresence = .gone(oldPlayer)
                 gonePlayerAlertPresented = true
             }
         }
-        .onChange(of: playerPresence.exists, perform: { playerExists in
-            if !playerExists {
-                gonePlayerAlertPresented = true
-            }
+        .alert("Ooops, player is gone.", isPresented: $gonePlayerAlertPresented, actions: {
+            Button("Dismiss") { dismiss() }
         })
     }
 }
 
-/// A @Query request that observes the presence of the player in the database.
-private struct PlayerPresenceRequest: Queryable {
-    static var defaultValue: PlayerPresence { .missing }
-    
+/// A @Query request that observes the player (any player, actually) in the database
+private struct PlayerRequest: ObservationQueryable {
+    static var defaultValue: Player? { nil }
     var id: Int64
     
-    func publisher(in playerRepository: PlayerRepository) -> AnyPublisher<PlayerPresence, Error> {
-        ValueObservation
-            .tracking(Player.filter(key: id).fetchOne)
-            .publisher(in: playerRepository.reader, scheduling: .immediate)
-            // Use scan in order to detect the three cases of player presence
-            .scan(.missing) { (previous, player) in
-                if let player {
-                    return .existing(player)
-                } else if let player = previous.player {
-                    return .gone(player)
-                } else {
-                    return .missing
-                }
-            }
-            .eraseToAnyPublisher()
+    func fetch(_ db: Database) throws -> Player? {
+        try Player.fetchOne(db, key: id)
     }
 }
 
@@ -119,14 +104,14 @@ private enum PlayerPresence {
     }
 }
 
-struct PlayerEditionView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerEditionView(id: 1)
-            .environment(\.playerRepository, .populated(playerId: 1))
-            .previewDisplayName("Existing player")
-        
-        PlayerEditionView(id: -1)
-            .environment(\.playerRepository, .empty())
-            .previewDisplayName("Missing player")
-    }
+// MARK: - Previews
+
+#Preview("Existing player") {
+    PlayerEditionView(id: 1)
+        .playerRepository(.populated(playerId: 1))
+}
+
+#Preview("Missing player") {
+    PlayerEditionView(id: -1)
+        .playerRepository(.empty())
 }

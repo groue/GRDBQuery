@@ -47,14 +47,14 @@ struct PlayerEditionView: View {
     }
 }
 
-struct PlayerEditionView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerEditionView(id: 1)
-            .environment(\.playerRepository, .populated(playerId: 1))
-            .previewDisplayName("Existing player")
-        
-        PlayerEditionView(id: -1)
-            .environment(\.playerRepository, .empty())
-            .previewDisplayName("Missing player")
-    }
+// MARK: - Previews
+
+#Preview("Existing player") {
+    PlayerEditionView(id: 1)
+        .playerRepository(.populated(playerId: 1))
+}
+
+#Preview("Missing player") {
+    PlayerEditionView(id: -1)
+        .playerRepository(.empty())
 }
