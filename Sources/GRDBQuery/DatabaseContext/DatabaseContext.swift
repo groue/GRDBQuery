@@ -1,53 +1,87 @@
 import GRDB
 
-/// A `DatabaseContext` provides access to a GRDB database, and feed the
-/// SwiftUI `databaseContext` environment key.
-///
-/// Application can opt in for read-only access when desired. They can also
-/// deal with database opening errors by providing a failing database
-/// context.
+// See Documentation.docc/Extensions/DatabaseContext.md
 public struct DatabaseContext {
-    private let _reader: @MainActor () throws -> any DatabaseReader
-    private let _writer: @MainActor () throws -> any DatabaseWriter
+    private let readerResult: Result<any DatabaseReader, Error>
+    private let writerResult: Result<any DatabaseWriter, Error>
     
-    /// Creates a `DatabaseContext` with a read/write access.
-    public static func make(_ writer: @escaping @MainActor () throws -> any DatabaseWriter) -> Self {
-        self.init(_reader: writer, _writer: writer)
-    }
-    
-    /// Creates a read-only `DatabaseContext`.
-    ///
-    /// Attempts to write in the database throug the ``writer`` property
-    /// throw ``DatabaseContextError/writeAccessUnvailable``.
-    public static func readOnly(_ reader: @escaping @MainActor () throws -> any DatabaseReader) -> Self {
-        self.init(
-            _reader: reader,
-            _writer: { throw DatabaseContextError.writeAccessUnvailable })
+    /// Returns a database writer.
+    public var writer: any DatabaseWriter {
+        get throws {
+            try writerResult.get()
+        }
     }
 }
 
 extension DatabaseContext: TopLevelDatabaseReader {
-    @MainActor public var reader: any DatabaseReader {
+    public var reader: any DatabaseReader {
         get throws {
-            try _reader()
+            try readerResult.get()
         }
     }
 }
 
-extension DatabaseContext: TopLevelDatabaseWriter {
-    @MainActor public var writer: any DatabaseWriter {
-        get throws {
-            try _writer()
-        }
+extension DatabaseContext {
+    /// A `DatabaseContext` that throws
+    /// ``DatabaseContextError/notConnected`` on every database access.
+    ///
+    /// The ``SwiftUI/EnvironmentValues/databaseContext`` environment key
+    /// contains such a database context unless the application
+    /// replaces it.
+    public static var notConnected: DatabaseContext {
+        self.init(
+            readerResult: .failure(DatabaseContextError.notConnected),
+            writerResult: .failure(DatabaseContextError.notConnected))
     }
-}
-
-/// An error thrown when the SwiftUI environment does not provide the
-/// required dataase access.
-public enum DatabaseContextError: Error {
-    /// Read-only access is not available.
-    case readAccessUnvailable
     
-    /// Read-write access is not available.
-    case writeAccessUnvailable
+    /// Creates a read-only `DatabaseContext` from an existing
+    /// database connection.
+    ///
+    /// The input closure is evaluated once. If it throws an error, all
+    /// database reads performed from the resulting context throw that
+    /// same error.
+    ///
+    /// Attempts to write in the database through the ``writer`` property
+    /// throw ``DatabaseContextError/readOnly``.
+    public static func readOnly(_ reader: () throws -> any DatabaseReader) -> Self {
+        do {
+            let reader = try reader()
+            return self.init(
+                readerResult: .success(reader),
+                writerResult: .failure(DatabaseContextError.readOnly))
+        } catch {
+            return self.init(
+                readerResult: .failure(error),
+                writerResult: .failure(DatabaseContextError.readOnly))
+        }
+    }
+    
+    /// Creates a `DatabaseContext` with a read/write access on an existing
+    /// database connection.
+    ///
+    /// The input closure is evaluated once. If it throws an error, all
+    /// database accesses performed from the resulting context throw that
+    /// same error.
+    public init(_ writer: () throws -> any DatabaseWriter) {
+        do {
+            let writer = try writer()
+            self.init(
+                readerResult: .success(writer),
+                writerResult: .success(writer))
+        } catch {
+            self.init(
+                readerResult: .failure(error),
+                writerResult: .failure(error))
+        }
+    }
+}
+
+/// An error thrown by `DatabaseContext` when a database access is
+/// not available.
+public enum DatabaseContextError: Error {
+    /// Database is not connected.
+    case notConnected
+    
+    /// Write access is not available.
+    case readOnly
 }

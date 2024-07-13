@@ -1,7 +1,7 @@
 import Combine
 
 // See Documentation.docc/Extensions/Queryable.md
-public protocol Queryable: Equatable {
+public protocol Queryable<Context>: Equatable {
     /// The type of the published values.
     associatedtype Value
     
@@ -33,5 +33,6 @@ public protocol Queryable: Equatable {
     /// Returns a Combine publisher of database values.
     ///
     /// - parameter database: Provides access to the database.
-    @MainActor func publisher(in database: Context) -> ValuePublisher
+    /// - throws: Any error that prevents the publisher to be returned.
+    @MainActor func publisher(in database: Context) throws -> ValuePublisher
 }

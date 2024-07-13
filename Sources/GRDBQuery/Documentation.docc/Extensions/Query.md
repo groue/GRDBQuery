@@ -8,10 +8,16 @@ Learn how to use `@Query` in <doc:GettingStarted>.
 
 ## Topics
 
-### Creating a @Query
+### Creating a @Query from the 'databaseContext' SwiftUI environment.
 
-- ``init(_:in:)-4ubsz``
-- ``init(_:in:)-2knwm``
+- ``init(_:)-7u3nj``
+- ``init(_:)-8786d``
+- ``init(constant:)-20bym``
+
+### Creating a @Query from other database contexts.
+
+- ``init(_:in:)-2o5mo``
+- ``init(_:in:)-8jlgq``
 - ``init(constant:in:)``
 
 ### Getting the Value
@@ -24,6 +30,6 @@ Learn how to use `@Query` in <doc:GettingStarted>.
 
 Those convenience initializers don't need any key path. They fit `Queryable` types that ignore environment values and use `Void` as their `DatabaseContext`.
 
-- ``init(_:)-5ucm5``
-- ``init(_:)-1fkla``
-- ``init(constant:)``
+- ``init(_:)-9bg3k``
+- ``init(_:)-81ae1``
+- ``init(constant:)-1ko9k``

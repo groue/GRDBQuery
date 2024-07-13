@@ -3,9 +3,9 @@ import XCTest
 import GRDB
 import GRDBQuery
 
-class ObservationQueryableTests: XCTestCase {
+class ValueObservationQueryableTests: XCTestCase {
     func test_initial_value_is_fetched_immediately() throws {
-        struct Request: ObservationQueryable {
+        struct Request: ValueObservationQueryable {
             static var defaultValue: Bool { false }
             
             func fetch(_ db: Database) throws -> Bool {
@@ -28,8 +28,8 @@ class ObservationQueryableTests: XCTestCase {
     }
     
     func test_initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_delayed_option() throws {
-        struct Request: ObservationQueryable {
-            static let observationOptions = ObservationOptions.delayed
+        struct Request: ValueObservationQueryable {
+            static let queryableOptions = QueryableOptions.delayed
             static var defaultValue: Bool { false }
             
             func fetch(_ db: Database) throws -> Bool {
@@ -55,6 +55,33 @@ class ObservationQueryableTests: XCTestCase {
         XCTAssertFalse(valueMutex.withLock { $0 })
         withExtendedLifetime(cancellable) {
             wait(for: [expectation])
+        }
+        XCTAssertTrue(valueMutex.withLock { $0 })
+    }
+    
+    func test_custom_context() throws {
+        struct DatabaseManager: TopLevelDatabaseReader {
+            var reader: any DatabaseReader
+        }
+        struct Request: ValueObservationQueryable {
+            typealias Context = DatabaseManager
+            static var defaultValue: Bool { false }
+            
+            func fetch(_ db: Database) throws -> Bool {
+                true
+            }
+        }
+        
+        let request = Request()
+        let dbQueue = try DatabaseQueue()
+        let manager = DatabaseManager(reader: dbQueue)
+        let publisher = request.publisher(in: manager)
+        
+        let valueMutex = Mutex(false)
+        _ = publisher.sink { completion in
+            if case .failure = completion { XCTFail() }
+        } receiveValue: { value in
+            valueMutex.withLock { $0 = value }
         }
         XCTAssertTrue(valueMutex.withLock { $0 })
     }

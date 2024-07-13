@@ -85,7 +85,7 @@ import GRDB
 import GRDBQuery
 
 #Preview {
-    struct PlayerCountRequest: ObservationQueryable {
+    struct PlayerCountRequest: ValueObservationQueryable {
         static var defaultValue: Int { 0 }
         
         func fetch(_ db: Database) throws -> Int {

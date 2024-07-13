@@ -26,6 +26,6 @@ extension View {
     func playerRepository(_ repository: PlayerRepository) -> some View {
         self
             .environment(\.playerRepository, repository)
-            .environment(\.databaseContext, DatabaseContext.readOnly { repository.reader })
+            .databaseContext(.readOnly { repository.reader })
     }
 }

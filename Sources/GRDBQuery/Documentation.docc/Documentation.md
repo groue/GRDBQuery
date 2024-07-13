@@ -55,13 +55,31 @@ Both property wrappers can work together, so that developers can run quick exper
 
 ## Topics
 
-### The @Query property wrapper
+### Fundamentals
 
 - <doc:GettingStarted>
 - <doc:QueryableParameters>
 - ``Query``
 - ``Queryable``
+- ``FetchQueryable``
+- ``ValueObservationQueryable``
+- ``QueryableOptions``
+
+### Providing a database context
+
+- <doc:CustomDatabaseContexts>
+- ``DatabaseContext``
+- ``DatabaseContextError``
+- ``SwiftUI/View/databaseContext(_:)``
+- ``SwiftUI/Scene/databaseContext(_:)``
+- ``SwiftUI/EnvironmentValues/databaseContext``
+- ``TopLevelDatabaseReader``
+
+### Controlling observation
+
+- ``SwiftUI/View/queryObservation(_:)``
 - ``QueryObservation``
+- ``SwiftUI/EnvironmentValues/queryObservationEnabled``
 
 ### The MVVM architecture
 

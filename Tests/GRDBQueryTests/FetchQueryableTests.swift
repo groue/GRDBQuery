@@ -29,7 +29,7 @@ class FetchQueryableTests: XCTestCase {
     
     func test_value_is_not_fetched_immediately_and_received_on_main_actor_with_delayed_option() throws {
         struct Request: FetchQueryable {
-            static let fetchOptions = FetchOptions.delayed
+            static let queryableOptions = QueryableOptions.delayed
             static var defaultValue: Bool { false }
             
             func fetch(_ db: Database) throws -> Bool {
@@ -55,6 +55,33 @@ class FetchQueryableTests: XCTestCase {
         XCTAssertFalse(valueMutex.withLock { $0 })
         withExtendedLifetime(cancellable) {
             wait(for: [expectation])
+        }
+        XCTAssertTrue(valueMutex.withLock { $0 })
+    }
+    
+    func test_custom_context() throws {
+        struct DatabaseManager: TopLevelDatabaseReader {
+            var reader: any DatabaseReader
+        }
+        struct Request: FetchQueryable {
+            typealias Context = DatabaseManager
+            static var defaultValue: Bool { false }
+            
+            func fetch(_ db: Database) throws -> Bool {
+                true
+            }
+        }
+        
+        let request = Request()
+        let dbQueue = try DatabaseQueue()
+        let manager = DatabaseManager(reader: dbQueue)
+        let publisher = request.publisher(in: manager)
+        
+        let valueMutex = Mutex(false)
+        _ = publisher.sink { completion in
+            if case .failure = completion { XCTFail() }
+        } receiveValue: { value in
+            valueMutex.withLock { $0 = value }
         }
         XCTAssertTrue(valueMutex.withLock { $0 })
     }

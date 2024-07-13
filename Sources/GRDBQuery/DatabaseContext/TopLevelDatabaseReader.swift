@@ -3,7 +3,7 @@ import GRDB
 
 /// A type that provides a read-only database access.
 public protocol TopLevelDatabaseReader {
-    /// Returns a database reader.
+    /// Provides a read-only access to the database.
     @MainActor var reader: any DatabaseReader { get throws }
 }
 
@@ -12,6 +12,8 @@ extension TopLevelDatabaseReader where Self: DatabaseReader {
 }
 
 extension AnyDatabaseReader: TopLevelDatabaseReader { }
+extension DatabaseQueue: TopLevelDatabaseReader { }
+extension DatabasePool: TopLevelDatabaseReader { }
 extension DatabaseSnapshot: TopLevelDatabaseReader { }
 extension DatabaseSnapshotPool: TopLevelDatabaseReader { }
 

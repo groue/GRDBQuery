@@ -80,7 +80,7 @@ struct AppView: View {
 }
 
 /// A @Query request that observes the player (any player, actually) in the database
-private struct AnyPlayerRequest: ObservationQueryable {
+private struct AnyPlayerRequest: ValueObservationQueryable {
     static var defaultValue: Player? { nil }
     
     func fetch(_ db: Database) throws -> Player? {

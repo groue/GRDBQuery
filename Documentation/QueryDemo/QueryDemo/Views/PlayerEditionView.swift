@@ -55,6 +55,8 @@ struct PlayerEditionView: View {
             } else if let oldPlayer = playerPresence.player {
                 playerPresence = .gone(oldPlayer)
                 gonePlayerAlertPresented = true
+            } else {
+                gonePlayerAlertPresented = true
             }
         }
         .alert("Ooops, player is gone.", isPresented: $gonePlayerAlertPresented, actions: {
@@ -64,7 +66,7 @@ struct PlayerEditionView: View {
 }
 
 /// A @Query request that observes the player (any player, actually) in the database
-private struct PlayerRequest: ObservationQueryable {
+private struct PlayerRequest: ValueObservationQueryable {
     static var defaultValue: Player? { nil }
     var id: Int64
     

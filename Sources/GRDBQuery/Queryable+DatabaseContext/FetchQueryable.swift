@@ -1,59 +1,41 @@
 import Combine
 import GRDB
 
-/// A `Queryable` type that performs a single fetch. It is suitable for
-/// views that must not change once they have appeared on screen.
-///
-/// For example:
-///
-/// ```swift
-/// import GRDB
-/// import GRDBQuery
-///
-/// struct PlayersView {
-///     @Query(PlayersRequest()) var players: [Player]
-/// }
-///
-/// struct PlayersRequest: FetchQueryable {
-///     static var defaultValue: [Player] = []
-///
-///     func fetch(_ db: Database) throws -> [Player] {
-///         try Player.fetchAll(db)
-///     }
-/// }
-/// ```
-public protocol FetchQueryable: Queryable, Sendable
+// See Documentation.docc/Extensions/FetchQueryable.md
+public protocol FetchQueryable<Context>: Queryable, Sendable
 where Context: TopLevelDatabaseReader,
       ValuePublisher == AnyPublisher<Value, any Error>
 {
     /// Options for the database fetch.
-    static var fetchOptions: FetchOptions { get }
+    ///
+    /// The default behavior immediately fetches the value, right on
+    /// subscription. This might not be suitable for slow database accesses.
+    ///
+    /// See ``QueryableOptions`` for more options.
+    static var queryableOptions: QueryableOptions { get }
     
     /// Returns the fetched value.
     func fetch(_ db: Database) throws -> Value
 }
 
 extension FetchQueryable {
-    public static var fetchOptions: FetchOptions { .default }
+    public static var queryableOptions: QueryableOptions { .default }
     
     public func publisher(in context: Context) -> ValuePublisher {
         context.publishValue(
-            options: Self.fetchOptions,
+            queryableOptions: Self.queryableOptions,
             value: { try self.fetch($0) })
     }
 }
 
 extension TopLevelDatabaseReader {
     /// Returns a publisher of a single database value.
-    ///
-    /// - Parameters:
-    ///   - value: The closure that fetches the value.
     func publishValue<Value>(
-        options: FetchOptions,
+        queryableOptions: QueryableOptions,
         value: @escaping @Sendable (Database) throws -> Value
     ) -> AnyPublisher<Value, any Error> {
         DeferredOnMainActor {
-            if options.contains(.delayed) {
+            if queryableOptions.contains(.delayed) {
                 do {
                     return try reader
                         .readPublisher(value: value)
@@ -98,7 +80,7 @@ private struct Request: FetchQueryable {
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, visionOS 1.0, watchOS 10.0, *)
 #Preview {
     let dbQueue = try! DatabaseQueue()
-    let context = DatabaseContext.make { dbQueue }
+    let context = DatabaseContext { dbQueue }
     
     return Preview()
         .databaseContext(context)

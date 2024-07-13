@@ -1,6 +1,6 @@
 # ``GRDBQuery/Queryable``
 
-A type that feeds the `@Query` property wrapper.
+A type that feeds the `@Query` property wrapper with a sequence of values over time.
 
 ## Overview
 
@@ -23,10 +23,10 @@ import GRDBQuery
 struct PlayersRequest: Queryable {
     static var defaultValue: [Player] { [] }
 
-    func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
-        ValueObservation
+    func publisher(in context: DatabaseContext) throws -> AnyPublisher<[Player], Error> {
+        try ValueObservation
             .tracking { db in try Player.fetchAll(db) }
-            .publisher(in: dbQueue, scheduling: .immediate)
+            .publisher(in: context.reader, scheduling: .immediate)
             .eraseToAnyPublisher()
     }
 }
@@ -39,8 +39,7 @@ import GRDBQuery
 import SwiftUI
 
 struct PlayerList: View {
-    @Query(PlayersRequest())
-    private var players: [Player]
+    @Query(PlayersRequest()) private var players: [Player]
 
     var body: some View {
         List(players) { player in ... }
@@ -48,15 +47,37 @@ struct PlayerList: View {
 }
 ```
 
-For an explanation of how this works, and the required setup, please check <doc:GettingStarted>.
+> Important: Make sure a valid database context has been provided in the environment, or it will be impossible to access the database, and the `@Query` property will emit an error.
 
-Learn how a SwiftUI view can configure a `Queryable` type, control the database values it displays, in <doc:QueryableParameters>.
+## Derived protocols for convenient database accesses
+
+The `Queryable` protocol can build arbitraty Combine publishers, from a ``DatabaseContext`` or from any other data source (see <doc:CustomDatabaseContexts>). It is very versatile.
+
+However, many views just want to observe the database, or perform a single database fetch.
+
+That's why `Queryable` has two derived protocols that address those use cases specifically: ``ValueObservationQueryable`` and ``FetchQueryable``.
+
+For example, the `PlayersRequest` defined above can be streamlined as below, for an identical behavior:
+
+```swift
+struct PlayersRequest: ValueObservationQueryable {
+    static var defaultValue: [Player] = []
+
+    func fetch(_ db: Database) throws -> [Player] {
+        try Player.fetchAll(db)
+    }
+}
+```
+
+## Configurable Queryable Types
+
+A `Queryable` type can have parameters, so that it can filter or sort a list, fetch a model with a particular identifier, etc. See <doc:QueryableParameters>.
 
 ## Topics
 
 ### Associated Types
 
-- ``DatabaseContext``
+- ``Context``
 - ``ValuePublisher``
 - ``Value``
 

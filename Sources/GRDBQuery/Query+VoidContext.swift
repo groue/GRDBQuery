@@ -4,7 +4,7 @@ extension Query where Request.Context == Void {
     /// Creates a `Query`, given an initial ``Queryable`` request that uses
     /// `Void` as a `Context`.
     ///
-    /// See ``init(_:in:)-4ubsz`` for more information about the runtime
+    /// See ``init(_:in:)-2o5mo`` for more information about the runtime
     /// behavior of the returned `Query`.
     ///
     /// For example:
@@ -36,7 +36,7 @@ extension Query where Request.Context == Void {
     /// Creates a `Query`, given a SwiftUI binding to a ``Queryable``
     /// request that uses `Void` as a `Context`.
     ///
-    /// See ``init(_:in:)-2knwm`` for more information about the runtime
+    /// See ``init(_:in:)-8jlgq`` for more information about the runtime
     /// behavior of the returned `Query`.
     ///
     /// For example:

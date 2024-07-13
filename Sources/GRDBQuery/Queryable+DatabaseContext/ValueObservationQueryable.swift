@@ -1,30 +1,8 @@
 import Combine
 import GRDB
 
-/// A `Queryable` type that observes the database.
-///
-/// For example:
-///
-/// ```swift
-/// import GRDB
-/// import GRDBQuery
-///
-/// struct PlayersView {
-///     @Query(PlayersRequest()) var players: [Player]
-/// }
-///
-/// struct PlayersRequest: ObservationQueryable {
-///     static var defaultValue: [Player] = []
-///
-///     func fetch(_ db: Database) throws -> [Player] {
-///         try Player.fetchAll(db)
-///     }
-/// }
-/// ```
-///
-/// For more information, see
-/// <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/valueobservation>.
-public protocol ObservationQueryable: Queryable, Sendable
+// See Documentation.docc/Extensions/ValueObservationQueryable.md
+public protocol ValueObservationQueryable<Context>: Queryable, Sendable
 where Context: TopLevelDatabaseReader,
       ValuePublisher == AnyPublisher<Value, any Error>
 {
@@ -32,51 +10,49 @@ where Context: TopLevelDatabaseReader,
     ///
     /// By default:
     ///
-    /// - The initial value is immediately fetched.
+    /// - The initial value is immediately fetched, right on
+    ///   subscription. This might not be suitable for slow
+    ///   database accesses.
     /// - The tracked database region is not considered constant, which
-    ///   prevents some scheduling optimization in demanding applications.
+    ///   prevents some scheduling optimizations.
     ///
-    /// See ``ObservationOptions`` for more information.
-    static var observationOptions: ObservationOptions { get }
+    /// See ``QueryableOptions`` for more options.
+    ///
+    /// See also ``QueryObservation`` for enabling or disabling database
+    /// observation.
+    static var queryableOptions: QueryableOptions { get }
     
     /// Returns the observed value.
     func fetch(_ db: Database) throws -> Value
 }
 
-extension ObservationQueryable {
-    public static var observationOptions: ObservationOptions { .default }
+extension ValueObservationQueryable {
+    public static var queryableOptions: QueryableOptions { .default }
     
     public func publisher(in context: Context) -> ValuePublisher {
         context.publishObservation(
-            options: Self.observationOptions,
+            queryableOptions: Self.queryableOptions,
             value: { try self.fetch($0) })
     }
 }
 
 extension TopLevelDatabaseReader {
     /// Returns a publisher of an observed database value.
-    ///
-    /// - Parameters:
-    ///   - defaultValue: The value to publish when database access is
-    ///     not available.
-    ///   - scheduler: A `ValueObservationScheduler`. By default, fresh
-    ///     values are dispatched asynchronously on the main dispatch queue.
-    ///   - value: The closure that fetches the observed value.
     func publishObservation<Value>(
-        options: ObservationOptions,
+        queryableOptions: QueryableOptions,
         value: @escaping @Sendable (Database) throws -> Value
     ) -> AnyPublisher<Value, any Error> {
         DeferredOnMainActor {
             do {
                 let observation: ValueObservation<ValueReducers.Fetch<Value>>
-                if options.contains(.constantRegion) {
+                if queryableOptions.contains(.constantRegion) {
                     observation = ValueObservation.trackingConstantRegion(value)
                 } else {
                     observation = ValueObservation.tracking(value)
                 }
                 
                 let publisher: DatabasePublishers.Value<Value>
-                if options.contains(.delayed) {
+                if queryableOptions.contains(.delayed) {
                     publisher = try reader.publish(observation, scheduling: .async(onQueue: .main))
                 } else {
                     publisher = try reader.publish(observation, scheduling: .immediate)
@@ -124,7 +100,7 @@ private struct Preview: View {
     }
 }
 
-private struct Request: ObservationQueryable {
+private struct Request: ValueObservationQueryable {
     static let defaultValue = 0
     
     func fetch(_ db: Database) throws -> Int {
@@ -140,7 +116,7 @@ private struct Request: ObservationQueryable {
             t.autoIncrementedPrimaryKey("id")
         }
     }
-    let context = DatabaseContext.make { dbQueue }
+    let context = DatabaseContext { dbQueue }
     
     return Preview()
         .databaseContext(context)

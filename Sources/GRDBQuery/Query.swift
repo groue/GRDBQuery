@@ -164,6 +164,10 @@ public struct Query<Request: Queryable> {
     ///
     /// - ``request``
     /// - ``subscript(dynamicMember:)``
+    ///
+    /// ### Accessing the latest error
+    ///
+    /// - ``error``
     @dynamicMemberLookup public struct Wrapper {
         fileprivate let query: Query
         
@@ -198,6 +202,11 @@ public struct Query<Request: Queryable> {
         }
         
         /// Returns the latest request publisher error.
+        ///
+        /// This error is set whenever an error occurs when accessing a
+        /// database value.
+        ///
+        /// It is reset to nil when the `Query` is restarted.
         @MainActor public var error: Error? {
             query.tracker.error
         }
@@ -263,10 +272,19 @@ public struct Query<Request: Queryable> {
             trackedRequest = newRequest
             request = newRequest
             error = nil
+            
+            // Load the publisher
+            let publisher: Request.ValuePublisher
+            do {
+                publisher = try newRequest.publisher(in: database)
+            } catch {
+                self.error = error
+                return
+            }
 
             // Start tracking the new request
             var isUpdating = true
-            cancellable = newRequest.publisher(in: database).sink(
+            cancellable = publisher.sink(
                 receiveCompletion: { [weak self] completion in
                     guard let self = self else { return }
                     if case .failure(let error) = completion {
