@@ -1,8 +1,8 @@
 import SwiftUI
 
-extension Query where Request.DatabaseContext == Void {
+extension Query where Request.Context == Void {
     /// Creates a `Query`, given an initial ``Queryable`` request that uses
-    /// `Void` as a `DatabaseContext`.
+    /// `Void` as a `Context`.
     ///
     /// See ``init(_:in:)-4ubsz`` for more information about the runtime
     /// behavior of the returned `Query`.
@@ -34,7 +34,7 @@ extension Query where Request.DatabaseContext == Void {
     }
     
     /// Creates a `Query`, given a SwiftUI binding to a ``Queryable``
-    /// request that uses `Void` as a `DatabaseContext`.
+    /// request that uses `Void` as a `Context`.
     ///
     /// See ``init(_:in:)-2knwm`` for more information about the runtime
     /// behavior of the returned `Query`.
@@ -78,7 +78,7 @@ extension Query where Request.DatabaseContext == Void {
     }
     
     /// Creates a `Query`, given a ``Queryable`` request that uses
-    /// `Void` as a `DatabaseContext`.
+    /// `Void` as a `Context`.
     ///
     /// See ``init(constant:in:)`` for more information about the runtime
     /// behavior of the returned `Query`.
@@ -98,7 +98,7 @@ extension Query where Request.DatabaseContext == Void {
     /// struct PlayerList: View {
     ///     @Query<PlayersRequest> private var players: [Player]
     ///
-    ///     init(constantRequest request: Binding<PlayersRequest>) {
+    ///     init(constantRequest request: PlayersRequest) {
     ///         _players = Query(constant: request)
     ///     }
     ///

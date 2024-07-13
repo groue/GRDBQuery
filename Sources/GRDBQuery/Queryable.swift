@@ -13,7 +13,7 @@ public protocol Queryable: Equatable {
     ///
     /// It may be a `GRDB.DatabaseQueue`, or your custom database manager: see
     /// <doc:GettingStarted> for more guidance.
-    associatedtype DatabaseContext
+    associatedtype Context
     
     /// The type of the Combine publisher of database values, returned
     /// from ``publisher(in:)``.

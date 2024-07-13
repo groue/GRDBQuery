@@ -12,7 +12,7 @@ public struct Query<Request: Queryable> {
     }
     
     /// Database access
-    @Environment private var database: Request.DatabaseContext
+    @Environment private var database: Request.Context
     
     /// Database access
     @Environment(\.queryObservationEnabled) private var queryObservationEnabled
@@ -70,7 +70,7 @@ public struct Query<Request: Queryable> {
     ///   database in the environment, see <doc:GettingStarted>.
     public init(
         _ request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
     {
         self._database = Environment(keyPath)
         self.configuration = .initial(request)
@@ -105,7 +105,7 @@ public struct Query<Request: Queryable> {
     ///   database in the environment, see <doc:GettingStarted>.
     public init(
         constant request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
     {
         self._database = Environment(keyPath)
         self.configuration = .constant(request)
@@ -149,7 +149,7 @@ public struct Query<Request: Queryable> {
     ///   database in the environment, see <doc:GettingStarted>.
     public init(
         _ request: Binding<Request>,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
     {
         self._database = Environment(keyPath)
         self.configuration = .binding(request)
@@ -227,7 +227,7 @@ public struct Query<Request: Queryable> {
         func update(
             queryObservationEnabled: Bool,
             configuration queryConfiguration: Configuration,
-            database: Request.DatabaseContext)
+            database: Request.Context)
         {
             // Give up if observation is disabled
             guard queryObservationEnabled else {
