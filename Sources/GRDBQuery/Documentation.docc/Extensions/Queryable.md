@@ -12,7 +12,7 @@ The `Queryable` protocol inherits from the standard `Equatable` protocol so that
 
 ## Example
 
-The sample code below defines `PlayersRequest`, a `Queryable` type that publishes the list of players found in the database:
+The sample code below defines `PlayersRequest`, a `Queryable` type that publishes the list of players found in a `DatabaseContext`:
 
 ```swift
 import Combine
@@ -49,7 +49,7 @@ struct PlayerList: View {
 
 > Important: Make sure a valid database context has been provided in the environment, or it will be impossible to access the database, and the `@Query` property will emit an error.
 
-## Derived protocols for convenient database accesses
+## Convenience database accesses
 
 The `Queryable` protocol can build arbitraty Combine publishers, from a ``DatabaseContext`` or from any other data source (see <doc:CustomDatabaseContexts>). It is very versatile.
 

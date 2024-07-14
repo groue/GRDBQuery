@@ -8,14 +8,14 @@ Applications can perform arbitrary read and write database accesses from their S
 
 Some apps have other needs, though:
 
-- An app that wants to enforce **database invariants** must not allow views to perform any kind of database writes. Such invariants are an important part of application safety, as described in the [GRDB Concurrency Guide](https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/concurrency). 
+- An app that wants to enforce **database invariants** must not allow views to perform arbitrary database writes. Database invariants are an important part of application safety, as described in the [GRDB Concurrency Guide](https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/concurrency). 
 - An app that connects to **multiple databases** and wants to use the `@Query` property wrapper has to specify which database a `@Query` connects to.
 
 We will address those needs below.
 
 ## Removing write access from a DatabaseContext
 
-An application controls the `DatabaseContext` that is present in the SwiftUI environment. It is read-only if it is created with the ``DatabaseContext/readOnly(_:)`` factory method, even its underlying database connection can write.
+An application controls the ``DatabaseContext`` that is present in the SwiftUI environment. It is read-only if it is created with the ``DatabaseContext/readOnly(_:)`` factory method, even if its underlying database connection can write.
 
 ```swift
 import GRDBQuery
@@ -36,7 +36,7 @@ With a read-only context, all attempts to perform arbitraty writes via the `data
 
 ## Controlling writes with a custom database manager
 
-Now that it is impossible to perform arbitraty writes from the `databaseContext` environment value, some applications need views to perform controlled database writes.
+Now that it is impossible to perform arbitraty writes from the `databaseContext` environment value, some applications need views to perform controlled database writes — again, for convenience, or rapid prototyping.
 
 To do that, first define a "database manager" type that declares the set of permitted writes with dedicated methods. For example:
 
@@ -44,7 +44,7 @@ To do that, first define a "database manager" type that declares the set of perm
 import GRDB
 
 struct PlayerRepository {
-    private let writer: DatabaseWriter
+    private let writer: GRDB.DatabaseWriter
 }
 
 extension PlayerRepository {
@@ -105,15 +105,11 @@ struct DeletePlayersButton: View {
 
     var body: some View {
         Button("Delete Players") {
-            deletePlayers()
-        }
-    }
-
-    private func deletePlayers() {
-        do {
-            try playerRepository.deletePlayers()
-        } catch {
-            // Handle error 
+            do {
+                try playerRepository.deletePlayers()
+            } catch {
+                // Handle error 
+            }
         }
     }
 }
@@ -127,7 +123,7 @@ At this point, views that use the `@Query` property wrapper will fail, because t
 ```swift
 extension PlayerRepository {
     /// Provides a read-only access to the database.
-    var reader: DatabaseReader { writer }
+    var reader: GRDB.DatabaseReader { writer }
 }
 
 extension View {
@@ -153,7 +149,7 @@ This technique can be used to disallow arbitrary reads. It is also useful in app
 
 First, stop defining the `databaseContext` environment value, since it is useless.
 
-For `@Query` to be able to feed from a database manager, it is necessary to instruct all `Queryable` types to access the database through this database manager, instead of `DatabaseContext`.
+For `@Query` to be able to feed from a database manager, it is necessary to instruct `Queryable` types to access the database through this database manager, instead of `DatabaseContext`.
 
 - For ``Queryable`` types, build the publisher from a database manager instead of a database context:
 
@@ -171,7 +167,7 @@ For `@Query` to be able to feed from a database manager, it is necessary to inst
     ```swift
     extension PlayerRepository: TopLevelDatabaseReader {
         /// Provides a read-only access to the database.
-        var reader: DatabaseReader { writer }
+        var reader: GRDB.DatabaseReader { writer }
     }
 
     struct PlayersRequest: ValueObservationQueryable {

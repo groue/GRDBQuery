@@ -8,6 +8,9 @@ private struct DatabaseContextKey: EnvironmentKey {
 extension EnvironmentValues {
     /// The database context used for `@Query` and other database
     /// operations within the SwiftUI environment.
+    ///
+    /// To set the database context in the environment, use
+    /// ``SwiftUI/View/databaseContext(_:)``.
     public var databaseContext: DatabaseContext {
         get { self[DatabaseContextKey.self] }
         set { self[DatabaseContextKey.self] = newValue }
