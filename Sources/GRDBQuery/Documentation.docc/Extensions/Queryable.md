@@ -55,7 +55,7 @@ The `Queryable` protocol can build arbitraty Combine publishers, from a ``Databa
 
 However, many views just want to observe the database, or perform a single database fetch.
 
-That's why `Queryable` has two derived protocols that address those use cases specifically: ``ValueObservationQueryable`` and ``FetchQueryable``.
+That's why `Queryable` has three derived protocols that address those use cases specifically: ``ValueObservationQueryable``, ``PresenceObservationQueryable`` and ``FetchQueryable``.
 
 For example, the `PlayersRequest` defined above can be streamlined as below, for an identical behavior:
 

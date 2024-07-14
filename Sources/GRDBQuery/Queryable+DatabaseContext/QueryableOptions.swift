@@ -1,4 +1,5 @@
-/// Options for ``FetchQueryable`` and ``ValueObservationQueryable``.
+/// Options for ``ValueObservationQueryable``,
+/// ``PresenceObservationQueryable``, and ``FetchQueryable``.
 ///
 /// ## Topics
 ///

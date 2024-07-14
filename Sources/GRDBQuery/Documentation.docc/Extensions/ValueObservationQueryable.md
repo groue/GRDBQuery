@@ -4,7 +4,7 @@ A convenience `Queryable` type that observes the database.
 
 ## Example
 
-The sample code below defines `PlayersRequest`, a `Queryable` type that publishes the list of players found in the database:
+The sample code below defines `PlayersRequest`, a `ValueObservationQueryable` type that publishes the list of players found in the database:
 
 ```swift
 import GRDB
@@ -39,7 +39,7 @@ struct PlayerList: View {
 
 - Tip: Learn how a SwiftUI view can configure a `Queryable` type, control the database values it displays, in <doc:QueryableParameters>.
 
-- Tip: For more information about database observation, see <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/valueobservation>.
+- Tip: For more information about database observation, see [GRDB.ValueObservation].
 
 ## Topics
 
@@ -50,3 +50,5 @@ struct PlayerList: View {
 ### Controlling the observation behavior
 
 - ``queryableOptions``
+
+[GRDB.ValueObservation]: https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/valueobservation

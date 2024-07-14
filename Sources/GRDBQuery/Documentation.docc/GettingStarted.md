@@ -62,7 +62,7 @@ struct PlayersRequest: ValueObservationQueryable {
 
 Those "queryable" types conform to the ``Queryable`` protocol, which feeds the `@Query` property wrapper with a sequence of values over time.
 
-Two extra protocols ``FetchQueryable`` and ``ValueObservationQueryable`` (used in the above example) are derived from `Queryable`. They provide convenience APIs that perform a single fetch, or observe the database.
+Three extra protocols ``ValueObservationQueryable`` (used in the above example), ``PresenceObservationQueryable``, and ``FetchQueryable`` are derived from `Queryable`. They provide convenience APIs that observe the database or perform a single fetch.
 
 Queryable types can have parameters, so that they can filter or sort a list, fetch a model with a particular identifier, etc. See <doc:QueryableParameters>.
 

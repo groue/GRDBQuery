@@ -1,4 +1,8 @@
+#if compiler(>=6)
 @preconcurrency import Combine
+#else
+import Combine
+#endif
 import XCTest
 @testable import GRDBQuery
 

@@ -66,8 +66,9 @@ Both property wrappers can work together, so that developers can run quick exper
 - <doc:QueryableParameters>
 - ``Query``
 - ``Queryable``
-- ``FetchQueryable``
 - ``ValueObservationQueryable``
+- ``PresenceObservationQueryable``
+- ``FetchQueryable``
 - ``QueryableOptions``
 
 ### Providing a database context

@@ -8,7 +8,7 @@ Applications can perform arbitrary read and write database accesses from their S
 
 Some apps have other needs, though:
 
-- An app that wants to enforce **database invariants** must not allow views to perform arbitrary database writes. Database invariants are an important part of application safety, as described in the [GRDB Concurrency Guide](https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/concurrency). 
+- An app that wants to enforce **database invariants** must not allow views to perform arbitrary database writes. Database invariants are an important part of application safety, as described in the [GRDB Concurrency Guide]. 
 - An app that connects to **multiple databases** and wants to use the `@Query` property wrapper has to specify which database a `@Query` connects to.
 
 We will address those needs below.
@@ -162,7 +162,7 @@ For `@Query` to be able to feed from a database manager, it is necessary to inst
     }
     ```
 
-- For ``FetchQueryable`` and ``ValueObservationQueryable``, have the database manager conform to ``TopLevelDatabaseReader``, and explicitly define the context type in queryable types:
+- For convenience protocols ``ValueObservationQueryable``, ``PresenceObservationQueryable`` and ``FetchQueryable``, have the database manager conform to ``TopLevelDatabaseReader``, and explicitly define the context type in queryable types:
 
     ```swift
     extension PlayerRepository: TopLevelDatabaseReader {
@@ -239,3 +239,5 @@ struct PlayerList: View {
 >     ...
 > }
 > ```
+
+[GRDB Concurrency Guide]: https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/concurrency

@@ -4,7 +4,7 @@ A convenience `Queryable` type that emits a single value, from a single database
 
 ## Example
 
-The sample code below defines `PlayersRequest`, a FetchQueryable type that fetches the list of players found in the database:
+The sample code below defines `PlayersRequest`, a `FetchQueryable` type that fetches the list of players found in the database:
 
 ```swift
 import GRDB
