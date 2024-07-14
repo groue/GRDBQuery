@@ -6,7 +6,7 @@ The SwiftUI companion for GRDB
 
 This library helps building SwiftUI applications that access "services", such as a local database, through the SwiftUI environment.
 
-Its main purpose is to help users of the [GRDB] SQLite toolkit. Yet GRDBQuery has no dependency on GRDB: you can use it in other contexts, in a Core Data or Realm application, and generally in any kind of app, as long as you'd like to put the SwiftUI environment to good use. 
+Its main purpose is to help users of the [GRDB] SQLite toolkit. Yet GRDBQuery can be used it in other contexts, in a Core Data or Realm application, and generally in any kind of app, as long as you'd like to put the SwiftUI environment to good use.
 
 ## What's in the Box?
 
@@ -26,6 +26,8 @@ GRDBQuery provides two property wrappers:
     }
     ```
 
+    See <doc:GettingStarted>.
+
 - With **`@EnvironmentStateObject`**, applications can build observable objects that find their dependencies in the SwiftUI environment:
 
     ```swift
@@ -35,7 +37,7 @@ GRDBQuery provides two property wrappers:
         
         init() {
             _viewModel = EnvironmentStateObject { env in
-                PlayerListViewModel(database: env.database)
+                PlayerListViewModel(database: env.databaseContext)
             }
         }
         
@@ -47,7 +49,9 @@ GRDBQuery provides two property wrappers:
     
     `@EnvironmentStateObject` is a general-purpose property wrapper, akin to the SwiftUI `@Environment`, `@EnvironmentObject`, `@ObservedObject`, and `@StateObject`.
     
-    It fits well the view models of the MVVM architecture, as well as dependency injection. 
+    It fits well the view models of the MVVM architecture, as well as dependency injection.
+
+    See <doc:MVVM>.
 
 Both property wrappers can work together, so that developers can run quick experiments, build versatile previews, and also apply strict patterns and conventions. Pick `@Query`, or `@EnvironmentStateObject`, depending on your needs!
 

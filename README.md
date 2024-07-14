@@ -10,7 +10,7 @@
 
 This library helps building SwiftUI applications that access "services", such as a local database, through the SwiftUI environment.
 
-Its main purpose is to help users of the [GRDB] SQLite toolkit. Yet GRDBQuery has no dependency on GRDB: you can use it in other contexts, in a Core Data or Realm application, and generally in any kind of app, as long as you'd like to put the SwiftUI environment to good use. 
+Its main purpose is to help users of the [GRDB] SQLite toolkit. Yet GRDBQuery can be used it in other contexts, in a Core Data or Realm application, and generally in any kind of app, as long as you'd like to put the SwiftUI environment to good use.
 
 ## What's in the Box?
 
@@ -39,7 +39,7 @@ GRDBQuery provides two property wrappers:
         
         init() {
             _viewModel = EnvironmentStateObject { env in
-                PlayerListViewModel(database: env.database)
+                PlayerListViewModel(database: env.databaseContext)
             }
         }
         
