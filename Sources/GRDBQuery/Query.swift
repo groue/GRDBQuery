@@ -3,7 +3,7 @@ import SwiftUI
 
 // See Documentation.docc/Extensions/Query.md
 @propertyWrapper
-public struct Query<Request: Queryable> {
+@MainActor public struct Query<Request: Queryable> {
     /// For a full discussion of these cases, see <doc:QueryableParameters>.
     private enum Configuration {
         case constant(Request)
@@ -24,7 +24,7 @@ public struct Query<Request: Queryable> {
     private let configuration: Configuration
     
     /// The last published database value.
-    @MainActor public var wrappedValue: Request.Value {
+    public var wrappedValue: Request.Value {
         tracker.value ?? Request.defaultValue
     }
     
@@ -281,13 +281,28 @@ public struct Query<Request: Queryable> {
                 self.error = error
                 return
             }
-
+            
             // Start tracking the new request
             var isUpdating = true
             cancellable = publisher.sink(
                 receiveCompletion: { [weak self] completion in
                     guard let self = self else { return }
-                    if case .failure(let error) = completion {
+                    MainActor.assumeIsolated {
+                        if case .failure(let error) = completion {
+                            if !isUpdating {
+                                // Avoid the runtime warning in the case of publishers
+                                // that publish values right on subscription:
+                                // > Publishing changes from within view updates is not
+                                // > allowed, this will cause undefined behavior.
+                                self.objectWillChange.send()
+                            }
+                            self.error = error
+                        }
+                    }
+                },
+                receiveValue: { [weak self] value in
+                    guard let self = self else { return }
+                    MainActor.assumeIsolated {
                         if !isUpdating {
                             // Avoid the runtime warning in the case of publishers
                             // that publish values right on subscription:
@@ -295,19 +310,8 @@ public struct Query<Request: Queryable> {
                             // > allowed, this will cause undefined behavior.
                             self.objectWillChange.send()
                         }
-                        self.error = error
+                        self.value = value
                     }
-                },
-                receiveValue: { [weak self] value in
-                    guard let self = self else { return }
-                    if !isUpdating {
-                        // Avoid the runtime warning in the case of publishers
-                        // that publish values right on subscription:
-                        // > Publishing changes from within view updates is not
-                        // > allowed, this will cause undefined behavior.
-                        self.objectWillChange.send()
-                    }
-                    self.value = value
                 })
             isUpdating = false
         }
@@ -317,7 +321,7 @@ public struct Query<Request: Queryable> {
 // Declare `DynamicProperty` conformance in an extension so that DocC does
 // not show `update` in the `Query` documentation.
 extension Query: DynamicProperty {
-    public func update() {
+    nonisolated public func update() {
         MainActor.assumeIsolated {
             tracker.update(
                 queryObservationEnabled: queryObservationEnabled,

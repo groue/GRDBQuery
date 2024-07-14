@@ -3,7 +3,7 @@ import SwiftUI
 
 // See Documentation.docc/Extensions/EnvironmentStateObject.md
 @propertyWrapper
-public struct EnvironmentStateObject<ObjectType>: DynamicProperty
+@MainActor public struct EnvironmentStateObject<ObjectType>: DynamicProperty
 where ObjectType: ObservableObject
 {
     /// The environment values.
@@ -23,7 +23,7 @@ where ObjectType: ObservableObject
     }
     
     /// The underlying object.
-    @MainActor public var wrappedValue: ObjectType {
+    public var wrappedValue: ObjectType {
         // If `core.object` is nil, this means that `wrappedValue` is accessed
         // before `update()` was called, and SwiftUI would provide the expected
         // context in the environment.
@@ -38,12 +38,12 @@ where ObjectType: ObservableObject
     
     /// A projection that creates bindings to the properties of the
     /// underlying object.
-    @MainActor public var projectedValue: Wrapper {
+    public var projectedValue: Wrapper {
         Wrapper(object: wrappedValue)
     }
     
     /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
-    public func update() {
+    nonisolated public func update() {
         MainActor.assumeIsolated {
             core.update(makeObject: { makeObject(environmentValues) })
         }

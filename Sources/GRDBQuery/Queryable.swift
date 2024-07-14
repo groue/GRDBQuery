@@ -7,16 +7,14 @@ public protocol Queryable<Context>: Equatable {
     
     /// The type that provides database access.
     ///
-    /// By default, it is ``DatabaseContext``, so that the
-    /// queryable type can feed from the `databaseContext`
-    /// environment key.
+    /// By default, it is ``DatabaseContext``.
     ///
     /// Generally speaking, any type can fit, as long as the `Queryable`
     /// type can build a Combine publisher from an instance of this type,
     /// in the ``publisher(in:)`` method.
     ///
-    /// It may be a `GRDB.DatabaseQueue`, or your custom database manager: see
-    /// <doc:GettingStarted> for more guidance.
+    /// It may be a `GRDB.DatabaseQueue`, or your custom database manager:
+    /// see <doc:CustomDatabaseContexts> for more guidance.
     associatedtype Context = DatabaseContext
     
     /// The type of the Combine publisher of database values, returned
@@ -31,6 +29,9 @@ public protocol Queryable<Context>: Equatable {
     @MainActor static var defaultValue: Value { get }
     
     /// Returns a Combine publisher of database values.
+    ///
+    /// The returned publisher must publish its values and completion on the
+    /// main actor.
     ///
     /// - parameter database: Provides access to the database.
     /// - throws: Any error that prevents the publisher to be returned.

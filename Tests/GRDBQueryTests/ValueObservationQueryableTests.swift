@@ -4,7 +4,7 @@ import GRDB
 import GRDBQuery
 
 class ValueObservationQueryableTests: XCTestCase {
-    func test_initial_value_is_fetched_immediately() throws {
+    @MainActor func test_initial_value_is_fetched_immediately() throws {
         struct Request: ValueObservationQueryable {
             static var defaultValue: Bool { false }
             
@@ -27,7 +27,7 @@ class ValueObservationQueryableTests: XCTestCase {
         XCTAssertTrue(valueMutex.withLock { $0 })
     }
     
-    func test_initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_delayed_option() throws {
+    @MainActor func test_initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_delayed_option() throws {
         struct Request: ValueObservationQueryable {
             static let queryableOptions = QueryableOptions.delayed
             static var defaultValue: Bool { false }
@@ -59,7 +59,7 @@ class ValueObservationQueryableTests: XCTestCase {
         XCTAssertTrue(valueMutex.withLock { $0 })
     }
     
-    func test_custom_context() throws {
+    @MainActor func test_custom_context() throws {
         struct DatabaseManager: TopLevelDatabaseReader {
             var reader: any DatabaseReader
         }

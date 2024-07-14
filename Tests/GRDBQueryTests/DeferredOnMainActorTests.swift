@@ -1,15 +1,15 @@
-import Combine
+@preconcurrency import Combine
 import XCTest
 @testable import GRDBQuery
 
 class DeferredOnMainActorTests: XCTestCase {
     func test_deferred_publisher_is_lazily_instantiated() {
-        var instantiated = false
+        let instantiatedMutex = Mutex(false)
         _ = DeferredOnMainActor {
-            instantiated = true
+            instantiatedMutex.withLock { $0 = true }
             return Just(true)
         }
-        XCTAssertFalse(instantiated)
+        XCTAssertFalse(instantiatedMutex.withLock { $0 })
     }
     
     @MainActor func test_deferred_publisher_is_synchronously_subscribed_from_main_actor() {

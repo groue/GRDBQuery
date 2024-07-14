@@ -21,7 +21,7 @@ where Context: TopLevelDatabaseReader,
 extension FetchQueryable {
     public static var queryableOptions: QueryableOptions { .default }
     
-    public func publisher(in context: Context) -> ValuePublisher {
+    @MainActor public func publisher(in context: Context) -> ValuePublisher {
         context.publishValue(
             queryableOptions: Self.queryableOptions,
             value: { try self.fetch($0) })
@@ -30,26 +30,29 @@ extension FetchQueryable {
 
 extension TopLevelDatabaseReader {
     /// Returns a publisher of a single database value.
-    func publishValue<Value>(
+    @MainActor func publishValue<Value>(
         queryableOptions: QueryableOptions,
         value: @escaping @Sendable (Database) throws -> Value
     ) -> AnyPublisher<Value, any Error> {
-        DeferredOnMainActor {
-            if queryableOptions.contains(.delayed) {
-                do {
-                    return try reader
+        let readerResult = Result { try reader }
+        return DeferredOnMainActor {
+            do {
+                let reader = try readerResult.get()
+                
+                if queryableOptions.contains(.delayed) {
+                    return reader
                         .readPublisher(value: value)
                         .eraseToAnyPublisher()
-                } catch {
-                    return Fail(outputType: Value.self, failure: error)
-                        .eraseToAnyPublisher()
+                } else {
+                    return Result {
+                        try reader.read(value)
+                    }
+                    .publisher
+                    .eraseToAnyPublisher()
                 }
-            } else {
-                return Result {
-                    try reader.read(value)
-                }
-                .publisher
-                .eraseToAnyPublisher()
+            } catch {
+                return Fail(outputType: Value.self, failure: error)
+                    .eraseToAnyPublisher()
             }
         }
         .eraseToAnyPublisher()

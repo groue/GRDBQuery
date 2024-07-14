@@ -4,7 +4,7 @@ import GRDB
 import GRDBQuery
 
 class FetchQueryableTests: XCTestCase {
-    func test_value_is_fetched_immediately() throws {
+    @MainActor func test_value_is_fetched_immediately() throws {
         struct Request: FetchQueryable {
             static var defaultValue: Bool { false }
             
@@ -27,7 +27,7 @@ class FetchQueryableTests: XCTestCase {
         XCTAssertTrue(valueMutex.withLock { $0 })
     }
     
-    func test_value_is_not_fetched_immediately_and_received_on_main_actor_with_delayed_option() throws {
+    @MainActor func test_value_is_not_fetched_immediately_and_received_on_main_actor_with_delayed_option() throws {
         struct Request: FetchQueryable {
             static let queryableOptions = QueryableOptions.delayed
             static var defaultValue: Bool { false }
@@ -59,7 +59,7 @@ class FetchQueryableTests: XCTestCase {
         XCTAssertTrue(valueMutex.withLock { $0 })
     }
     
-    func test_custom_context() throws {
+    @MainActor func test_custom_context() throws {
         struct DatabaseManager: TopLevelDatabaseReader {
             var reader: any DatabaseReader
         }

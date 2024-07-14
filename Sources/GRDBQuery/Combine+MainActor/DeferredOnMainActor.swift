@@ -22,7 +22,7 @@ struct DeferredOnMainActor<DeferredPublisher: Publisher>: Publisher {
     let deferred: @MainActor () -> DeferredPublisher
     
     func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
-        Deferred {
+        Deferred { [deferred] in
             Just(())
                 .receive(on: MainActorScheduler.shared)
                 .flatMapOnMainActor {

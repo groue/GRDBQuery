@@ -29,7 +29,7 @@ where Context: TopLevelDatabaseReader,
 extension ValueObservationQueryable {
     public static var queryableOptions: QueryableOptions { .default }
     
-    public func publisher(in context: Context) -> ValuePublisher {
+    @MainActor public func publisher(in context: Context) -> ValuePublisher {
         context.publishObservation(
             queryableOptions: Self.queryableOptions,
             value: { try self.fetch($0) })
@@ -38,12 +38,15 @@ extension ValueObservationQueryable {
 
 extension TopLevelDatabaseReader {
     /// Returns a publisher of an observed database value.
-    func publishObservation<Value>(
+    @MainActor func publishObservation<Value>(
         queryableOptions: QueryableOptions,
         value: @escaping @Sendable (Database) throws -> Value
     ) -> AnyPublisher<Value, any Error> {
-        DeferredOnMainActor {
+        let readerResult = Result { try reader }
+        return DeferredOnMainActor {
             do {
+                let reader = try readerResult.get()
+                
                 let observation: ValueObservation<ValueReducers.Fetch<Value>>
                 if queryableOptions.contains(.constantRegion) {
                     observation = ValueObservation.trackingConstantRegion(value)
@@ -53,9 +56,9 @@ extension TopLevelDatabaseReader {
                 
                 let publisher: DatabasePublishers.Value<Value>
                 if queryableOptions.contains(.delayed) {
-                    publisher = try reader.publish(observation, scheduling: .async(onQueue: .main))
+                    publisher = reader.publish(observation, scheduling: .async(onQueue: .main))
                 } else {
-                    publisher = try reader.publish(observation, scheduling: .immediate)
+                    publisher = reader.publish(observation, scheduling: .immediate)
                 }
                 
                 return publisher.eraseToAnyPublisher()
