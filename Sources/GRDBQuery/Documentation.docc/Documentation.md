@@ -61,6 +61,7 @@ Both property wrappers can work together, so that developers can run quick exper
 
 ### Fundamentals
 
+- <doc:MigratingToGRDBQuery09>
 - <doc:GettingStarted>
 - <doc:QueryableParameters>
 - ``Query``
