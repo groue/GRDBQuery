@@ -51,7 +51,7 @@ struct PlayerList: View {
 
 ## Convenience database accesses
 
-The `Queryable` protocol can build arbitraty Combine publishers, from a ``DatabaseContext`` or from any other data source (see <doc:CustomDatabaseContexts>). It is very versatile.
+The `Queryable` protocol can build arbitrary Combine publishers, from a ``DatabaseContext`` or from any other data source (see <doc:CustomDatabaseContexts>). It is very versatile.
 
 However, many views just want to observe the database, or perform a single database fetch.
 

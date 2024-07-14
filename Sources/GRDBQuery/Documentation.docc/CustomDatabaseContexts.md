@@ -32,11 +32,13 @@ struct MyApp: App {
 }
 ```
 
-With a read-only context, all attempts to perform arbitraty writes via the `databaseContext` environment value throw ``DatabaseContextError/readOnly``. This makes it pratically useless to define views that attempt to do so, so your app won't contain any.
+With a read-only context, all attempts to perform arbitrary writes via the `databaseContext` environment value throw ``DatabaseContextError/readOnly``. This makes it pratically useless to define views that attempt to do so, so your app won't contain any.
 
 ## Controlling writes with a custom database manager
 
-Now that it is impossible to perform arbitraty writes from the `databaseContext` environment value, some applications need views to perform controlled database writes — again, for convenience, or rapid prototyping.
+Now that it is impossible to perform arbitrary writes from the `databaseContext` environment value, some applications need views to perform controlled database writes — again, for convenience, or rapid prototyping.
+
+This is case of the [@Query Demo Application], that uses the techniques described here.
 
 To do that, first define a "database manager" type that declares the set of permitted writes with dedicated methods. For example:
 
@@ -241,3 +243,4 @@ struct PlayerList: View {
 > ```
 
 [GRDB Concurrency Guide]: https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/concurrency
+[@Query Demo Application]: https://github.com/groue/GRDBQuery/tree/main/Documentation/QueryDemo
