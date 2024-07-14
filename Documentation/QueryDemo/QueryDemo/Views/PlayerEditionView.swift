@@ -49,7 +49,7 @@ struct PlayerEditionView: View {
                 PlayerNotFoundView()
             }
         }
-        .onChange(of: player?.id, initial: true) {
+        .onChange(of: player, initial: true) {
             if let player {
                 playerPresence = .existing(player)
             } else if let oldPlayer = playerPresence.player {
