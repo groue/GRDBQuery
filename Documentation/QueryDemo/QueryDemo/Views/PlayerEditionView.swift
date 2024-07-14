@@ -11,19 +11,18 @@ import SwiftUI
 struct PlayerEditionView: View {
     @Environment(\.dismiss) private var dismiss
     
-    @Query<PlayerRequest>
-    private var player: Player?
+    @Query<PlayerPresenceRequest>
+    private var playerPresence: Presence<Player>
     
-    @State private var playerPresence: PlayerPresence = .missing
     @State private var gonePlayerAlertPresented = false
     
     init(id: Int64) {
-        _player = Query(PlayerRequest(id: id))
+        _playerPresence = Query(PlayerPresenceRequest(id: id))
     }
     
     var body: some View {
         NavigationView {
-            if let player = playerPresence.player {
+            if let player = playerPresence.value {
                 VStack {
                     PlayerFormView(player: player)
                     
@@ -49,60 +48,23 @@ struct PlayerEditionView: View {
                 PlayerNotFoundView()
             }
         }
-        .onChange(of: player, initial: true) {
-            if let player {
-                playerPresence = .existing(player)
-            } else if let oldPlayer = playerPresence.player {
-                playerPresence = .gone(oldPlayer)
-                gonePlayerAlertPresented = true
-            } else {
+        .alert("Ooops, player is gone.", isPresented: $gonePlayerAlertPresented) {
+            Button("Dismiss") { dismiss() }
+        }
+        .onChange(of: playerPresence.exists, initial: true) { _, playerExists in
+            if !playerExists {
                 gonePlayerAlertPresented = true
             }
         }
-        .alert("Ooops, player is gone.", isPresented: $gonePlayerAlertPresented, actions: {
-            Button("Dismiss") { dismiss() }
-        })
     }
 }
 
-/// A @Query request that observes the player (any player, actually) in the database
-private struct PlayerRequest: ValueObservationQueryable {
-    static var defaultValue: Player? { nil }
+/// A @Query request that observes the player in the database
+private struct PlayerPresenceRequest: PresenceObservationQueryable {
     var id: Int64
     
     func fetch(_ db: Database) throws -> Player? {
         try Player.fetchOne(db, key: id)
-    }
-}
-
-// We handle three distinct cases regarding the presence of the
-// edited player:
-private enum PlayerPresence {
-    /// The player exists in the database
-    case existing(Player)
-    
-    /// Player no longer exists, but we have its latest value.
-    case gone(Player)
-    
-    /// Player does not exist, and we don't have any information about it.
-    case missing
-    
-    var player: Player? {
-        switch self {
-        case let .existing(player), let .gone(player):
-            return player
-        case .missing:
-            return nil
-        }
-    }
-    
-    var exists: Bool {
-        switch self {
-        case .existing:
-            return true
-        case .gone, .missing:
-            return false
-        }
     }
 }
 
