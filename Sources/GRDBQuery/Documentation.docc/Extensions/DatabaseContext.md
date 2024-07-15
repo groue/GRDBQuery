@@ -20,25 +20,6 @@ let databaseContext = DatabaseContext { dbQueue }
 let databaseContext = DatabaseContext.readOnly { dbQueue }
 ```
 
-## Creating a DatabaseContext from a database manager
-
-When the application accesses the database through a database manager type, it is still possible to create a `DatabaseContext`, and feed `@Query` property wrappers. Learn more about the way to integrate database managers in GRDBQuery in <doc:CustomDatabaseContexts>.
-
-For example, here is how to create a read-only `DatabaseContext` from a `PlayerRepository` database manager:
-
-```swift
-extension PlayerRepository: TopLevelDatabaseReader {
-    /// Provides a read-only access to the database, or throws an error if
-    /// database connection could not be opened.
-    var reader: GRDB.DatabaseReader {
-        get throws { /* return a DatabaseReader */ }
-    }
-}
-
-let repository: PlayerRepository = ...
-let databaseContext = DatabaseContext.readOnly { try repository.reader }
-```
-
 ## DatabaseContext and the SwiftUI environment
 
 When put in the SwiftUI environment, a `DatabaseContext` allows SwiftUI views to read, observe, and even write in the database, when desired. For example:
@@ -59,6 +40,27 @@ struct MyApp: App {
 ```
 
 See <doc:GettingStarted> for more information.
+
+## Creating a DatabaseContext from a database manager
+
+When the application accesses the database through a database manager type, it is still possible to create a `DatabaseContext`, and feed `@Query` property wrappers.
+
+For example, here is how to create a read-only `DatabaseContext` from a `PlayerRepository` database manager:
+
+```swift
+extension PlayerRepository: TopLevelDatabaseReader {
+    /// Provides a read-only access to the database, or throws an error if
+    /// database connection could not be opened.
+    var reader: GRDB.DatabaseReader {
+        get throws { /* return a DatabaseReader */ }
+    }
+}
+
+let repository: PlayerRepository = ...
+let databaseContext = DatabaseContext.readOnly { try repository.reader }
+```
+
+Learn more about the way to use GRDBQuery with database managers in <doc:CustomDatabaseContexts>.
 
 ## Topics
 

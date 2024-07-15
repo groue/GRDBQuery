@@ -52,7 +52,7 @@ import GRDBQuery
 
 /// Tracks the full list of players
 struct PlayersRequest: ValueObservationQueryable {
-    static var defaultValue: [Player] = []
+    static var defaultValue: [Player] { [] }
 
     func fetch(_ db: Database) throws -> [Player] {
         try Player.fetchAll(db)

@@ -59,7 +59,7 @@ Given this general timeline of SwiftUI events:
 
 > Tip: For *slow and asynchronous* database publishers that publish all their values asynchronously, prefer `QueryObservation.always`, in order to reduce the probability that the application user can see obsolete database values.
 >
-> When you use a convenience ``ValueObservationQueryable``, ``PresenceObservationQueryable``, or ``FetchQueryable`` request, you opt in for such an asynchronous publishers with the ``QueryableOptions/delayed`` option.
+> When you use a convenience ``ValueObservationQueryable``, ``PresenceObservationQueryable``, or ``FetchQueryable`` request, you opt in for such an asynchronous publishers with the ``QueryableOptions/async`` option.
 >
 > You can also consider using `.onAppear` and a plain ``Queryable`` type that prepends its publisher with a sentinel value. This value will allow the view to display a loading indicator instead of obsolete database values, whenever the view appears or re-appears.
 

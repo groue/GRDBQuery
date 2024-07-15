@@ -4,7 +4,7 @@ A convenience `Queryable` type that observes the presence of a value in the data
 
 ## Example
 
-The sample code below defines `PlayerPresenceRequest`, a `PresenceObservationQueryable` type that publishes the presence of a player in the database, given its id:
+The sample code below defines `PlayerPresenceRequest`, a queryable type that publishes the presence of a player in the database, given its id:
 
 ```swift
 import GRDB
@@ -49,9 +49,28 @@ struct PlayerView: View {
 
 See <doc:QueryableParameters> for more explanations about the `PlayerView` initializer.
 
-- Important: Make sure a valid database context has been provided in the environment, or it will be impossible to access the database, and the `@Query` property will emit an error.
+> Important: Make sure a valid database context has been provided in the environment, or the `@Query` property will emit an ``Query/Wrapper/error``. See <doc:GettingStarted>.
 
-- Tip: For more information about database observation, see [GRDB.ValueObservation].
+> Tip: For more information about database observation, see [GRDB.ValueObservation].
+
+## Runtime Behavior
+
+By default, a `PresenceObservationQueryable` type fetches its initial value as soon as a SwiftUI view needs it, from the main thread. This is undesired when the database fetch is slow, because this blocks the user interface. For slow fetches, use the `.async` option, as below. The SwiftUI view will display the default value until the initial fetch is completed.
+
+```swift
+struct PlayersRequest: ValueObservationQueryable {
+    // Opt-in for async fetch
+    static let queryableOptions = QueryableOptions.async
+    
+    static var defaultValue: [Player] { [] }
+
+    func fetch(_ db: Database) throws -> [Player] {
+        try Player.fetchAll(db)
+    }
+}
+```
+
+The other option is ``QueryableOptions/constantRegion``. When appropriate, it that can enable scheduling optimizations in the most demanding apps. Check the documentation of this option.
 
 ## Topics
 
@@ -59,7 +78,7 @@ See <doc:QueryableParameters> for more explanations about the `PlayerView` initi
 
 - ``fetch(_:)``
 
-### Controlling the observation behavior
+### Controlling the runtime behavior
 
 - ``queryableOptions``
 

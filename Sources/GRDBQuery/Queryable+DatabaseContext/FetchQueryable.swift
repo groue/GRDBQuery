@@ -39,7 +39,7 @@ extension TopLevelDatabaseReader {
             do {
                 let reader = try readerResult.get()
                 
-                if queryableOptions.contains(.delayed) {
+                if queryableOptions.contains(.async) {
                     return reader
                         .readPublisher(value: value)
                         .eraseToAnyPublisher()

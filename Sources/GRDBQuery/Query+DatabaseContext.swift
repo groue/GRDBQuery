@@ -10,17 +10,6 @@ extension Query where Request.Context == DatabaseContext {
     /// For example:
     ///
     /// ```swift
-    /// struct PlayersRequest: Queryable {
-    ///     static var defaultValue: [Player] { [] }
-    ///
-    ///     // PlayersRequest feeds from nothing (Void)
-    ///     func publisher(
-    ///         in context: DatabaseContext
-    ///     ) -> AnyPublisher<[Player], Error> {
-    ///         ...
-    ///     }
-    /// }
-    ///
     /// struct PlayerList: View {
     ///     @Query(PlayersRequest()) private var players: [Player]
     ///
@@ -46,17 +35,6 @@ extension Query where Request.Context == DatabaseContext {
     /// For example:
     ///
     /// ```swift
-    /// struct PlayersRequest: Queryable {
-    ///     static var defaultValue: [Player] { [] }
-    ///
-    ///     // PlayersRequest feeds from nothing (Void)
-    ///     func publisher(
-    ///         in context: DatabaseContext
-    ///     ) -> AnyPublisher<[Player], Error> {
-    ///         ...
-    ///     }
-    /// }
-    ///
     /// struct PlayerList: View {
     ///     @Query<PlayersRequest> private var players: [Player]
     ///
@@ -87,17 +65,6 @@ extension Query where Request.Context == DatabaseContext {
     /// For example:
     ///
     /// ```swift
-    /// struct PlayersRequest: Queryable {
-    ///     static var defaultValue: [Player] { [] }
-    ///
-    ///     // PlayersRequest feeds from nothing (Void)
-    ///     func publisher(
-    ///         in context: DatabaseContext
-    ///     ) -> AnyPublisher<[Player], Error> {
-    ///         ...
-    ///     }
-    /// }
-    ///
     /// struct RootView {
     ///     @State var request: PlayersRequest
     ///

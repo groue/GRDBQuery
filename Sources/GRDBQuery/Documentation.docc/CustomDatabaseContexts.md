@@ -176,7 +176,7 @@ For `@Query` to be able to feed from a database manager, it is necessary to inst
         // Opt-out of the default `DatabaseContext`
         typealias Context = PlayerRepository
         
-        static var defaultValue: [Player] = []
+        static var defaultValue: [Player] { [] }
 
         func fetch(_ db: Database) throws -> [Player] {
             try Player.fetchAll(db)

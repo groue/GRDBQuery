@@ -36,14 +36,19 @@ import SwiftUI
         Wrapper(query: self)
     }
     
-    /// Creates a `Query`, given an initial ``Queryable`` request, and a key
-    /// path to the database in the SwiftUI environment.
+    /// Creates a `Query`, given an initial ``Queryable`` request, and a 
+    /// key path to a database context in the SwiftUI environment.
+    ///
+    /// The `request` must have a `Context` type identical to the type of
+    /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
+    /// default context of queryable requests), of any other type (see
+    /// <doc:CustomDatabaseContexts>).
     ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayerList: View {
-    ///     @Query(PlayersRequest(), in: \.dbQueue)
+    ///     @Query(PlayersRequest(), in: \.myDatabase)
     ///     private var players: [Player]
     ///
     ///     var body: some View {
@@ -65,9 +70,7 @@ import SwiftUI
     /// `@Query` initializers.
     ///
     /// - parameter request: An initial ``Queryable`` request.
-    /// - parameter keyPath: A key path to the database in the environment. To
-    ///   know which key path you have to provide, and learn how to put the
-    ///   database in the environment, see <doc:GettingStarted>.
+    /// - parameter keyPath: A key path to the database in the environment.
     public init(
         _ request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.Context>)
@@ -76,8 +79,13 @@ import SwiftUI
         self.configuration = .initial(request)
     }
     
-    /// Creates a `Query`, given a ``Queryable`` request, and a key path to the
-    /// database in the SwiftUI environment.
+    /// Creates a `Query`, given a ``Queryable`` request, and a key path to
+    /// the database in the SwiftUI environment.
+    ///
+    /// The `request` must have a `Context` type identical to the type of
+    /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
+    /// default context of queryable requests), of any other type (see
+    /// <doc:CustomDatabaseContexts>).
     ///
     /// The SwiftUI bindings returned by the ``projectedValue`` wrapper
     /// (`$players`) can not update the database content: the request is
@@ -90,7 +98,7 @@ import SwiftUI
     ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(constantRequest request: Binding<PlayersRequest>) {
-    ///         _players = Query(constant: request, in: \.dbQueue)
+    ///         _players = Query(constant: request, in: \.myDatabase)
     ///     }
     ///
     ///     var body: some View {
@@ -100,9 +108,7 @@ import SwiftUI
     /// ```
     ///
     /// - parameter request: A ``Queryable`` request.
-    /// - parameter keyPath: A key path to the database in the environment. To
-    ///   know which key path you have to provide, and learn how to put the
-    ///   database in the environment, see <doc:GettingStarted>.
+    /// - parameter keyPath: A key path to the database in the environment.
     public init(
         constant request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.Context>)
@@ -111,8 +117,13 @@ import SwiftUI
         self.configuration = .constant(request)
     }
     
-    /// Creates a `Query`, given a SwiftUI binding to its ``Queryable`` request,
-    /// and a key path to the database in the SwiftUI environment.
+    /// Creates a `Query`, given a SwiftUI binding to its ``Queryable``
+    /// request, and a key path to the database in the SwiftUI environment.
+    ///
+    /// The `request` must have a `Context` type identical to the type of
+    /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
+    /// default context of queryable requests), of any other type (see
+    /// <doc:CustomDatabaseContexts>).
     ///
     /// Both the `request` Binding argument, and the SwiftUI bindings
     /// returned by the ``projectedValue`` wrapper (`$players`) can update
@@ -134,7 +145,7 @@ import SwiftUI
     ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(_ request: Binding<PlayersRequest>) {
-    ///         _players = Query(request, in: \.dbQueue)
+    ///         _players = Query(request, in: \.myDatabase)
     ///     }
     ///
     ///     var body: some View {
@@ -144,9 +155,7 @@ import SwiftUI
     /// ```
     ///
     /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
-    /// - parameter keyPath: A key path to the database in the environment. To
-    ///   know which key path you have to provide, and learn how to put the
-    ///   database in the environment, see <doc:GettingStarted>.
+    /// - parameter keyPath: A key path to the database in the environment.
     public init(
         _ request: Binding<Request>,
         in keyPath: KeyPath<EnvironmentValues, Request.Context>)

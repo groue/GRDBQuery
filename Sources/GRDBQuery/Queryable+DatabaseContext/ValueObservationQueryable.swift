@@ -55,7 +55,7 @@ extension TopLevelDatabaseReader {
                 }
                 
                 let publisher: DatabasePublishers.Value<Value>
-                if queryableOptions.contains(.delayed) {
+                if queryableOptions.contains(.async) {
                     publisher = reader.publish(observation, scheduling: .async(onQueue: .main))
                 } else {
                     publisher = reader.publish(observation, scheduling: .immediate)

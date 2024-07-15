@@ -27,9 +27,9 @@ class ValueObservationQueryableTests: XCTestCase {
         XCTAssertTrue(valueMutex.withLock { $0 })
     }
     
-    @MainActor func test_initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_delayed_option() throws {
+    @MainActor func test_initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_async_option() throws {
         struct Request: ValueObservationQueryable {
-            static let queryableOptions = QueryableOptions.delayed
+            static let queryableOptions = QueryableOptions.async
             static var defaultValue: Bool { false }
             
             func fetch(_ db: Database) throws -> Bool {

@@ -25,9 +25,9 @@ class PresenceObservationQueryableTests: XCTestCase {
         XCTAssertEqual(valueMutex.withLock { $0 }.value, true)
     }
     
-    @MainActor func test_initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_delayed_option() throws {
+    @MainActor func test_initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_async_option() throws {
         struct Request: PresenceObservationQueryable {
-            static let queryableOptions = QueryableOptions.delayed
+            static let queryableOptions = QueryableOptions.async
             
             func fetch(_ db: Database) throws -> Bool? {
                 true

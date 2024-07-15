@@ -47,7 +47,7 @@ struct PlayerList: View {
 }
 ```
 
-> Important: Make sure a valid database context has been provided in the environment, or it will be impossible to access the database, and the `@Query` property will emit an error.
+> Important: Make sure a valid database context has been provided in the environment, or the `@Query` property will emit an ``Query/Wrapper/error``. See <doc:GettingStarted>.
 
 ## Convenience database accesses
 
@@ -61,7 +61,7 @@ For example, the `PlayersRequest` defined above can be streamlined as below, for
 
 ```swift
 struct PlayersRequest: ValueObservationQueryable {
-    static var defaultValue: [Player] = []
+    static var defaultValue: [Player] { [] }
 
     func fetch(_ db: Database) throws -> [Player] {
         try Player.fetchAll(db)
