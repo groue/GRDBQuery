@@ -39,6 +39,7 @@ extension PresenceObservationQueryable {
                 queryableOptions: Self.queryableOptions,
                 value: { try self.fetch($0) })
             .scanPresence()
+            .eraseToAnyPublisher()
     }
 }
 

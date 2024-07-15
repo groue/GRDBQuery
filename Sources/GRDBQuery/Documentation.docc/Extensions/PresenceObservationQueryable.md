@@ -82,8 +82,9 @@ The other option is ``QueryableOptions/constantRegion``. When appropriate, it th
 
 - ``queryableOptions``
 
-### Supporting Type
+### Support
 
 - ``Presence``
+- ``Combine/Publisher/scanPresence()``
 
 [GRDB.ValueObservation]: https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/valueobservation

@@ -4,6 +4,15 @@ import GRDB
 /// An enum that with three distinct cases, regarding the presence of a
 /// value: `.missing`, `.existing`, or `.gone`. The `.gone` case contains
 /// the latest known value.
+///
+/// # Overview
+///
+/// `Presence` makes it possible to display values on screen, even after
+/// they no longer exist. See ``PresenceObservationQueryable`` for a
+/// sample code.
+///
+/// All Combine publishers that publish optional values can be turned into
+/// a publisher of `Presence`, with ``Combine/Publisher/scanPresence()``.
 public enum Presence<Value> {
     /// The value exists.
     case existing(Value)
@@ -55,8 +64,9 @@ extension Presence: Identifiable where Value: Identifiable {
 extension Presence: Sendable where Value: Sendable { }
 
 extension Publisher {
-    /// Returns a publisher of `Presence` that preserves the last non-nil
-    /// value. Useful when we should display deleted values on screen.
+    /// Transforms the upstream publisher of optional values into a
+    /// publisher of ``Presence`` that preserves the last non-nil
+    /// value.
     ///
     /// For example:
     ///
@@ -68,20 +78,18 @@ extension Publisher {
     ///     | nil       | .gone(2)
     ///     | 3         | .existing(3)
     ///     v           v
-    func scanPresence<Value>()
-    -> AnyPublisher<Presence<Value>, Failure>
+    public func scanPresence<Value>()
+    -> Publishers.Scan<Self, Presence<Value>>
     where Output == Value?
     {
-        self
-            .scan(.missing) { (previous, value) in
-                if let value {
-                    .existing(value)
-                } else if let previousValue = previous.value {
-                    .gone(previousValue)
-                } else {
-                    .missing
-                }
+        scan(.missing) { (previous, value) in
+            if let value {
+                .existing(value)
+            } else if let previousValue = previous.value {
+                .gone(previousValue)
+            } else {
+                .missing
             }
-            .eraseToAnyPublisher()
+        }
     }
 }
