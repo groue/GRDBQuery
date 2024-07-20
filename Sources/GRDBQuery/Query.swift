@@ -52,7 +52,7 @@ import SwiftUI
     ///     private var players: [Player]
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
@@ -102,7 +102,7 @@ import SwiftUI
     ///     }
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
@@ -149,7 +149,7 @@ import SwiftUI
     ///     }
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```

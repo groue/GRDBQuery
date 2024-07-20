@@ -14,7 +14,7 @@ extension Query where Request.Context == DatabaseContext {
     ///     @Query(PlayersRequest()) private var players: [Player]
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
@@ -43,7 +43,7 @@ extension Query where Request.Context == DatabaseContext {
     ///     }
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
@@ -81,7 +81,7 @@ extension Query where Request.Context == DatabaseContext {
     ///     }
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```

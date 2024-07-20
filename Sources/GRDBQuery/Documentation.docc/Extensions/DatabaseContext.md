@@ -14,7 +14,7 @@ To create a `DatabaseContext`, first [connect to a database](https://swiftpackag
 let dbQueue = try DatabaseQueue(path: ...)
 
 // Read-write access
-let databaseContext = DatabaseContext { dbQueue }
+let databaseContext = DatabaseContext.readWrite { dbQueue }
 
 // Read-only access
 let databaseContext = DatabaseContext.readOnly { dbQueue }

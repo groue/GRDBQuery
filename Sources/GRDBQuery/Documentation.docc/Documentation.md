@@ -4,58 +4,79 @@ The SwiftUI companion for GRDB
 
 ## Overview
 
-This library helps building SwiftUI applications that access "services", such as a local database, through the SwiftUI environment.
+GRDBQuery helps SwiftUI applications access a local SQLite database through [GRDB] and the SwiftUI environment.
 
-Its main purpose is to help users of the [GRDB] SQLite toolkit. Yet GRDBQuery can be used it in other contexts, in a Core Data or Realm application, and generally in any kind of app, as long as you'd like to put the SwiftUI environment to good use.
+It comes in two flavors:
 
-## What's in the Box?
-
-GRDBQuery provides two property wrappers:
-
-- With **`@Query`**, SwiftUI views can display database values, and automatically update when database content changes. Generally speaking, `@Query` helps subscribing to Combine publishers defined from the SwiftUI environment:
+- The `@Query` property wrapper allows SwiftUI views to directly read and observe the database:
 
     ```swift
-    /// A view that displays an always up-to-date list of players in the database.
+    /// Displays an always up-to-date list of database players.
     struct PlayerList: View {
-        @Query(PlayersRequest())
-        var players: [Player]
+        @Query(PlayersRequest()) var players: [Player]
         
         var body: some View {
             List(players) { player in Text(player.name) }
+        }
+    }
+
+    /// Tracks the full list of database players
+    struct PlayersRequest: ValueObservationQueryable {
+        static var defaultValue: [Player] { [] }
+
+        func fetch(_ db: Database) throws -> [Player] {
+            try Player.fetchAll(db)
         }
     }
     ```
 
     See <doc:GettingStarted>.
 
-- With **`@EnvironmentStateObject`**, applications can build observable objects that find their dependencies in the SwiftUI environment:
+- The `@EnvironmentStateObject` property wrapper helps building `ObservableObject` models from the SwiftUI environment:
 
     ```swift
-    /// A view that displays the list of players provided by its view model.
+    /// Displays an always up-to-date list of database players.
     struct PlayerList: View {
-        @EnvironmentStateObject var viewModel: PlayerListViewModel
+        @EnvironmentStateObject var model: PlayerListModel = []
         
         init() {
-            _viewModel = EnvironmentStateObject { env in
-                PlayerListViewModel(database: env.databaseContext)
+            _model = EnvironmentStateObject { env in
+                PlayerListModel(databaseContext: env.databaseContext)
             }
         }
         
         var body: some View {
-            List(viewModel.players) { player in Text(player.name) }
+            List(players) { player in Text(player.name) }
+        }
+    }
+
+    class PlayerListModel: ObservableObject {
+        @Published private(set) var players: [Player]
+        private var cancellable: DatabaseCancellable?
+
+        init(databaseContext: DatabaseContext) {
+            let observation = ValueObservation.tracking { db in
+                try Player.fetchAll(db)
+            } 
+            cancellable = observation.start(in: databaseContext.reader, scheduling: .immediate) { error in
+                // Handle error
+            } onChange: { players in
+                self.players =  players
+            }
         }
     }
     ```
-    
-    `@EnvironmentStateObject` is a general-purpose property wrapper, akin to the SwiftUI `@Environment`, `@EnvironmentObject`, `@ObservedObject`, and `@StateObject`.
-    
-    It fits well the view models of the MVVM architecture, as well as dependency injection.
 
     See <doc:MVVM>.
 
-Both property wrappers can work together, so that developers can run quick experiments, build versatile previews, and also apply strict patterns and conventions. Pick `@Query`, or `@EnvironmentStateObject`, depending on your needs!
+Both techniques can be used in a single application, so that developers can run quick experiments, build versatile previews, and also apply strict patterns and conventions. Pick `@Query`, or `@EnvironmentStateObject`, depending on your needs!
 
-[Download GRDBQuery on GitHub](http://github.com/groue/GRDBQuery)
+## Links
+
+- [GitHub repository](http://github.com/groue/GRDBQuery)
+- [GRDB]: the toolkit for SQLite databases, with a focus on application development
+- [GRDBQuery demo apps](https://github.com/groue/GRDBQuery/tree/main/Documentation)
+- [GRDB demo apps](https://github.com/groue/GRDB.swift/tree/master/Documentation/DemoApps)
 
 ## Topics
 

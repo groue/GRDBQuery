@@ -8,62 +8,72 @@
 
 ---
 
-This library helps building SwiftUI applications that access "services", such as a local database, through the SwiftUI environment.
+GRDBQuery helps SwiftUI applications access a local SQLite database through [GRDB] and the SwiftUI environment.
 
-Its main purpose is to help users of the [GRDB] SQLite toolkit. Yet GRDBQuery can be used it in other contexts, in a Core Data or Realm application, and generally in any kind of app, as long as you'd like to put the SwiftUI environment to good use.
+It comes in two flavors:
 
-## What's in the Box?
-
-GRDBQuery provides two property wrappers:
-
-- With **`@Query`**, SwiftUI views can automatically update their content when the database changes. Generally speaking, `@Query` helps subscribing to Combine publishers defined from the SwiftUI environment:
+- The `@Query` property wrapper allows SwiftUI views to directly read and observe the database:
 
     ```swift
-    /// A view that displays an always up-to-date list of players in the database.
+    /// Displays an always up-to-date list of database players.
     struct PlayerList: View {
-        @Query(PlayersRequest())
-        var players: [Player]
+        @Query(PlayersRequest()) var players: [Player]
         
         var body: some View {
             List(players) { player in Text(player.name) }
         }
     }
+
+    /// Tracks the full list of database players
+    struct PlayersRequest: ValueObservationQueryable {
+        static var defaultValue: [Player] { [] }
+
+        func fetch(_ db: Database) throws -> [Player] {
+            try Player.fetchAll(db)
+        }
+    }
     ```
 
-- With **`@EnvironmentStateObject`**, applications can build observable objects that find their dependencies in the SwiftUI environment:
+    See <doc:GettingStarted>.
+
+- The `@EnvironmentStateObject` property wrapper helps building `ObservableObject` models from the SwiftUI environment:
 
     ```swift
-    /// A view that displays the list of players provided by its view model
+    /// Displays an always up-to-date list of database players.
     struct PlayerList: View {
-        @EnvironmentStateObject var viewModel: PlayerListViewModel
+        @EnvironmentStateObject var model: PlayerListModel = []
         
         init() {
-            _viewModel = EnvironmentStateObject { env in
-                PlayerListViewModel(database: env.databaseContext)
+            _model = EnvironmentStateObject { env in
+                PlayerListModel(databaseContext: env.databaseContext)
             }
         }
         
         var body: some View {
-            List(viewModel.players) { player in Text(player.name) }
+            List(players) { player in Text(player.name) }
+        }
+    }
+
+    class PlayerListModel: ObservableObject {
+        @Published private(set) var players: [Player]
+        private var cancellable: DatabaseCancellable?
+
+        init(databaseContext: DatabaseContext) {
+            let observation = ValueObservation.tracking { db in
+                try Player.fetchAll(db)
+            } 
+            cancellable = observation.start(in: databaseContext.reader, scheduling: .immediate) { error in
+                // Handle error
+            } onChange: { players in
+                self.players =  players
+            }
         }
     }
     ```
-    
-    `@EnvironmentStateObject` is a general-purpose property wrapper, akin to the SwiftUI `@Environment`, `@EnvironmentObject`, `@ObservedObject`, and `@StateObject`.
-    
-    It fits well the view models of the MVVM architecture, as well as dependency injection. 
 
-Both property wrappers can work together, so that developers can run quick experiments, build versatile previews, and also apply strict patterns and conventions. Pick `@Query`, or `@EnvironmentStateObject`, depending on your needs!
+    See <doc:MVVM>.
 
-## Why GRDBQuery?
-
-**GRDBQuery makes sure SwiftUI views are *immediately* rendered with the content you expect.**
-
-For example, when you display a `List` that animates its changes, you do not want to see an animation for the *initial* state of the list, or to prevent this undesired animation with extra code.
-
-You also want your SwiftUI previews to display the expected values *without having to run them*.
-
-Techniques based on [`onAppear(perform:)`](https://developer.apple.com/documentation/swiftui/view/onappear(perform:)), [`onReceive(_:perform)`](https://developer.apple.com/documentation/swiftui/view/onreceive(_:perform:)) and similar methods suffer from this "double-rendering" problem and its side effects. By contrast, the GRDBQuery property wrappers have you fully covered.
+Both techniques can be used in a single application, so that developers can run quick experiments, build versatile previews, and also apply strict patterns and conventions. Pick `@Query`, or `@EnvironmentStateObject`, depending on your needs!
 
 ## Documentation
 

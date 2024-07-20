@@ -83,9 +83,8 @@ private struct Request: FetchQueryable {
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, visionOS 1.0, watchOS 10.0, *)
 #Preview {
     let dbQueue = try! DatabaseQueue()
-    let context = DatabaseContext { dbQueue }
     
     return Preview()
-        .databaseContext(context)
+        .databaseContext(.readWrite { dbQueue })
 }
 #endif

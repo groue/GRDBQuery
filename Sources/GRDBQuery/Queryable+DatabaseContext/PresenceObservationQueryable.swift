@@ -103,9 +103,8 @@ private struct Request: PresenceObservationQueryable {
             t.autoIncrementedPrimaryKey("id")
         }
     }
-    let context = DatabaseContext { dbQueue }
     
     return Preview()
-        .databaseContext(context)
+        .databaseContext(.readWrite { dbQueue })
 }
 #endif

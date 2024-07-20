@@ -42,7 +42,7 @@ struct PlayerList: View {
     @Query(PlayersRequest()) private var players: [Player]
 
     var body: some View {
-        List(players) { player in ... }
+        List(players) { player in Text(player.name) }
     }
 }
 ```

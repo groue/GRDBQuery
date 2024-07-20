@@ -4,12 +4,12 @@ Control the database accesses in your application.
 
 ## Overview
 
-Applications can perform arbitrary read and write database accesses from their SwiftUI views, for convenience, or rapid prototyping. See <doc:GettingStarted> for such a setup.
+Applications can perform unrestricted read and write database accesses from their SwiftUI views, for convenience, or rapid prototyping. See <doc:GettingStarted> for such a setup.
 
 Some apps have other needs, though:
 
-- An app that wants to enforce **database invariants** must not allow views to perform arbitrary database writes. Database invariants are an important part of application safety, as described in the [GRDB Concurrency Guide]. 
-- An app that connects to **multiple databases** and wants to use the `@Query` property wrapper has to specify which database a `@Query` connects to.
+- An app that enforces **database invariants** must disallow unrestricted writes. Database invariants are important for the integrity of application data, as described in the [GRDB Concurrency Guide]. 
+- An app that connects to **multiple databases** and has to specify which database a `@Query` property connects to.
 
 We will address those needs below.
 
@@ -27,20 +27,20 @@ struct MyApp: App {
         WindowGroup {
             MyView()
         }
-        .databaseContext(/* some read-only context */)
+        .databaseContext(.readOnly { /* a GRDB connection */ })
     }
 }
 ```
 
-With a read-only context, all attempts to perform arbitrary writes via the `databaseContext` environment value throw ``DatabaseContextError/readOnly``. This makes it pratically useless to define views that attempt to do so, so your app won't contain any.
+With a read-only context, all attempts to perform writes via the `databaseContext` environment value will fail with ``DatabaseContextError/readOnly``.
 
 ## Controlling writes with a custom database manager
 
-Now that it is impossible to perform arbitrary writes from the `databaseContext` environment value, some applications need views to perform controlled database writes — again, for convenience, or rapid prototyping.
+Now that it is impossible to perform unrestricted writes from the `databaseContext` environment, some applications need views to perform controlled database writes — again, for convenience, or rapid prototyping.
 
-This is case of the [@Query Demo Application], that uses the techniques described here.
+This is case of the [GRDBQuery demo app], that uses the techniques described here.
 
-To do that, first define a "database manager" type that declares the set of permitted writes with dedicated methods. For example:
+Define a "database manager" type that declares the set of permitted writes. For example:
 
 ```swift
 import GRDB
@@ -50,8 +50,8 @@ struct PlayerRepository {
 }
 
 extension PlayerRepository {
-    /// Inserts a player and returns the inserted player.
-    func insert(_ player: Player) throws -> Player {
+    /// Inserts a player.
+    func insert(_ player: Player) {
         try writer.write { ... }
     }
     
@@ -62,7 +62,7 @@ extension PlayerRepository {
 }
 ```
 
-Next, define a custom SwiftUI environment key that makes it possible to inject the database manager in the environment:
+Then, define a custom SwiftUI environment key for the database manager:
 
 ```swift
 import SwiftUI
@@ -73,7 +73,7 @@ private struct PlayerRepositoryKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    fileprivate(set) var playerRepository: PlayerRepository {
+    var playerRepository: PlayerRepository {
         get { self[PlayerRepositoryKey.self] }
         set { self[PlayerRepositoryKey.self] = newValue }
     }
@@ -87,9 +87,7 @@ extension View {
 }
 ```
 
-Note how the `EnvironmentValues.playerRepository` setter is `fileprivate`. We will see why below.
-
-Now, the application can inject a `PlayerRepository` in the environment, and views can use it to perform allowed writes:
+Now, the application can inject a `PlayerRepository` in the environment, and views can use it to write in the database:
 
 ```swift
 @main
@@ -98,12 +96,12 @@ struct MyApp: App {
         WindowGroup {
             MyView()
         }
-        .environment(\.playerRepository, /* some repository */)
+        .environment(\.playerRepository, /* a repository */)
     }
 }
 
 struct DeletePlayersButton: View {
-    @Environment(\.playerRepository) private var playerRepository
+    @Environment(\.playerRepository) var playerRepository
 
     var body: some View {
         Button("Delete Players") {
@@ -117,10 +115,10 @@ struct DeletePlayersButton: View {
 }
 ```
 
-At this point, views that use the `@Query` property wrapper will fail, because the SwiftUI environment does not contain any `DatabaseContext`. You can restore read-only access with those two extra changes:
+Finally, let SwiftUI views use the `@Query` property wrapper, as below:
 
 1. Expose a read-only access from the database manager.
-2. Update the `View.playerRepository(_:)` method so that it sets a database context that reads through the manager.
+2. Update the `View.playerRepository(_:)` method so that it puts a read-only database context in the environment.
 
 ```swift
 extension PlayerRepository {
@@ -139,15 +137,13 @@ extension View {
 }
 ```
 
-This modified version of `View.playerRepository(_:)` explains why the `EnvironmentValues.playerRepository` setter was declared as fileprivate: this guarantees that when a `playerRepository` is set, a read-only `databaseContext` is set as well.
-
-Now everything is working as expected: `@Query` can perform arbitrary reads, and views can perform controlled writes.
+Now everything is working as expected: views can perform controlled writes, and use the `@Query` propoerty wrapper.
 
 ## Replacing DatabaseContext with a custom database manager, and connecting to multiple databases
 
 It is also possible to get rid of `DatabaseContext` entirely, and perform all database accesses from a database manager.
 
-This technique can be used to disallow arbitrary reads. It is also useful in applications that connect to multiple databases (just define multiple database managers).   
+This technique can be used to prevent unrestricted reads. It is also useful in applications that connect to multiple databases (just define multiple database managers).   
 
 First, stop defining the `databaseContext` environment value, since it is useless.
 
@@ -173,9 +169,7 @@ For `@Query` to be able to feed from a database manager, it is necessary to inst
     }
 
     struct PlayersRequest: ValueObservationQueryable {
-        // Opt-out of the default `DatabaseContext`
-        typealias Context = PlayerRepository
-        
+        typealias Context = PlayerRepository // 👈 Custom context
         static var defaultValue: [Player] { [] }
 
         func fetch(_ db: Database) throws -> [Player] {
@@ -184,20 +178,15 @@ For `@Query` to be able to feed from a database manager, it is necessary to inst
     }
     ```
 
-Finally, instruct `@Query` to connect to the desired database manager, with an explicit environment key (see <doc:CustomDatabaseContexts#Controlling-writes-with-a-custom-database-manager> above):
+Finally, instruct `@Query` to connect to the database manager, with an explicit environment key (see <doc:CustomDatabaseContexts#Controlling-writes-with-a-custom-database-manager> above):
 
 ```swift
 struct PlayerList: View {
-    @Query(PlayersRequest(), in: \.playerRepository) // Explicit environment key
-    private var players: [Player]
+    @Query(PlayersRequest(), in: \.playerRepository) // 👈 Custom environment key
+    var players: [Player]
     
     var body: some View {
-        List(players) { player in
-            HStack {
-                Text(player.name)
-                Text("\(player.score) points")
-            }
-        }
+        List(players) { player in Text(player.name) }
     }
 }
 ```
@@ -236,11 +225,11 @@ struct PlayerList: View {
 > ```swift
 > struct PlayerList: View {
 >     // Implicitly uses 'playerRepository'
->     @Query(PlayersRequest()) private var players: [Player]
+>     @Query(PlayersRequest()) var players: [Player]
 >
 >     ...
 > }
 > ```
 
 [GRDB Concurrency Guide]: https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/concurrency
-[@Query Demo Application]: https://github.com/groue/GRDBQuery/tree/main/Documentation/QueryDemo
+[GRDBQuery demo app]: https://github.com/groue/GRDBQuery/tree/main/Documentation/QueryDemo

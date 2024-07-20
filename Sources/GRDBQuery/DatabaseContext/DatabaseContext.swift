@@ -42,7 +42,25 @@ extension DatabaseContext {
     /// same error.
     ///
     /// Attempts to write in the database through the ``writer`` property
-    /// throw ``DatabaseContextError/readOnly``.
+    /// throw ``DatabaseContextError/readOnly``, even if the input
+    /// connection can perform writes.
+    ///
+    /// For example:
+    ///
+    /// ```swift
+    /// import GRDBQuery
+    /// import SwiftUI
+    ///
+    /// @main
+    /// struct MyApp: App {
+    ///     var body: some Scene {
+    ///         WindowGroup {
+    ///             MyView()
+    ///         }
+    ///         .databaseContext(.readOnly { /* a GRDB connection */ })
+    ///     }
+    /// }
+    /// ```
     public static func readOnly(_ reader: () throws -> any DatabaseReader) -> Self {
         do {
             let reader = try reader()
@@ -62,14 +80,31 @@ extension DatabaseContext {
     /// The input closure is evaluated once. If it throws an error, all
     /// database accesses performed from the resulting context throw that
     /// same error.
-    public init(_ writer: () throws -> any DatabaseWriter) {
+    ///
+    /// For example:
+    ///
+    /// ```swift
+    /// import GRDBQuery
+    /// import SwiftUI
+    ///
+    /// @main
+    /// struct MyApp: App {
+    ///     var body: some Scene {
+    ///         WindowGroup {
+    ///             MyView()
+    ///         }
+    ///         .databaseContext(.readWrite { /* a GRDB connection */ })
+    ///     }
+    /// }
+    /// ```
+    public static func readWrite(_ writer: () throws -> any DatabaseWriter) -> Self {
         do {
             let writer = try writer()
-            self.init(
+            return self.init(
                 readerResult: .success(writer),
                 writerResult: .success(writer))
         } catch {
-            self.init(
+            return self.init(
                 readerResult: .failure(error),
                 writerResult: .failure(error))
         }

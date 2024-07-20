@@ -18,7 +18,7 @@ struct MyApp: App {
         WindowGroup {
             MyView()
         }
-        .databaseContext(/* some DatabaseContext on disk */)
+        .databaseContext(.readWrite { /* a GRDB connection */ })
     }
 }
 ```
@@ -26,19 +26,17 @@ struct MyApp: App {
 SwiftUI previews can use specific, in-memory, databases:
 
 ```swift
-#Preview("Empty database") {
+#Preview {
     MyView()
-        .databaseContext(/* empty database */)
-}
-
-#Preview("Non-empty database") {
-    MyView()
-        .databaseContext(/* non-empty database */)
-    }
+        .databaseContext(.readWrite { /* the database to preview */ })
 }
 ```
 
-> Note: Apps that connect to multiple databases need further customization. See <doc:CustomDatabaseContexts>.    
+To prevent SwiftUI views from writing in the database, use ``DatabaseContext/readOnly(_:)`` instead of ``DatabaseContext/readWrite(_:)``.
+
+Apps that connect to multiple databases need further customization.
+
+See <doc:CustomDatabaseContexts>.    
 
 ## Define a Queryable type
 
@@ -60,13 +58,14 @@ struct PlayersRequest: ValueObservationQueryable {
 }
 ```
 
-Those "queryable" types conform to the ``Queryable`` protocol, which feeds the `@Query` property wrapper with a sequence of values over time.
+Such a "queryable" type conforms to the ``Queryable`` protocol. It publishes a sequence of values over time, for the `@Query` property wrapper used in SwiftUI views.
 
-Three extra protocols ``ValueObservationQueryable`` (used in the above example), ``PresenceObservationQueryable``, and ``FetchQueryable`` are derived from `Queryable`. They provide convenience APIs that observe the database or perform a single fetch.
+There are three extra protocols: ``ValueObservationQueryable`` (used in the above example), ``PresenceObservationQueryable``, and ``FetchQueryable``. They are derived from `Queryable`, and provide convenience APIs for observing the database, or performing a single fetch.
 
-Queryable types can have parameters, so that they can filter or sort a list, fetch a model with a particular identifier, etc. See <doc:QueryableParameters>.
+Queryable types support customization:
 
-> Note: By default, a `Queryable` type accesses the database through a ``DatabaseContext``. This can be configured: see <doc:CustomDatabaseContexts>.
+- They can have parameters, so that they can filter or sort a list, fetch a model with a particular identifier, etc. See <doc:QueryableParameters>.
+- By default, they access the database through a ``DatabaseContext``. This can be configured: see <doc:CustomDatabaseContexts>.
 
 ## Feed a SwiftUI View
 
@@ -77,24 +76,19 @@ import GRDBQuery
 import SwiftUI
 
 struct PlayerList: View {
-    @Query(PlayersRequest()) private var players: [Player]
+    @Query(PlayersRequest()) var players: [Player]
     
     var body: some View {
-        List(players) { player in
-            HStack {
-                Text(player.name)
-                Text("\(player.score) points")
-            }
-        }
+        List(players) { player in Text(player.name) }
     }
 }
 ```
 
-> Note: Apps that connect to multiple databases or do not use `DatabaseContext` need to tell the `@Query` property wrapper how to access the database. See <doc:CustomDatabaseContexts>.
+Apps that connect to multiple databases, or do not use `DatabaseContext`, need to instruct `@Query` how to access the database. See <doc:CustomDatabaseContexts>.
 
 > Tip: By default, `@Query` listens to the database values for the whole duration of the presence of the view in the SwiftUI engine.
 >
-> Apps can spare resources by cancelling the subscription when views are not on screen: see ``QueryObservation``.
+> Apps can spare resources by stopping and restarting the database observation when views appear and disappear: see ``QueryObservation``.
 
 ## Handling Errors
 
@@ -105,7 +99,7 @@ import GRDBQuery
 import SwiftUI
 
 struct PlayerList: View {
-    @Query(PlayersRequest()) private var players: [Player]
+    @Query(PlayersRequest()) var players: [Player]
     
     var body: some View {
         if let error = $players.error {
@@ -115,12 +109,7 @@ struct PlayerList: View {
                 Text(error.localizedDescription)
             }
         } else {
-            List(players) { player in
-                HStack {
-                    Text(player.name)
-                    Text("\(player.score) points")
-                }
-            }
+            List(players) { player in Text(player.name) }
         }
     }
 }
@@ -137,26 +126,21 @@ import GRDBQuery
 import SwiftUI
 
 struct PlayerList: View {
-    @Environment(\.databaseContext) private var databaseContext
-    @Query(PlayersRequest()) private var players: [Player]
+    @Environment(\.databaseContext) var databaseContext
+    @Query(PlayersRequest()) var players: [Player]
     
     var body: some View {
         List(players) { player in
-            HStack {
-                Text(player.name)
-                Text("\(player.score) points")
-            }
+            List(players) { player in Text(player.name) }
         }
         .toolbar {
-            Button {
+            Button("Delete All") {
                 deletePlayers()
-            } label: {
-                Image(systemName: "trash")
             }
         }
     }
 
-    private func deletePlayers() {
+    func deletePlayers() {
         do {
             try databaseContext.writer.write { db in
                 try Player.deleteAll(db)
@@ -168,4 +152,4 @@ struct PlayerList: View {
 }
 ```
 
-> Note: Not all apps want to let SwiftUI views performing such database writes. See <doc:CustomDatabaseContexts> for more information.
+It is possible to prevent SwiftUI views from performing such unrestricted writes. See ``DatabaseContext/readOnly(_:)`` and <doc:CustomDatabaseContexts> for more information.

@@ -23,7 +23,7 @@ extension Query where Request.Context == Void {
     ///     @Query(PlayersRequest()) private var players: [Player]
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
@@ -67,7 +67,7 @@ extension Query where Request.Context == Void {
     ///     }
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
@@ -103,7 +103,7 @@ extension Query where Request.Context == Void {
     ///     }
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```

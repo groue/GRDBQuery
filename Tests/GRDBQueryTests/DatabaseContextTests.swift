@@ -17,6 +17,6 @@ class DatabaseContextTests: XCTestCase {
         
         let manager = DatabaseManager()
         _ = DatabaseContext.readOnly { try manager.reader }
-        _ = DatabaseContext { try manager.writer }
+        _ = DatabaseContext.readWrite { try manager.writer }
     }
 }
