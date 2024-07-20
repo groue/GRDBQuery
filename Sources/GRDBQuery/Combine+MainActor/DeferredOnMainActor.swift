@@ -19,14 +19,16 @@ import Combine
 struct DeferredOnMainActor<DeferredPublisher: Publisher>: Publisher {
     typealias Output = DeferredPublisher.Output
     typealias Failure = DeferredPublisher.Failure
-    let deferred: @MainActor () -> DeferredPublisher
+    let deferred: @Sendable @MainActor () -> DeferredPublisher
     
     func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
         Deferred { [deferred] in
             Just(())
                 .receive(on: MainActorScheduler.shared)
-                .flatMapOnMainActor {
-                    deferred()
+                .flatMap {
+                    MainActor.assumeIsolated {
+                        deferred()
+                    }
                 }
         }
         .receive(subscriber: subscriber)

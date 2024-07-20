@@ -51,15 +51,27 @@ where ObjectType: ObservableObject
     
     /// A wrapper of the underlying object that can create bindings to its
     /// properties using dynamic member lookup.
-    @dynamicMemberLookup public struct Wrapper {
+    @MainActor @dynamicMemberLookup public struct Wrapper {
         fileprivate let object: ObjectType
         
+        #if compiler(>=6)
         /// Returns a binding to the resulting value of a given key path.
-        public subscript<U>(dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, U>) -> Binding<U> {
+        public subscript<U>(
+            dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, U> & Sendable
+        ) -> Binding<U> {
             Binding(
                 get: { object[keyPath: keyPath] },
                 set: { object[keyPath: keyPath] = $0 })
         }
+        #else
+        public subscript<U>(
+            dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, U>
+        ) -> Binding<U> {
+            Binding(
+                get: { object[keyPath: keyPath] },
+                set: { object[keyPath: keyPath] = $0 })
+        }
+        #endif
     }
     
     /// An observable object that keeps a strong reference to the object,

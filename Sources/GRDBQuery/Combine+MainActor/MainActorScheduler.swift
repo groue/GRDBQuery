@@ -56,21 +56,3 @@ struct MainActorScheduler: Scheduler {
     
     private init() { }
 }
-
-extension Publishers.ReceiveOn where
-    Context == MainActorScheduler,
-    Failure == Never
-{
-    func flatMapOnMainActor<P>(
-        maxPublishers: Subscribers.Demand = .unlimited,
-        _ transform: @escaping @MainActor (Self.Output) -> P
-    ) -> Publishers.FlatMap<P, Publishers.SetFailureType<Self, P.Failure>>
-    where P: Publisher
-    {
-        flatMap(maxPublishers: maxPublishers) { value in
-            MainActor.assumeIsolated {
-                transform(value)
-            }
-        }
-    }
-}
