@@ -78,18 +78,18 @@ struct DeletePlayersButton: View {
     }
 }
 
+// MARK: - Previews
+
 // For tracking the player count in the preview
 import GRDB
 import GRDBQuery
 
-struct DatabaseButtons_Previews: PreviewProvider {
-    struct PlayerCountRequest: Queryable {
+#Preview {
+    struct PlayerCountRequest: ValueObservationQueryable {
         static var defaultValue: Int { 0 }
         
-        func publisher(in playerRepository: PlayerRepository) -> DatabasePublishers.Value<Int> {
-            ValueObservation
-                .tracking(Player.fetchCount)
-                .publisher(in: playerRepository.reader, scheduling: .immediate)
+        func fetch(_ db: Database) throws -> Int {
+            try Player.fetchCount(db)
         }
     }
     
@@ -108,7 +108,6 @@ struct DatabaseButtons_Previews: PreviewProvider {
         }
     }
     
-    static var previews: some View {
-        Preview()
-    }
+    return Preview()
+        .playerRepository(.empty())
 }

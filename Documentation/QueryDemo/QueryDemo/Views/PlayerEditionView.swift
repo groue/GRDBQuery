@@ -12,9 +12,9 @@ struct PlayerEditionView: View {
     @Environment(\.dismiss) private var dismiss
     
     @Query<PlayerPresenceRequest>
-    private var playerPresence: PlayerPresence
+    private var playerPresence: Presence<Player>
     
-    @State var gonePlayerAlertPresented = false
+    @State private var gonePlayerAlertPresented = false
     
     init(id: Int64) {
         _playerPresence = Query(PlayerPresenceRequest(id: id))
@@ -22,7 +22,7 @@ struct PlayerEditionView: View {
     
     var body: some View {
         NavigationView {
-            if let player = playerPresence.player {
+            if let player = playerPresence.value {
                 VStack {
                     PlayerFormView(player: player)
                     
@@ -48,85 +48,34 @@ struct PlayerEditionView: View {
                 PlayerNotFoundView()
             }
         }
-        .alert("Ooops, player is gone.", isPresented: $gonePlayerAlertPresented, actions: {
+        .alert("Ooops, player is gone.", isPresented: $gonePlayerAlertPresented) {
             Button("Dismiss") { dismiss() }
-        })
-        .onAppear {
-            if !playerPresence.exists {
-                gonePlayerAlertPresented = true
-            }
         }
-        .onChange(of: playerPresence.exists, perform: { playerExists in
+        .onChange(of: playerPresence.exists, initial: true) { _, playerExists in
             if !playerExists {
                 gonePlayerAlertPresented = true
             }
-        })
+        }
     }
 }
 
-/// A @Query request that observes the presence of the player in the database.
-private struct PlayerPresenceRequest: Queryable {
-    static var defaultValue: PlayerPresence { .missing }
-    
+/// A @Query request that observes the player in the database
+private struct PlayerPresenceRequest: PresenceObservationQueryable {
     var id: Int64
     
-    func publisher(in playerRepository: PlayerRepository) -> AnyPublisher<PlayerPresence, Error> {
-        ValueObservation
-            .tracking(Player.filter(key: id).fetchOne)
-            .publisher(in: playerRepository.reader, scheduling: .immediate)
-            // Use scan in order to detect the three cases of player presence
-            .scan(.missing) { (previous, player) in
-                if let player {
-                    return .existing(player)
-                } else if let player = previous.player {
-                    return .gone(player)
-                } else {
-                    return .missing
-                }
-            }
-            .eraseToAnyPublisher()
+    func fetch(_ db: Database) throws -> Player? {
+        try Player.fetchOne(db, key: id)
     }
 }
 
-// We handle three distinct cases regarding the presence of the
-// edited player:
-private enum PlayerPresence {
-    /// The player exists in the database
-    case existing(Player)
-    
-    /// Player no longer exists, but we have its latest value.
-    case gone(Player)
-    
-    /// Player does not exist, and we don't have any information about it.
-    case missing
-    
-    var player: Player? {
-        switch self {
-        case let .existing(player), let .gone(player):
-            return player
-        case .missing:
-            return nil
-        }
-    }
-    
-    var exists: Bool {
-        switch self {
-        case .existing:
-            return true
-        case .gone, .missing:
-            return false
-        }
-    }
+// MARK: - Previews
+
+#Preview("Existing player") {
+    PlayerEditionView(id: 1)
+        .playerRepository(.populated(playerId: 1))
 }
 
-struct PlayerEditionView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerEditionView(id: 1)
-            .environment(\.playerRepository, .populated(playerId: 1))
-            .previewDisplayName("Existing player")
-        
-        PlayerEditionView(id: -1)
-            .environment(\.playerRepository, .empty())
-            .previewDisplayName("Missing player")
-    }
+#Preview("Missing player") {
+    PlayerEditionView(id: -1)
+        .playerRepository(.empty())
 }

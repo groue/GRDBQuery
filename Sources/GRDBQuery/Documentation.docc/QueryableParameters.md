@@ -13,7 +13,7 @@ Such configuration can be performed by the view that declares a `@Query` propert
 As an example, let's extend the `PlayersRequest` request type we have seen in <doc:GettingStarted>. It can now sort players by score, or by name, depending on its `ordering` property.
 
 ```swift
-struct PlayersRequest: Queryable {
+struct PlayersRequest: ValueObservationQueryable {
     enum Ordering {
         case byScore
         case byName
@@ -24,14 +24,7 @@ struct PlayersRequest: Queryable {
 
     static var defaultValue: [Player] { [] }
 
-    func publisher(in dbQueue: DatabaseQueue) -> AnyPublisher<[Player], Error> {
-        ValueObservation
-            .tracking { db in try fetchValue(db) }
-            .publisher(in: dbQueue, scheduling: .immediate)
-            .eraseToAnyPublisher()
-    }
-
-    private func fetchValue(_ db: Database) throws -> [Player] {
+    func fetch(_ db: Database) throws -> [Player] {
         switch ordering {
         case .byScore:
             return try Player

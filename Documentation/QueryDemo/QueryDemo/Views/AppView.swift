@@ -10,7 +10,7 @@ struct AppView: View {
         var id: Int64
     }
     
-    @Query(PlayerRequest())
+    @Query(AnyPlayerRequest())
     private var player: Player?
     
     @State private var editedPlayer: EditedPlayer?
@@ -80,21 +80,20 @@ struct AppView: View {
 }
 
 /// A @Query request that observes the player (any player, actually) in the database
-private struct PlayerRequest: Queryable {
+private struct AnyPlayerRequest: ValueObservationQueryable {
     static var defaultValue: Player? { nil }
     
-    func publisher(in playerRepository: PlayerRepository) -> DatabasePublishers.Value<Player?> {
-        ValueObservation
-            .tracking(Player.fetchOne)
-            .publisher(in: playerRepository.reader, scheduling: .immediate)
+    func fetch(_ db: Database) throws -> Player? {
+        try Player.fetchOne(db)
     }
 }
 
-struct AppView_Previews: PreviewProvider {
-    static var previews: some View {
-        AppView().environment(\.playerRepository, .empty())
-            .previewDisplayName("Database Initially Empty")
-        AppView().environment(\.playerRepository, .populated())
-            .previewDisplayName("Database Initially Populated")
-    }
+// MARK: - Previews
+
+#Preview("Database Initially Empty") {
+    AppView().playerRepository(.empty())
+}
+
+#Preview("Database Initially Populated") {
+    AppView().playerRepository(.populated())
 }

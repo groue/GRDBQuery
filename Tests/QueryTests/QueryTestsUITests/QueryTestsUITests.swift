@@ -16,7 +16,7 @@ class QueryTestsUITests: XCTestCase {
     // Default request:
     // - The value holding the `@Query` can alter the request.
     // - The container view can NOT alter the request.
-    func testDefaultRequest() throws {
+    @MainActor func testDefaultRequest() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -65,7 +65,7 @@ class QueryTestsUITests: XCTestCase {
     // Initial request:
     // - The value holding the `@Query` can alter the request.
     // - The container view can NOT alter the request.
-    func testInitialRequest() throws {
+    @MainActor func testInitialRequest() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -114,7 +114,7 @@ class QueryTestsUITests: XCTestCase {
     // Constant request:
     // - The value holding the `@Query` can NOT alter the request.
     // - The container view can alter the request.
-    func testConstantRequest() throws {
+    @MainActor func testConstantRequest() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -163,7 +163,7 @@ class QueryTestsUITests: XCTestCase {
     // Request binding:
     // - The value holding the `@Query` can alter the request.
     // - The container view can alter the request.
-    func testBindingRequest() throws {
+    @MainActor func testBindingRequest() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -209,7 +209,7 @@ class QueryTestsUITests: XCTestCase {
         XCTAssertEqual(text.value as? String, "36")
     }
     
-    func testQueryObservationAlways() {
+    @MainActor func testQueryObservationAlways() {
         let app = XCUIApplication()
         app.launch()
         
@@ -239,7 +239,7 @@ class QueryTestsUITests: XCTestCase {
         XCTAssertEqual(text.value as? String, "9")
     }
     
-    func testQueryObservationOnRender() {
+    @MainActor func testQueryObservationOnRender() {
         // TODO: find a way to have a testable difference between onRender and onAppear
         let app = XCUIApplication()
         app.launch()
@@ -270,7 +270,7 @@ class QueryTestsUITests: XCTestCase {
         XCTAssertEqual(text.value as? String, "6")
     }
     
-    func testQueryObservationOnAppear() {
+    @MainActor func testQueryObservationOnAppear() {
         let app = XCUIApplication()
         app.launch()
         

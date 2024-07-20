@@ -6,7 +6,7 @@ struct QueryDemoApp: App {
         WindowGroup {
             AppView()
                 // Use the on-disk repository in the application
-                .environment(\.playerRepository, .shared)
+                .playerRepository(.shared)
         }
     }
 }

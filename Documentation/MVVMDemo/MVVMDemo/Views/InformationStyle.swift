@@ -33,16 +33,16 @@ extension View {
     }
 }
 
-struct Information_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            Text("Info 1")
-                .informationStyle()
-            Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et.")
-                .informationStyle()
-            Button("OK") { }
-        }
-        .informationBox()
-        .padding()
+// MARK: - Previews
+
+#Preview {
+    VStack {
+        Text("Info 1")
+            .informationStyle()
+        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et.")
+            .informationStyle()
+        Button("OK") { }
     }
+    .informationBox()
+    .padding()
 }

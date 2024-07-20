@@ -3,7 +3,7 @@ import SwiftUI
 
 // See Documentation.docc/Extensions/Query.md
 @propertyWrapper
-public struct Query<Request: Queryable> {
+@MainActor public struct Query<Request: Queryable> {
     /// For a full discussion of these cases, see <doc:QueryableParameters>.
     private enum Configuration {
         case constant(Request)
@@ -12,7 +12,7 @@ public struct Query<Request: Queryable> {
     }
     
     /// Database access
-    @Environment private var database: Request.DatabaseContext
+    @Environment private var database: Request.Context
     
     /// Database access
     @Environment(\.queryObservationEnabled) private var queryObservationEnabled
@@ -36,18 +36,23 @@ public struct Query<Request: Queryable> {
         Wrapper(query: self)
     }
     
-    /// Creates a `Query`, given an initial ``Queryable`` request, and a key
-    /// path to the database in the SwiftUI environment.
+    /// Creates a `Query`, given an initial ``Queryable`` request, and a 
+    /// key path to a database context in the SwiftUI environment.
+    ///
+    /// The `request` must have a `Context` type identical to the type of
+    /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
+    /// default context of queryable requests), of any other type (see
+    /// <doc:CustomDatabaseContexts>).
     ///
     /// For example:
     ///
     /// ```swift
     /// struct PlayerList: View {
-    ///     @Query(PlayersRequest(), in: \.dbQueue)
+    ///     @Query(PlayersRequest(), in: \.myDatabase)
     ///     private var players: [Player]
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
@@ -65,19 +70,22 @@ public struct Query<Request: Queryable> {
     /// `@Query` initializers.
     ///
     /// - parameter request: An initial ``Queryable`` request.
-    /// - parameter keyPath: A key path to the database in the environment. To
-    ///   know which key path you have to provide, and learn how to put the
-    ///   database in the environment, see <doc:GettingStarted>.
+    /// - parameter keyPath: A key path to the database in the environment.
     public init(
         _ request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
     {
         self._database = Environment(keyPath)
         self.configuration = .initial(request)
     }
     
-    /// Creates a `Query`, given a ``Queryable`` request, and a key path to the
-    /// database in the SwiftUI environment.
+    /// Creates a `Query`, given a ``Queryable`` request, and a key path to
+    /// the database in the SwiftUI environment.
+    ///
+    /// The `request` must have a `Context` type identical to the type of
+    /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
+    /// default context of queryable requests), of any other type (see
+    /// <doc:CustomDatabaseContexts>).
     ///
     /// The SwiftUI bindings returned by the ``projectedValue`` wrapper
     /// (`$players`) can not update the database content: the request is
@@ -90,29 +98,32 @@ public struct Query<Request: Queryable> {
     ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(constantRequest request: Binding<PlayersRequest>) {
-    ///         _players = Query(constant: request, in: \.dbQueue)
+    ///         _players = Query(constant: request, in: \.myDatabase)
     ///     }
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
     ///
     /// - parameter request: A ``Queryable`` request.
-    /// - parameter keyPath: A key path to the database in the environment. To
-    ///   know which key path you have to provide, and learn how to put the
-    ///   database in the environment, see <doc:GettingStarted>.
+    /// - parameter keyPath: A key path to the database in the environment.
     public init(
         constant request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
     {
         self._database = Environment(keyPath)
         self.configuration = .constant(request)
     }
     
-    /// Creates a `Query`, given a SwiftUI binding to its ``Queryable`` request,
-    /// and a key path to the database in the SwiftUI environment.
+    /// Creates a `Query`, given a SwiftUI binding to its ``Queryable``
+    /// request, and a key path to the database in the SwiftUI environment.
+    ///
+    /// The `request` must have a `Context` type identical to the type of
+    /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
+    /// default context of queryable requests), of any other type (see
+    /// <doc:CustomDatabaseContexts>).
     ///
     /// Both the `request` Binding argument, and the SwiftUI bindings
     /// returned by the ``projectedValue`` wrapper (`$players`) can update
@@ -134,22 +145,20 @@ public struct Query<Request: Queryable> {
     ///     @Query<PlayersRequest> private var players: [Player]
     ///
     ///     init(_ request: Binding<PlayersRequest>) {
-    ///         _players = Query(request, in: \.dbQueue)
+    ///         _players = Query(request, in: \.myDatabase)
     ///     }
     ///
     ///     var body: some View {
-    ///         List(players) { player in ... }
+    ///         List(players) { player in Text(player.name) }
     ///     }
     /// }
     /// ```
     ///
     /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
-    /// - parameter keyPath: A key path to the database in the environment. To
-    ///   know which key path you have to provide, and learn how to put the
-    ///   database in the environment, see <doc:GettingStarted>.
+    /// - parameter keyPath: A key path to the database in the environment.
     public init(
         _ request: Binding<Request>,
-        in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
     {
         self._database = Environment(keyPath)
         self.configuration = .binding(request)
@@ -164,13 +173,17 @@ public struct Query<Request: Queryable> {
     ///
     /// - ``request``
     /// - ``subscript(dynamicMember:)``
+    ///
+    /// ### Accessing the latest error
+    ///
+    /// - ``error``
     @dynamicMemberLookup public struct Wrapper {
         fileprivate let query: Query
         
         /// Returns a binding to the ``Queryable`` request itself.
         ///
         /// Learn how to use this binding in the <doc:QueryableParameters> guide.
-        public var request: Binding<Request> {
+        @MainActor public var request: Binding<Request> {
             Binding(
                 get: {
                     switch query.configuration {
@@ -197,11 +210,21 @@ public struct Query<Request: Queryable> {
                 })
         }
         
+        /// Returns the latest request publisher error.
+        ///
+        /// This error is set whenever an error occurs when accessing a
+        /// database value.
+        ///
+        /// It is reset to nil when the `Query` is restarted.
+        @MainActor public var error: Error? {
+            query.tracker.error
+        }
+        
         /// Returns a binding to the property of the ``Queryable`` request, at
         /// a given key path.
         ///
         /// Learn how to use this binding in the <doc:QueryableParameters> guide.
-        public subscript<U>(dynamicMember keyPath: WritableKeyPath<Request, U>) -> Binding<U> {
+        @MainActor public subscript<U>(dynamicMember keyPath: WritableKeyPath<Request, U>) -> Binding<U> {
             Binding(
                 get: { request.wrappedValue[keyPath: keyPath] },
                 set: { request.wrappedValue[keyPath: keyPath] = $0 })
@@ -209,10 +232,12 @@ public struct Query<Request: Queryable> {
     }
     
     /// The object that keeps on observing the database as long as it is alive.
-    private class Tracker: ObservableObject {
-        /// The database value. Published so that view is redrawn when
-        /// the value changes.
+    @MainActor private class Tracker: ObservableObject {
+        /// The database value.
         var value: Request.Value?
+        
+        /// The latest eventual error.
+        var error: Error?
         
         /// The request set by the `Wrapper.request` binding.
         /// When modified, we wait for the next `update` to apply.
@@ -222,10 +247,12 @@ public struct Query<Request: Queryable> {
         private var trackedRequest: Request?
         private var cancellable: AnyCancellable?
         
+        nonisolated init() { }
+        
         func update(
             queryObservationEnabled: Bool,
             configuration queryConfiguration: Configuration,
-            database: Request.DatabaseContext)
+            database: Request.Context)
         {
             // Give up if observation is disabled
             guard queryObservationEnabled else {
@@ -253,23 +280,47 @@ public struct Query<Request: Queryable> {
             // Update inner state.
             trackedRequest = newRequest
             request = newRequest
+            error = nil
+            
+            // Load the publisher
+            let publisher: Request.ValuePublisher
+            do {
+                publisher = try newRequest.publisher(in: database)
+            } catch {
+                self.error = error
+                return
+            }
             
             // Start tracking the new request
             var isUpdating = true
-            cancellable = newRequest.publisher(in: database).sink(
-                receiveCompletion: { _ in
-                    // Ignore errors
+            cancellable = publisher.sink(
+                receiveCompletion: { [weak self] completion in
+                    guard let self = self else { return }
+                    MainActor.assumeIsolated {
+                        if case .failure(let error) = completion {
+                            if !isUpdating {
+                                // Avoid the runtime warning in the case of publishers
+                                // that publish values right on subscription:
+                                // > Publishing changes from within view updates is not
+                                // > allowed, this will cause undefined behavior.
+                                self.objectWillChange.send()
+                            }
+                            self.error = error
+                        }
+                    }
                 },
                 receiveValue: { [weak self] value in
                     guard let self = self else { return }
-                    if !isUpdating {
-                        // Avoid the runtime warning in the case of publishers
-                        // that publish values right on subscription:
-                        // > Publishing changes from within view updates is not
-                        // > allowed, this will cause undefined behavior.
-                        self.objectWillChange.send()
+                    MainActor.assumeIsolated {
+                        if !isUpdating {
+                            // Avoid the runtime warning in the case of publishers
+                            // that publish values right on subscription:
+                            // > Publishing changes from within view updates is not
+                            // > allowed, this will cause undefined behavior.
+                            self.objectWillChange.send()
+                        }
+                        self.value = value
                     }
-                    self.value = value
                 })
             isUpdating = false
         }
@@ -279,11 +330,13 @@ public struct Query<Request: Queryable> {
 // Declare `DynamicProperty` conformance in an extension so that DocC does
 // not show `update` in the `Query` documentation.
 extension Query: DynamicProperty {
-    public func update() {
-        tracker.update(
-            queryObservationEnabled: queryObservationEnabled,
-            configuration: configuration,
-            database: database)
+    nonisolated public func update() {
+        MainActor.assumeIsolated {
+            tracker.update(
+                queryObservationEnabled: queryObservationEnabled,
+                configuration: configuration,
+                database: database)
+        }
     }
 }
 

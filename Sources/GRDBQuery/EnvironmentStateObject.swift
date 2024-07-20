@@ -3,7 +3,7 @@ import SwiftUI
 
 // See Documentation.docc/Extensions/EnvironmentStateObject.md
 @propertyWrapper
-public struct EnvironmentStateObject<ObjectType>: DynamicProperty
+@MainActor public struct EnvironmentStateObject<ObjectType>: DynamicProperty
 where ObjectType: ObservableObject
 {
     /// The environment values.
@@ -43,21 +43,35 @@ where ObjectType: ObservableObject
     }
     
     /// Part of the SwiftUI `DynamicProperty` protocol. Do not call this method.
-    public func update() {
-        core.update(makeObject: { makeObject(environmentValues) })
+    nonisolated public func update() {
+        MainActor.assumeIsolated {
+            core.update(makeObject: { makeObject(environmentValues) })
+        }
     }
     
     /// A wrapper of the underlying object that can create bindings to its
     /// properties using dynamic member lookup.
-    @dynamicMemberLookup public struct Wrapper {
+    @MainActor @dynamicMemberLookup public struct Wrapper {
         fileprivate let object: ObjectType
         
+        #if compiler(>=6)
         /// Returns a binding to the resulting value of a given key path.
-        public subscript<U>(dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, U>) -> Binding<U> {
+        public subscript<U>(
+            dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, U> & Sendable
+        ) -> Binding<U> {
             Binding(
                 get: { object[keyPath: keyPath] },
                 set: { object[keyPath: keyPath] = $0 })
         }
+        #else
+        public subscript<U>(
+            dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, U>
+        ) -> Binding<U> {
+            Binding(
+                get: { object[keyPath: keyPath] },
+                set: { object[keyPath: keyPath] = $0 })
+        }
+        #endif
     }
     
     /// An observable object that keeps a strong reference to the object,

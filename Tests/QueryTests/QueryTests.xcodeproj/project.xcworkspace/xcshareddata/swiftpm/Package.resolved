@@ -1,16 +1,15 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "SwiftDocCPlugin",
-        "repositoryURL": "https://github.com/apple/swift-docc-plugin",
-        "state": {
-          "branch": null,
-          "revision": "3303b164430d9a7055ba484c8ead67a52f7b74f6",
-          "version": "1.0.0"
-        }
+  "originHash" : "499a2ca0064e3e9818abe77aaf0f0c25d506dcad1c92649a68e86cb0c6265a47",
+  "pins" : [
+    {
+      "identity" : "grdb.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/groue/GRDB.swift.git",
+      "state" : {
+        "revision" : "78448cf8f4ed39b259bd6718d074a57ae3b2e8ba",
+        "version" : "6.28.0"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 3
 }

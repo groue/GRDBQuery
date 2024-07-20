@@ -28,9 +28,10 @@ struct PlayerFormView: View {
     }
 }
 
-struct PlayerFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerFormView(player: .makeRandom())
-            .padding()
-    }
+// MARK: - Previews
+
+#Preview {
+    PlayerFormView(player: .makeRandom(id: 1))
+        .padding()
+        .playerRepository(.populated(playerId: 1))
 }

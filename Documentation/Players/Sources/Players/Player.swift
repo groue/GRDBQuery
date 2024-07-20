@@ -2,7 +2,7 @@ import GRDB
 
 // Equatable for testability
 /// A player.
-public struct Player: Codable, Equatable {
+public struct Player: Codable, Hashable, Sendable {
     private(set) public var id: Int64?
     public var name: String
     public var score: Int
