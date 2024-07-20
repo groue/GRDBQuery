@@ -19,7 +19,6 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
         .package(url: "https://github.com/groue/GRDB.swift.git", from: "6.4.0"),
     ],
     targets: [
