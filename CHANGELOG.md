@@ -1,5 +1,13 @@
 # Release Notes
 
+## v0.9.0
+
+Released on 2024/07/20
+
+- **New** [#52](https://github.com/groue/GRDBQuery/pull/52): DatabaseContext, and convenience queryable protocols.
+
+See the [Migrating To GRDBQuery 0.9](https://swiftpackageindex.com/groue/grdbquery/0.9.0/documentation/grdbquery/migratingtogrdbquery09) guide.
+
 ## v0.8.0
 
 Released on 2023/12/01
