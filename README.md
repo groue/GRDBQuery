@@ -23,18 +23,7 @@ It comes in two flavors:
             List(players) { player in Text(player.name) }
         }
     }
-
-    /// Tracks the full list of database players
-    struct PlayersRequest: ValueObservationQueryable {
-        static var defaultValue: [Player] { [] }
-
-        func fetch(_ db: Database) throws -> [Player] {
-            try Player.fetchAll(db)
-        }
-    }
     ```
-
-    See <doc:GettingStarted>.
 
 - The `@EnvironmentStateObject` property wrapper helps building `ObservableObject` models from the SwiftUI environment:
 
@@ -53,25 +42,7 @@ It comes in two flavors:
             List(players) { player in Text(player.name) }
         }
     }
-
-    class PlayerListModel: ObservableObject {
-        @Published private(set) var players: [Player]
-        private var cancellable: DatabaseCancellable?
-
-        init(databaseContext: DatabaseContext) {
-            let observation = ValueObservation.tracking { db in
-                try Player.fetchAll(db)
-            } 
-            cancellable = observation.start(in: databaseContext.reader, scheduling: .immediate) { error in
-                // Handle error
-            } onChange: { players in
-                self.players =  players
-            }
-        }
-    }
     ```
-
-    See <doc:MVVM>.
 
 Both techniques can be used in a single application, so that developers can run quick experiments, build versatile previews, and also apply strict patterns and conventions. Pick `@Query`, or `@EnvironmentStateObject`, depending on your needs!
 
@@ -83,7 +54,7 @@ Check out the **[GRDBQuery demo apps]**, and the **[GRDB demo apps]** for variou
 
 ## Thanks
 
-🙌 `@Query` was vastly inspired from [Core Data and SwiftUI](https://davedelong.com/blog/2021/04/03/core-data-and-swiftui/) by [@davedelong](https://github.com/davedelong), with [a critical improvement](https://github.com/groue/GRDB.swift/pull/955) contributed by [@steipete](https://github.com/steipete). Many thanks to both of you! `@EnvironmentStateObject` was later introduced because `@Query` does not fit the MVVM architecture. The author sees benefits in both property wrappers.
+🙌 `@Query` was vastly inspired from [Core Data and SwiftUI](https://davedelong.com/blog/2021/04/03/core-data-and-swiftui/) by [@davedelong](https://github.com/davedelong), with [a critical improvement](https://github.com/groue/GRDB.swift/pull/955) contributed by [@steipete](https://github.com/steipete), and enhancements inspired by conversations with [@stephencelis](https://github.com/stephencelis). Many thanks to all of you!
 
 
 [GRDB]: http://github.com/groue/GRDB.swift
