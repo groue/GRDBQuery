@@ -39,7 +39,7 @@ It comes in two flavors:
         }
         
         var body: some View {
-            List(players) { player in Text(player.name) }
+            List(model.players) { player in Text(player.name) }
         }
     }
     ```
