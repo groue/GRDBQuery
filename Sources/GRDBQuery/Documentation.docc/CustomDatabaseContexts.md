@@ -96,7 +96,7 @@ struct MyApp: App {
         WindowGroup {
             MyView()
         }
-        .environment(\.playerRepository, /* a repository */)
+        .playerRepository(/* a repository */)
     }
 }
 

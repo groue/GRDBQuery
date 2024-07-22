@@ -44,7 +44,7 @@ extension Query where Request.DatabaseContext == PlayerRepository {
 
 To migrate:
 
-- ✨ Delete the the extra `Query` initializers.
+- ✨ Delete the extra `Query` initializers.
 
 - ✨ Expose a read-only access from the database manager:
 
