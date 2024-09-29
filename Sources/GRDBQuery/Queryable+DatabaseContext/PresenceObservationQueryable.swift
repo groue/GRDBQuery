@@ -5,7 +5,8 @@ import GRDB
 public protocol PresenceObservationQueryable<Context>: Queryable, Sendable
 where Context: TopLevelDatabaseReader,
       Value == Presence<WrappedValue>,
-      ValuePublisher == AnyPublisher<Value, any Error>
+      ValuePublisher == AnyPublisher<Value, any Error>,
+      Value: Sendable
 {
     associatedtype WrappedValue
     

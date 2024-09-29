@@ -4,7 +4,8 @@ import GRDB
 // See Documentation.docc/Extensions/ValueObservationQueryable.md
 public protocol ValueObservationQueryable<Context>: Queryable, Sendable
 where Context: TopLevelDatabaseReader,
-      ValuePublisher == AnyPublisher<Value, any Error>
+      ValuePublisher == AnyPublisher<Value, any Error>,
+      Value: Sendable
 {
     /// Options for the database observation.
     ///
@@ -38,7 +39,7 @@ extension ValueObservationQueryable {
 
 extension TopLevelDatabaseReader {
     /// Returns a publisher of an observed database value.
-    @MainActor func publishObservation<Value>(
+    @MainActor func publishObservation<Value: Sendable>(
         queryableOptions: QueryableOptions,
         value: @escaping @Sendable (Database) throws -> Value
     ) -> AnyPublisher<Value, any Error> {
