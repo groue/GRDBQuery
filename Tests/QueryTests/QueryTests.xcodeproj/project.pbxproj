@@ -387,7 +387,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.groue.QueryTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -413,7 +413,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.groue.QueryTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
@@ -428,7 +428,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.groue.QueryTestsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TEST_TARGET_NAME = QueryTests;
 			};
 			name = Debug;
@@ -444,7 +444,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.groue.QueryTestsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TEST_TARGET_NAME = QueryTests;
 			};
 			name = Release;
