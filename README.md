@@ -1,6 +1,6 @@
 # GRDBQuery
 
-**Latest release**: July 20, 2024 • [version 0.9.0](https://github.com/groue/GRDBQuery/tree/0.9.0) • [CHANGELOG](CHANGELOG.md)
+**Latest release**: September 29, 2024 • [version 0.10.0](https://github.com/groue/GRDBQuery/tree/0.10.0) • [CHANGELOG](CHANGELOG.md)
 
 **Requirements**: iOS 14.0+ / macOS 11+ / tvOS 14.0+ / watchOS 7.0+ &bull; Swift 6+ / Xcode 16+
 

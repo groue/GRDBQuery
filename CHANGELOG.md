@@ -1,5 +1,12 @@
 # Release Notes
 
+## v0.10.0
+
+Released on 2024/09/28
+
+- **Breaking Change**: Depend on GRDB 7.0.0-beta+ by [@groue](https://github.com/groue) in [#58]https://github.com/groue/GRDBQuery/pull/58)
+
+
 ## v0.9.0
 
 Released on 2024/07/20
