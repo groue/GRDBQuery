@@ -27,10 +27,14 @@ struct DeferredOnMainActor<DeferredPublisher: Publisher>: Publisher {
                 .receive(on: MainActorScheduler.shared)
                 .flatMap {
                     MainActor.assumeIsolated {
-                        deferred()
-                    }
+                        UncheckedSendable(value: deferred())
+                    }.value
                 }
         }
         .receive(subscriber: subscriber)
     }
+}
+
+private struct UncheckedSendable<T>: @unchecked Sendable {
+    var value: T
 }

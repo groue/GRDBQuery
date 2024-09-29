@@ -1,4 +1,4 @@
-// swift-tools-version:5.10
+// swift-tools-version:6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -19,7 +19,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/groue/GRDB.swift.git", from: "6.4.0"),
+        .package(url: "https://github.com/groue/GRDB.swift", from: "7.0.0-beta"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -37,16 +37,3 @@ let package = Package(
             ]),
     ]
 )
-
-for target in package.targets {
-    var settings = target.swiftSettings ?? []
-    settings.append(contentsOf: [
-        // <https://github.com/apple/swift-evolution/blob/main/proposals/0337-support-incremental-migration-to-concurrency-checking.md>
-        .enableExperimentalFeature("StrictConcurrency"),
-        // <https://github.com/apple/swift-evolution/blob/main/proposals/0354-regex-literals.md>
-        .enableUpcomingFeature("BareSlashRegexLiterals"),
-        // <https://github.com/apple/swift-evolution/blob/main/proposals/0401-remove-property-wrapper-isolation.md>
-        .enableUpcomingFeature("DisableOutwardActorInference"),
-    ])
-    target.swiftSettings = settings
-}
