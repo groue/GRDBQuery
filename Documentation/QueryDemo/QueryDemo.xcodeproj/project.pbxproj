@@ -237,7 +237,7 @@
 			);
 			mainGroup = 56F8A17C273802970011ACBE;
 			packageReferences = (
-				56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB" */,
 			);
 			productRefGroup = 56F8A186273802970011ACBE /* Products */;
 			projectDirPath = "";
@@ -569,9 +569,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+		56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDB.swift.git";
+			repositoryURL = "https://github.com/groue/GRDB.swift";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = "7.0.0-beta";
@@ -586,7 +586,7 @@
 		};
 		56519DBF274FC3F700ED16D8 /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			package = 56519DBE274FC3F700ED16D8 /* XCRemoteSwiftPackageReference "GRDB" */;
 			productName = GRDB;
 		};
 		56519DC1274FC44500ED16D8 /* GRDBQuery */ = {
