@@ -55,6 +55,7 @@ extension TopLevelDatabaseReader {
                     .eraseToAnyPublisher()
             }
         }
+        .assertNoFailure(if: queryableOptions.contains(.assertNoFailure))
         .eraseToAnyPublisher()
     }
 }

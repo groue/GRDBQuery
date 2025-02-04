@@ -68,7 +68,21 @@ extension TopLevelDatabaseReader {
                     .eraseToAnyPublisher()
             }
         }
+        .assertNoFailure(if: queryableOptions.contains(.assertNoFailure))
         .eraseToAnyPublisher()
+    }
+}
+
+
+extension Publisher {
+    func assertNoFailure(if condition: Bool) -> AnyPublisher<Output, Failure> {
+        if !condition {
+            self.eraseToAnyPublisher()
+        } else {
+            self.assertNoFailure()
+                .setFailureType(to: Failure.self)
+                .eraseToAnyPublisher()
+        }
     }
 }
 
