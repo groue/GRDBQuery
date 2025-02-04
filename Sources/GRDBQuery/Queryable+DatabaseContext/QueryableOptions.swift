@@ -60,8 +60,8 @@ public struct QueryableOptions: OptionSet, Sendable {
     
     /// By default, any error that occurs can be accessed using ``Query/Wrapper/error``
     /// and is otherwise ignored.
-    /// With this option, assertNoFailure() is called on the combine publisher, which causes any error
-    /// to be treated as a fatalError which will terminate the app.
+    /// With this option, errors that happen while accessing the
+    /// database terminate the app with a fatal error.
     public static let assertNoFailure = QueryableOptions(rawValue: 1 << 2)
     
     /// The default options.
