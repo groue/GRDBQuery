@@ -7,6 +7,7 @@
 ///
 /// - ``async``
 /// - ``constantRegion``
+/// - ``assertNoFailure``
 public struct QueryableOptions: OptionSet, Sendable {
     public let rawValue: Int
     
