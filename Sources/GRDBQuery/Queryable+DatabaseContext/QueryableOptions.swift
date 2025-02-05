@@ -7,6 +7,7 @@
 ///
 /// - ``async``
 /// - ``constantRegion``
+/// - ``assertNoFailure``
 public struct QueryableOptions: OptionSet, Sendable {
     public let rawValue: Int
     
@@ -57,6 +58,12 @@ public struct QueryableOptions: OptionSet, Sendable {
     /// This option only applies to ``ValueObservationQueryable`` and
     /// ``PresenceObservationQueryable`` types.
     public static let constantRegion = QueryableOptions(rawValue: 1 << 1)
+    
+    /// By default, any error that occurs can be accessed using ``Query/Wrapper/error``
+    /// and is otherwise ignored.
+    /// With this option, errors that happen while accessing the
+    /// database terminate the app with a fatal error.
+    public static let assertNoFailure = QueryableOptions(rawValue: 1 << 2)
     
     /// The default options.
     public static let `default`: QueryableOptions = []
