@@ -1,5 +1,11 @@
 # Release Notes
 
+## v0.11.0
+
+Released on 2025/03/15
+
+- **New**: adds QueryableOptions.assertNoFailure to treat errors as fatalError by [@ChristophKaser](https://github.com/ChristophKaser) in [#64](https://github.com/groue/GRDBQuery/pull/64)
+
 ## v0.10.1
 
 Released on 2024/09/29
