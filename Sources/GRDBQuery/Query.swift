@@ -1,6 +1,16 @@
 import Combine
 import SwiftUI
 
+public struct QueryPublisherPrintConfiguration {
+    public let prefix: String
+    public let outputStream: (any TextOutputStream)?
+    
+    public init(prefix: String = "", outputStream: (any TextOutputStream)? = nil) {
+        self.prefix = prefix
+        self.outputStream = outputStream
+    }
+}
+
 // See Documentation.docc/Extensions/Query.md
 @propertyWrapper
 @MainActor public struct Query<Request: Queryable> {
@@ -22,7 +32,7 @@ import SwiftUI
     
     /// The `Query` configuration.
     private let configuration: Configuration
-    
+    private let printPublisherConfiguration: QueryPublisherPrintConfiguration?
     /// The last published database value.
     public var wrappedValue: Request.Value {
         tracker.value ?? Request.defaultValue
@@ -73,10 +83,12 @@ import SwiftUI
     /// - parameter keyPath: A key path to the database in the environment.
     public init(
         _ request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>,
+        printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil)
     {
-        self._database = Environment(keyPath)
-        self.configuration = .initial(request)
+        self.init(configuration: .initial(request),
+                  in: keyPath,
+                  printPublisherConfiguration: printPublisherConfiguration)
     }
     
     /// Creates a `Query`, given a ``Queryable`` request, and a key path to
@@ -111,10 +123,12 @@ import SwiftUI
     /// - parameter keyPath: A key path to the database in the environment.
     public init(
         constant request: Request,
-        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>,
+        printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil)
     {
-        self._database = Environment(keyPath)
-        self.configuration = .constant(request)
+        self.init(configuration: .constant(request),
+                  in: keyPath,
+                  printPublisherConfiguration: printPublisherConfiguration)
     }
     
     /// Creates a `Query`, given a SwiftUI binding to its ``Queryable``
@@ -158,11 +172,24 @@ import SwiftUI
     /// - parameter keyPath: A key path to the database in the environment.
     public init(
         _ request: Binding<Request>,
-        in keyPath: KeyPath<EnvironmentValues, Request.Context>)
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>,
+        printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil)
+    {
+        self.init(configuration: .binding(request),
+                  in: keyPath,
+                  printPublisherConfiguration: printPublisherConfiguration)
+    }
+    
+    private init(
+        configuration: Configuration,
+        in keyPath: KeyPath<EnvironmentValues, Request.Context>,
+        printPublisherConfiguration: QueryPublisherPrintConfiguration?)
     {
         self._database = Environment(keyPath)
-        self.configuration = .binding(request)
+        self.configuration = configuration
+        self.printPublisherConfiguration = printPublisherConfiguration
     }
+    
     
     /// A wrapper of the underlying `Query` that creates bindings to
     /// its ``Queryable`` request.
@@ -252,8 +279,10 @@ import SwiftUI
         func update(
             queryObservationEnabled: Bool,
             configuration queryConfiguration: Configuration,
+            printPublisherConfiguration: QueryPublisherPrintConfiguration?,
             database: Request.Context)
         {
+        
             // Give up if observation is disabled
             guard queryObservationEnabled else {
                 trackedRequest = nil
@@ -291,9 +320,17 @@ import SwiftUI
                 return
             }
             
+            var finalPublisher = publisher.eraseToAnyPublisher()
+            
+            if let printConfiguration = printPublisherConfiguration {
+                finalPublisher = finalPublisher.print(printConfiguration.prefix,
+                                                      to: printConfiguration.outputStream)
+                .eraseToAnyPublisher()
+            }
+            
             // Start tracking the new request
             var isUpdating = true
-            cancellable = publisher.sink(
+            cancellable = finalPublisher.sink(
                 receiveCompletion: { [weak self] completion in
                     guard let self = self else { return }
                     MainActor.assumeIsolated {
@@ -335,6 +372,7 @@ extension Query: DynamicProperty {
             tracker.update(
                 queryObservationEnabled: queryObservationEnabled,
                 configuration: configuration,
+                printPublisherConfiguration: printPublisherConfiguration,
                 database: database)
         }
     }

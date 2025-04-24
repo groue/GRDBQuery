@@ -29,8 +29,11 @@ extension Query where Request.Context == Void {
     /// ```
     ///
     /// - parameter request: An initial ``Queryable`` request.
-    public init(_ request: Request) {
-        self.init(request, in: \.void)
+    public init(_ request: Request,
+                printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil) {
+        self.init(request,
+                  in: \.void,
+                  printPublisherConfiguration: printPublisherConfiguration)
     }
     
     /// Creates a `Query`, given a SwiftUI binding to a ``Queryable``
@@ -73,8 +76,11 @@ extension Query where Request.Context == Void {
     /// ```
     ///
     /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
-    public init(_ request: Binding<Request>) {
-        self.init(request, in: \.void)
+    public init(_ request: Binding<Request>,
+                printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil) {
+        self.init(request,
+                  in: \.void,
+                  printPublisherConfiguration: printPublisherConfiguration)
     }
     
     /// Creates a `Query`, given a ``Queryable`` request that uses
@@ -109,8 +115,11 @@ extension Query where Request.Context == Void {
     /// ```
     ///
     /// - parameter request: A ``Queryable`` request.
-    public init(constant request: Request) {
-        self.init(constant:request, in: \.void)
+    public init(constant request: Request,
+                printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil) {
+        self.init(constant:request,
+                  in: \.void,
+                  printPublisherConfiguration: printPublisherConfiguration)
     }
 }
 

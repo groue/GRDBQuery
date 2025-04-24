@@ -21,9 +21,12 @@ extension Query where Request.Context == DatabaseContext {
     ///
     /// - parameter request: An initial ``Queryable`` request.
     public init(
-        _ request: Request
+        _ request: Request,
+        printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil
     ) {
-        self.init(request, in: \.databaseContext)
+        self.init(request,
+                  in: \.databaseContext,
+                  printPublisherConfiguration: printPublisherConfiguration)
     }
     
     /// Creates a `Query` that feeds from the `databaseContext`
@@ -50,9 +53,12 @@ extension Query where Request.Context == DatabaseContext {
     ///
     /// - parameter request: A ``Queryable`` request.
     public init(
-        constant request: Request
+        constant request: Request,
+        printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil
     ) {
-        self.init(constant: request, in: \.databaseContext)
+        self.init(constant: request,
+                  in: \.databaseContext,
+                  printPublisherConfiguration: printPublisherConfiguration)
     }
     
     /// Creates a `Query` that feeds from the `databaseContext`
@@ -88,8 +94,11 @@ extension Query where Request.Context == DatabaseContext {
     ///
     /// - parameter request: A SwiftUI binding to a ``Queryable`` request.
     public init(
-        _ request: Binding<Request>
+        _ request: Binding<Request>,
+        printPublisherConfiguration: QueryPublisherPrintConfiguration? = nil
     ) {
-        self.init(request, in: \.databaseContext)
+        self.init(request,
+                  in: \.databaseContext,
+                  printPublisherConfiguration: printPublisherConfiguration)
     }
 }

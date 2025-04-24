@@ -10,7 +10,7 @@ struct AppView: View {
         var id: Int64
     }
     
-    @Query(AnyPlayerRequest())
+    @Query(AnyPlayerRequest(), printPublisherConfiguration: .init(prefix: "\(#function)"))
     private var player: Player?
     
     @State private var editedPlayer: EditedPlayer?
