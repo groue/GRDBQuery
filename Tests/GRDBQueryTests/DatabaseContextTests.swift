@@ -1,9 +1,10 @@
 import GRDB
-import XCTest
+import Testing
 @testable import GRDBQuery
 
-class DatabaseContextTests: XCTestCase {
-    @MainActor func test_relationship_with_TopLevelDatabaseReader_and_main_actor() {
+struct DatabaseContextTests {
+    @Test @MainActor
+    func relationship_with_TopLevelDatabaseReader_and_main_actor() {
         // This test passes if it compiles without any compiler warning.
         @MainActor struct DatabaseManager: TopLevelDatabaseReader {
             var reader: any DatabaseReader {

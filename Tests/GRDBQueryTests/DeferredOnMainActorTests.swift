@@ -3,32 +3,35 @@
 #else
 import Combine
 #endif
-import XCTest
+import Testing
 @testable import GRDBQuery
 
-class DeferredOnMainActorTests: XCTestCase {
-    func test_deferred_publisher_is_lazily_instantiated() {
+struct DeferredOnMainActorTests {
+    @Test
+    func deferred_publisher_is_lazily_instantiated() {
         let instantiatedMutex = Mutex(false)
         _ = DeferredOnMainActor {
             instantiatedMutex.withLock { $0 = true }
             return Just(true)
         }
-        XCTAssertFalse(instantiatedMutex.withLock { $0 })
+        #expect(!instantiatedMutex.withLock { $0 })
     }
     
-    @MainActor func test_deferred_publisher_is_synchronously_subscribed_from_main_actor() {
+    @Test @MainActor
+    func deferred_publisher_is_synchronously_subscribed_from_main_actor() {
         let publisher = DeferredOnMainActor {
             Just(true)
         }
         var value = false
         _ = publisher.sink(receiveValue: { value = $0 })
-        XCTAssertTrue(value)
+        #expect(value)
     }
 
-    func test_deferred_publisher_is_instantiated_on_main_actor() async {
+    @Test
+    func deferred_publisher_is_instantiated_on_main_actor() async {
         let value = await withCheckedContinuation { continuation in
             Task {
-                XCTAssertFalse(Thread.isMainThread)
+                #expect(!isMainThread())
                 
                 let publisher = DeferredOnMainActor {
                     MainActor.assumeIsolated {
@@ -46,6 +49,6 @@ class DeferredOnMainActorTests: XCTestCase {
                 }
             }
         }
-        XCTAssertEqual(value, true)
+        #expect(value == true)
     }
 }

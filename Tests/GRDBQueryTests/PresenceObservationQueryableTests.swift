@@ -1,10 +1,11 @@
 import Combine
-import XCTest
 import GRDB
 import GRDBQuery
+import Testing
 
-class PresenceObservationQueryableTests: XCTestCase {
-    @MainActor func test_initial_value_is_fetched_immediately() throws {
+struct PresenceObservationQueryableTests {
+    @Test @MainActor
+    func initial_value_is_fetched_immediately() throws {
         struct Request: PresenceObservationQueryable {
             func fetch(_ db: Database) throws -> Bool? {
                 true
@@ -18,14 +19,15 @@ class PresenceObservationQueryableTests: XCTestCase {
         
         let valueMutex = Mutex<Presence<Bool>>(.missing)
         _ = publisher.sink { completion in
-            if case .failure = completion { XCTFail() }
+            if case .failure = completion { Issue.record() }
         } receiveValue: { value in
             valueMutex.withLock { $0 = value }
         }
-        XCTAssertEqual(valueMutex.withLock { $0 }.value, true)
+        #expect(valueMutex.withLock { $0 }.value == true)
     }
     
-    @MainActor func test_initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_async_option() throws {
+    @Test @MainActor
+    func initial_value_is_not_fetched_immediately_and_received_on_main_actor_with_async_option() async throws {
         struct Request: PresenceObservationQueryable {
             static let queryableOptions = QueryableOptions.async
             
@@ -40,23 +42,24 @@ class PresenceObservationQueryableTests: XCTestCase {
         let publisher = request.publisher(in: context)
         
         let valueMutex = Mutex<Presence<Bool>>(.missing)
-        let expectation = expectation(description: "value")
-        let cancellable = publisher.sink { completion in
-            if case .failure = completion { XCTFail() }
-        } receiveValue: { value in
-            MainActor.assumeIsolated {
-                valueMutex.withLock { $0 = value }
-                expectation.fulfill()
+        var cancellable: AnyCancellable?
+        await withCheckedContinuation { continuation in
+            cancellable = publisher.sink { completion in
+                if case .failure = completion { Issue.record() }
+            } receiveValue: { value in
+                MainActor.assumeIsolated {
+                    valueMutex.withLock { $0 = value }
+                    continuation.resume()
+                }
             }
+            #expect(!valueMutex.withLock { $0 }.exists)
         }
-        XCTAssertFalse(valueMutex.withLock { $0 }.exists)
-        withExtendedLifetime(cancellable) {
-            wait(for: [expectation])
-        }
-        XCTAssertEqual(valueMutex.withLock { $0 }.value, true)
+        withExtendedLifetime(cancellable) { }
+        #expect(valueMutex.withLock { $0 }.value == true)
     }
     
-    @MainActor func test_custom_context() throws {
+    @Test @MainActor
+    func custom_context() throws {
         struct DatabaseManager: TopLevelDatabaseReader {
             var reader: any DatabaseReader
         }
@@ -75,10 +78,10 @@ class PresenceObservationQueryableTests: XCTestCase {
         
         let valueMutex = Mutex<Presence<Bool>>(.missing)
         _ = publisher.sink { completion in
-            if case .failure = completion { XCTFail() }
+            if case .failure = completion { Issue.record() }
         } receiveValue: { value in
             valueMutex.withLock { $0 = value }
         }
-        XCTAssertEqual(valueMutex.withLock { $0 }.value, true)
+        #expect(valueMutex.withLock { $0 }.value == true)
     }
 }

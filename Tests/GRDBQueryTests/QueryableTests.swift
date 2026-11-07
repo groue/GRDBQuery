@@ -1,10 +1,11 @@
 import Combine
-import XCTest
 import GRDB
 import GRDBQuery
+import Testing
 
-class QueryableTests: XCTestCase {
-    @MainActor func test_custom_context() throws {
+struct QueryableTests {
+    @Test @MainActor
+    func custom_context() throws {
         // This test must compile without any compiler warning.
         struct DatabaseManager { }
         struct Request: Queryable {
@@ -21,10 +22,10 @@ class QueryableTests: XCTestCase {
         
         let valueMutex = Mutex(false)
         _ = publisher.sink { completion in
-            if case .failure = completion { XCTFail() }
+            if case .failure = completion { Issue.record() }
         } receiveValue: { value in
             valueMutex.withLock { $0 = value }
         }
-        XCTAssertTrue(valueMutex.withLock { $0 })
+        #expect(valueMutex.withLock { $0 })
     }
 }

@@ -1,10 +1,11 @@
 import Combine
-import XCTest
 import GRDB
 import GRDBQuery
+import Testing
 
-class FetchQueryableTests: XCTestCase {
-    @MainActor func test_value_is_fetched_immediately() throws {
+struct FetchQueryableTests {
+    @Test @MainActor
+    func value_is_fetched_immediately() throws {
         struct Request: FetchQueryable {
             static var defaultValue: Bool { false }
             
@@ -20,14 +21,15 @@ class FetchQueryableTests: XCTestCase {
         
         let valueMutex = Mutex(false)
         _ = publisher.sink { completion in
-            if case .failure = completion { XCTFail() }
+            if case .failure = completion { Issue.record() }
         } receiveValue: { value in
             valueMutex.withLock { $0 = value }
         }
-        XCTAssertTrue(valueMutex.withLock { $0 })
+        #expect(valueMutex.withLock { $0 })
     }
     
-    @MainActor func test_value_is_not_fetched_immediately_and_received_on_main_actor_with_async_option() throws {
+    @Test @MainActor
+    func value_is_not_fetched_immediately_and_received_on_main_actor_with_async_option() async throws {
         struct Request: FetchQueryable {
             static let queryableOptions = QueryableOptions.async
             static var defaultValue: Bool { false }
@@ -43,23 +45,24 @@ class FetchQueryableTests: XCTestCase {
         let publisher = request.publisher(in: context)
         
         let valueMutex = Mutex(false)
-        let expectation = expectation(description: "value")
-        let cancellable = publisher.sink { completion in
-            if case .failure = completion { XCTFail() }
-        } receiveValue: { value in
-            MainActor.assumeIsolated {
-                valueMutex.withLock { $0 = value }
-                expectation.fulfill()
+        var cancellable: AnyCancellable?
+        await withCheckedContinuation { continuation in
+            cancellable = publisher.sink { completion in
+                if case .failure = completion { Issue.record() }
+            } receiveValue: { value in
+                MainActor.assumeIsolated {
+                    valueMutex.withLock { $0 = value }
+                    continuation.resume()
+                }
             }
+            #expect(!valueMutex.withLock { $0 })
         }
-        XCTAssertFalse(valueMutex.withLock { $0 })
-        withExtendedLifetime(cancellable) {
-            wait(for: [expectation])
-        }
-        XCTAssertTrue(valueMutex.withLock { $0 })
+        withExtendedLifetime(cancellable) { }
+        #expect(valueMutex.withLock { $0 })
     }
     
-    @MainActor func test_custom_context() throws {
+    @Test @MainActor
+    func custom_context() throws {
         struct DatabaseManager: TopLevelDatabaseReader {
             var reader: any DatabaseReader
         }
@@ -79,10 +82,10 @@ class FetchQueryableTests: XCTestCase {
         
         let valueMutex = Mutex(false)
         _ = publisher.sink { completion in
-            if case .failure = completion { XCTFail() }
+            if case .failure = completion { Issue.record() }
         } receiveValue: { value in
             valueMutex.withLock { $0 = value }
         }
-        XCTAssertTrue(valueMutex.withLock { $0 })
+        #expect(valueMutex.withLock { $0 })
     }
 }
