@@ -22,10 +22,10 @@ class QueryTestsUITests: XCTestCase {
         
         // Make sure all ui elements are hittable
         XCUIElement.perform(withKeyModifiers: .option) {
-            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+            app.buttons[XCUIIdentifierFullScreenWindow].click()
         }
         
-        app.radioButtons["Tab 1"].tap()
+        app.tabViewTab("Tab 1").click()
         
         let text = app.staticTexts["default.value"]
         let changeRequestButton = app.buttons["default.changeRequestButton"]
@@ -36,29 +36,29 @@ class QueryTestsUITests: XCTestCase {
         XCTAssertEqual(text.value as? String, "6")
         
         // `n + (first * second)` where `first` was set to 5 from container view
-        containerChangeRequestButton.tap()
+        containerChangeRequestButton.click()
         XCTAssertEqual(text.value as? String, "6")
         
         // `n + (first * second)` where `second` was set to 7 from ValueView
-        changeRequestButton.tap()
+        changeRequestButton.click()
         XCTAssertEqual(text.value as? String, "14")
         
         // `n + (first * second)` where `n` was incremented
-        sharedNotificationButton.tap()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "15")
         
         // `n + (first * second)` where publisher was reset due to ValueView ID change
-        app.buttons["Change ID"].tap()
+        app.buttons["Change ID"].click()
         XCTAssertEqual(text.value as? String, "6")
         
         // Stop publisher subscription
-        app.buttons["Toggle Query Observation"].tap()
-        sharedNotificationButton.tap()
+        app.buttons["Toggle Query Observation"].click()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "6")
         
         // Restart publisher subscription
-        app.buttons["Toggle Query Observation"].tap()
-        sharedNotificationButton.tap()
+        app.buttons["Toggle Query Observation"].click()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "7")
     }
     
@@ -71,10 +71,10 @@ class QueryTestsUITests: XCTestCase {
         
         // Make sure all ui elements are hittable
         XCUIElement.perform(withKeyModifiers: .option) {
-            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+            app.buttons[XCUIIdentifierFullScreenWindow].click()
         }
         
-        app.radioButtons["Tab 1"].tap()
+        app.tabViewTab("Tab 1").click()
         
         let text = app.staticTexts["initial.value"]
         let changeRequestButton = app.buttons["initial.changeRequestButton"]
@@ -85,29 +85,29 @@ class QueryTestsUITests: XCTestCase {
         XCTAssertEqual(text.value as? String, "1")
         
         // `n + (first * second)` where `first` was set to 5 from container view
-        containerChangeRequestButton.tap()
+        containerChangeRequestButton.click()
         XCTAssertEqual(text.value as? String, "1")
         
         // `n + (first * second)` where `second` was set to 7 from ValueView
-        changeRequestButton.tap()
+        changeRequestButton.click()
         XCTAssertEqual(text.value as? String, "7")
         
         // `n + (first * second)` where `n` was incremented
-        sharedNotificationButton.tap()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "8")
         
         // `n + (first * second)` where publisher was reset due to ValueView ID change
-        app.buttons["Change ID"].tap()
+        app.buttons["Change ID"].click()
         XCTAssertEqual(text.value as? String, "5")
         
         // Stop publisher subscription
-        app.buttons["Toggle Query Observation"].tap()
-        sharedNotificationButton.tap()
+        app.buttons["Toggle Query Observation"].click()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "5")
         
         // Restart publisher subscription
-        app.buttons["Toggle Query Observation"].tap()
-        sharedNotificationButton.tap()
+        app.buttons["Toggle Query Observation"].click()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "6")
     }
     
@@ -120,10 +120,10 @@ class QueryTestsUITests: XCTestCase {
         
         // Make sure all ui elements are hittable
         XCUIElement.perform(withKeyModifiers: .option) {
-            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+            app.buttons[XCUIIdentifierFullScreenWindow].click()
         }
         
-        app.radioButtons["Tab 1"].tap()
+        app.tabViewTab("Tab 1").click()
         
         let text = app.staticTexts["constant.value"]
         let changeRequestButton = app.buttons["constant.changeRequestButton"]
@@ -134,29 +134,29 @@ class QueryTestsUITests: XCTestCase {
         XCTAssertEqual(text.value as? String, "1")
         
         // `n + (first * second)` where `first` was set to 5 from container view
-        containerChangeRequestButton.tap()
+        containerChangeRequestButton.click()
         XCTAssertEqual(text.value as? String, "5")
         
         // `n + (first * second)` where `second` was set to 7 from ValueView
-        changeRequestButton.tap()
+        changeRequestButton.click()
         XCTAssertEqual(text.value as? String, "5")
         
         // `n + (first * second)` where `n` was incremented
-        sharedNotificationButton.tap()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "6")
         
         // `n + (first * second)` where publisher was reset due to ValueView ID change
-        app.buttons["Change ID"].tap()
+        app.buttons["Change ID"].click()
         XCTAssertEqual(text.value as? String, "5")
         
         // Stop publisher subscription
-        app.buttons["Toggle Query Observation"].tap()
-        sharedNotificationButton.tap()
+        app.buttons["Toggle Query Observation"].click()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "5")
         
         // Restart publisher subscription
-        app.buttons["Toggle Query Observation"].tap()
-        sharedNotificationButton.tap()
+        app.buttons["Toggle Query Observation"].click()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "6")
     }
     
@@ -169,10 +169,10 @@ class QueryTestsUITests: XCTestCase {
         
         // Make sure all ui elements are hittable
         XCUIElement.perform(withKeyModifiers: .option) {
-            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+            app.buttons[XCUIIdentifierFullScreenWindow].click()
         }
         
-        app.radioButtons["Tab 1"].tap()
+        app.tabViewTab("Tab 1").click()
         
         let text = app.staticTexts["binding.value"]
         let changeRequestButton = app.buttons["binding.changeRequestButton"]
@@ -183,29 +183,29 @@ class QueryTestsUITests: XCTestCase {
         XCTAssertEqual(text.value as? String, "1")
         
         // `n + (first * second)` where `first` was set to 5 from container view
-        containerChangeRequestButton.tap()
+        containerChangeRequestButton.click()
         XCTAssertEqual(text.value as? String, "5")
         
         // `n + (first * second)` where `second` was set to 7 from ValueView
-        changeRequestButton.tap()
+        changeRequestButton.click()
         XCTAssertEqual(text.value as? String, "35")
         
         // `n + (first * second)` where `n` was incremented
-        sharedNotificationButton.tap()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "36")
         
         // `n + (first * second)` where publisher was reset due to ValueView ID change
-        app.buttons["Change ID"].tap()
+        app.buttons["Change ID"].click()
         XCTAssertEqual(text.value as? String, "35")
         
         // Stop publisher subscription
-        app.buttons["Toggle Query Observation"].tap()
-        sharedNotificationButton.tap()
+        app.buttons["Toggle Query Observation"].click()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "35")
         
         // Restart publisher subscription
-        app.buttons["Toggle Query Observation"].tap()
-        sharedNotificationButton.tap()
+        app.buttons["Toggle Query Observation"].click()
+        sharedNotificationButton.click()
         XCTAssertEqual(text.value as? String, "36")
     }
     
@@ -215,27 +215,27 @@ class QueryTestsUITests: XCTestCase {
         
         // Make sure all ui elements are hittable
         XCUIElement.perform(withKeyModifiers: .option) {
-            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+            app.buttons[XCUIIdentifierFullScreenWindow].click()
         }
         
         let text = app.staticTexts["queryObservation.always.value"]
         let notificationButton = app.buttons["queryObservation.always.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
-        app.radioButtons["queryObservation.always"].tap()
-        app.radioButtons["Tab 1"].tap()
-        sharedNotificationButton.tap()
+        app.tabViewTab("queryObservation.always").click()
+        app.tabViewTab("Tab 1").click()
+        sharedNotificationButton.click()
         
-        app.radioButtons["queryObservation.always"].tap()
+        app.tabViewTab("queryObservation.always").click()
         XCTAssertEqual(text.value as? String, "7")
         
-        notificationButton.tap()
+        notificationButton.click()
         XCTAssertEqual(text.value as? String, "8")
         
-        app.radioButtons["Tab 1"].tap()
-        sharedNotificationButton.tap()
+        app.tabViewTab("Tab 1").click()
+        sharedNotificationButton.click()
         
-        app.radioButtons["queryObservation.always"].tap()
+        app.tabViewTab("queryObservation.always").click()
         XCTAssertEqual(text.value as? String, "9")
     }
     
@@ -246,27 +246,27 @@ class QueryTestsUITests: XCTestCase {
         
         // Make sure all ui elements are hittable
         XCUIElement.perform(withKeyModifiers: .option) {
-            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+            app.buttons[XCUIIdentifierFullScreenWindow].click()
         }
         
         let text = app.staticTexts["queryObservation.onRender.value"]
         let notificationButton = app.buttons["queryObservation.onRender.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
-        app.radioButtons["queryObservation.onRender"].tap()
-        app.radioButtons["Tab 1"].tap()
-        sharedNotificationButton.tap()
+        app.tabViewTab("queryObservation.onRender").click()
+        app.tabViewTab("Tab 1").click()
+        sharedNotificationButton.click()
         
-        app.radioButtons["queryObservation.onRender"].tap()
+        app.tabViewTab("queryObservation.onRender").click()
         XCTAssertEqual(text.value as? String, "6")
         
-        notificationButton.tap()
+        notificationButton.click()
         XCTAssertEqual(text.value as? String, "7")
         
-        app.radioButtons["Tab 1"].tap()
-        sharedNotificationButton.tap()
+        app.tabViewTab("Tab 1").click()
+        sharedNotificationButton.click()
         
-        app.radioButtons["queryObservation.onRender"].tap()
+        app.tabViewTab("queryObservation.onRender").click()
         XCTAssertEqual(text.value as? String, "6")
     }
     
@@ -276,27 +276,39 @@ class QueryTestsUITests: XCTestCase {
         
         // Make sure all ui elements are hittable
         XCUIElement.perform(withKeyModifiers: .option) {
-            app.buttons[XCUIIdentifierFullScreenWindow].tap()
+            app.buttons[XCUIIdentifierFullScreenWindow].click()
         }
         
         let text = app.staticTexts["queryObservation.onAppear.value"]
         let notificationButton = app.buttons["queryObservation.onAppear.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
-        app.radioButtons["queryObservation.onAppear"].tap()
-        app.radioButtons["Tab 1"].tap()
-        sharedNotificationButton.tap()
+        app.tabViewTab("queryObservation.onAppear").click()
+        app.tabViewTab("Tab 1").click()
+        sharedNotificationButton.click()
         
-        app.radioButtons["queryObservation.onAppear"].tap()
+        app.tabViewTab("queryObservation.onAppear").click()
         XCTAssertEqual(text.value as? String, "6")
         
-        notificationButton.tap()
+        notificationButton.click()
         XCTAssertEqual(text.value as? String, "7")
         
-        app.radioButtons["Tab 1"].tap()
-        sharedNotificationButton.tap()
+        app.tabViewTab("Tab 1").click()
+        sharedNotificationButton.click()
         
-        app.radioButtons["queryObservation.onAppear"].tap()
+        app.tabViewTab("queryObservation.onAppear").click()
         XCTAssertEqual(text.value as? String, "6")
+    }
+}
+
+extension XCUIApplication {
+    /// Returns the TabView tab with the given label.
+    ///
+    /// macOS 27 exposes TabView tabs as tabs, while previous macOS versions
+    /// expose them as radio buttons.
+    func tabViewTab(_ label: String) -> XCUIElement {
+        let elementTypes = [XCUIElement.ElementType.tab, .radioButton].map(\.rawValue)
+        return descendants(matching: .any)
+            .matching(NSPredicate(format: "elementType IN %@", elementTypes))[label]
     }
 }
