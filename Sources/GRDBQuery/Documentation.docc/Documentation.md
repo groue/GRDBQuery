@@ -102,16 +102,16 @@ Both techniques can be used in a single application, so that developers can run 
 - <doc:CustomDatabaseContexts>
 - ``DatabaseContext``
 - ``DatabaseContextError``
-- ``SwiftUI/View/databaseContext(_:)``
+- ``SwiftUICore/View/databaseContext(_:)``
 - ``SwiftUI/Scene/databaseContext(_:)``
-- ``SwiftUI/EnvironmentValues/databaseContext``
+- ``SwiftUICore/EnvironmentValues/databaseContext``
 - ``TopLevelDatabaseReader``
 
 ### Controlling observation
 
-- ``SwiftUI/View/queryObservation(_:)``
+- ``SwiftUICore/View/queryObservation(_:)``
 - ``QueryObservation``
-- ``SwiftUI/EnvironmentValues/queryObservationEnabled``
+- ``SwiftUICore/EnvironmentValues/queryObservationEnabled``
 
 ### The MVVM architecture
 

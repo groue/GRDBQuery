@@ -66,7 +66,7 @@ Learn more about the way to use GRDBQuery with database managers in <doc:CustomD
 
 ### Creating A DatabaseContext
 
-- ``init(_:)``
+- ``readWrite(_:)``
 - ``readOnly(_:)``
 - ``notConnected``
 

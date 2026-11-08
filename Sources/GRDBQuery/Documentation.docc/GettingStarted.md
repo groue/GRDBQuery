@@ -119,7 +119,7 @@ struct PlayerList: View {
 
 ## Writing to the database
 
-Apps can, when desired, write to the database with the ``SwiftUI/EnvironmentValues/databaseContext`` environment key:
+Apps can, when desired, write to the database with the ``SwiftUICore/EnvironmentValues/databaseContext`` environment key:
 
 ```swift
 import GRDB

@@ -10,7 +10,7 @@ extension EnvironmentValues {
     /// operations within the SwiftUI environment.
     ///
     /// To set the database context in the environment, use
-    /// ``SwiftUI/View/databaseContext(_:)``.
+    /// ``SwiftUICore/View/databaseContext(_:)``.
     fileprivate(set) public var databaseContext: DatabaseContext {
         get { self[DatabaseContextKey.self] }
         set { self[DatabaseContextKey.self] = newValue }

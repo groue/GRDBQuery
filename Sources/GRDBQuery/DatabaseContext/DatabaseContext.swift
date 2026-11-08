@@ -63,7 +63,7 @@ extension DatabaseContext {
     /// A `DatabaseContext` that throws
     /// ``DatabaseContextError/notConnected`` on every database access.
     ///
-    /// The ``SwiftUI/EnvironmentValues/databaseContext`` environment key
+    /// The ``SwiftUICore/EnvironmentValues/databaseContext`` environment key
     /// contains such a database context unless the application
     /// replaces it.
     public static var notConnected: DatabaseContext {
