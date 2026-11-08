@@ -2,8 +2,46 @@ import GRDB
 
 // See Documentation.docc/Extensions/DatabaseContext.md
 public struct DatabaseContext {
-    private let readerResult: Result<any DatabaseReader, Error>
-    private let writerResult: Result<any DatabaseWriter, Error>
+    /// This class is the failure type of `ConnectionResult`, an alternative
+    /// to the standard `Result`.
+    ///
+    /// The reason why it exists is that when the `DatabaseContext` stored
+    /// in the SwiftUI environment contains plain `Result` values that wrap
+    /// an error (such as read-only contexts that wrap an error in their
+    /// writer result), then the SwiftUI views that access the
+    /// `DatabaseContext` are refreshed for unrelated environment changes
+    /// (see <https://github.com/groue/GRDBQuery/issues/68>).
+    ///
+    /// Replacing `Result` with `ConnectionResult` whose failure type is a
+    /// class fixes this problem (not a struct).
+    private final class ConnectionFailure {
+        let error: any Error
+        
+        init(error: any Error) {
+            self.error = error
+        }
+    }
+    
+    private enum ConnectionResult<T> {
+        case success(T)
+        case failure(ConnectionFailure)
+        
+        static func failure(_ error: any Error) -> Self {
+            ConnectionResult.failure(ConnectionFailure(error: error))
+        }
+        
+        func get() throws -> T {
+            switch self {
+            case .success(let value):
+                return value
+            case .failure(let failure):
+                throw failure.error
+            }
+        }
+    }
+    
+    private let readerResult: ConnectionResult<any DatabaseReader>
+    private let writerResult: ConnectionResult<any DatabaseWriter>
     
     /// Returns a database writer.
     public var writer: any DatabaseWriter {
