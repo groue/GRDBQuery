@@ -7,6 +7,7 @@ A convenience `Queryable` type that observes the database.
 The sample code below defines `PlayersRequest`, a queryable type that publishes the list of players found in the database:
 
 ```swift
+import Combine
 import GRDB
 import GRDBQuery
 

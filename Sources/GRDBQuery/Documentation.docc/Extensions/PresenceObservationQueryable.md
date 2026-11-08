@@ -7,6 +7,7 @@ A convenience `Queryable` type that observes the presence of a value in the data
 The sample code below defines `PlayerPresenceRequest`, a queryable type that publishes the presence of a player in the database, given its id:
 
 ```swift
+import Combine
 import GRDB
 import GRDBQuery
 

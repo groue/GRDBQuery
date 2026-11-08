@@ -45,6 +45,7 @@ See <doc:CustomDatabaseContexts>.
 For example, let's build `PlayersRequest`, that observes the list of player models, and publishes fresh values whenever the database changes:
 
 ```swift
+import Combine
 import GRDB
 import GRDBQuery
 
