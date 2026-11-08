@@ -41,7 +41,7 @@ struct PlayersRequest: ValueObservationQueryable {
 
 The `@Query` property wrapper will detect changes in the `ordering` property, and update SwiftUI views accordingly.
 
-> Experiment: You can adapt this example for your own needs. As you can see, you can modify the order to database values, but you can also change how they are filtered. All [GRDB] features are available. 
+> Experiment: You can adapt this example for your own needs. As you can see, you can modify the order of database values, but you can also change how they are filtered. All [GRDB] features are available. 
 
 ## Modifying the Request from the SwiftUI View
 
@@ -88,7 +88,7 @@ struct ToggleOrderingButton: View {
 
 In the above example, `$players.ordering` is a SwiftUI binding to the `ordering` property of the `PlayersRequest` request.
 
-This binding feeds `ToggleOrderingButton`, which lets the user change the ordering of the request. `@Query` then redraws the view with an updated database content. 
+This binding feeds `ToggleOrderingButton`, which lets the user change the ordering of the request. `@Query` then redraws the view with updated database content. 
 
 When appropriate, you can also use `$players.request`, a SwiftUI binding to the `PlayersRequest` request itself.
 
@@ -134,12 +134,12 @@ struct PlayerList: View {
 }
 ```
 
-> IMPORTANT: The initial request is only used when `PlayerList` becomes rendered by SwiftUI. After that, and until `PlayerList` is no longer rendered, the request is only controlled by the `$players` bindings described above.
+> IMPORTANT: The initial request is only used when `PlayerList` is first rendered by SwiftUI. After that, and until `PlayerList` is no longer rendered, the request is only controlled by the `$players` bindings described above.
 >
-> This means that calling the `PlayerList(initialRequest:)` with a different request will have _no effect_:
+> This means that calling `PlayerList(initialRequest:)` with a different request will have _no effect_:
 > 
 > ```swift
-> struct RootView {
+> struct RootView: View {
 >     @State var request = PlayersRequest(ordering: .byScore)
 > 
 >     var body: some View {
@@ -156,7 +156,7 @@ struct PlayerList: View {
 The `@Query` property wrapper can be controlled with a SwiftUI binding, as in the example below:
 
 ```swift
-struct RootView {
+struct RootView: View {
     @State var request = PlayersRequest(ordering: .byScore)
 
     var body: some View {
@@ -182,10 +182,10 @@ This is the classic two-way connection enabled by SwiftUI `Binding`.
 
 ## Initializing @Query from a Constant Request
 
-Finally, the ``Query/init(constant:in:)`` initializer allows the enclosing RootView view to control the request without restriction, and without any SwiftUI Binding. However, `$players` binding have no effect: 
+Finally, the ``Query/init(constant:in:)`` initializer allows the enclosing RootView view to control the request without restriction, and without any SwiftUI Binding. However, `$players` bindings have no effect: 
 
 ```swift
-struct RootView {
+struct RootView: View {
     var request: PlayersRequest
 
     var body: some View {

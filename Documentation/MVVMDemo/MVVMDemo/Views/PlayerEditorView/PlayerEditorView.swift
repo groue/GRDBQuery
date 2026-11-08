@@ -1,17 +1,17 @@
 import GRDBQuery
 import SwiftUI
 
-/// The sheet for player edition.
+/// The sheet for editing a player.
 ///
-/// In this demo app, this view don't want to remain on screen
+/// In this demo app, this view doesn't want to remain on screen
 /// whenever the edited player no longer exists in the database.
-struct PlayerEditionView: View {
+struct PlayerEditorView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentStateObject private var viewModel: PlayerEditionViewModel
+    @EnvironmentStateObject private var viewModel: PlayerEditorViewModel
     
     init(id: Int64) {
         _viewModel = EnvironmentStateObject {
-            PlayerEditionViewModel(playerRepository: $0.playerRepository, id: id)
+            PlayerEditorViewModel(playerRepository: $0.playerRepository, id: id)
         }
     }
     
@@ -50,11 +50,11 @@ struct PlayerEditionView: View {
 // MARK: - Previews
 
 #Preview("Existing player") {
-    PlayerEditionView(id: 1)
+    PlayerEditorView(id: 1)
         .playerRepository(.populated(playerId: 1))
 }
 
 #Preview("Missing player") {
-    PlayerEditionView(id: -1)
+    PlayerEditorView(id: -1)
         .playerRepository(.empty())
 }

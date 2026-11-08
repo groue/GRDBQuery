@@ -28,7 +28,7 @@ Learn how to use `@Query` in <doc:GettingStarted>.
 
 ### Debugging Initializers
 
-Those convenience initializers don't need any key path. They fit `Queryable` types that ignore environment values and use `Void` as their `DatabaseContext`.
+Those convenience initializers don't need any key path. They fit `Queryable` types that ignore environment values and use `Void` as their `Context`.
 
 - ``init(_:)-9bg3k``
 - ``init(_:)-81ae1``

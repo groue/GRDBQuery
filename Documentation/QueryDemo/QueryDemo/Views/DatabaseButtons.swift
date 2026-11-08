@@ -59,17 +59,17 @@ struct DeletePlayersButton: View {
         Button {
             switch mode {
             case .delete:
-                _ = try! playerRepository.deleteAllPlayer()
+                _ = try! playerRepository.deleteAllPlayers()
                 
             case let .deleteAfter(action):
                 action()
                 Task {
                     try await Task.sleep(nanoseconds: 100_000_000)
-                    try playerRepository.deleteAllPlayer()
+                    try playerRepository.deleteAllPlayers()
                 }
                 
             case let .deleteBefore(action):
-                _ = try! playerRepository.deleteAllPlayer()
+                _ = try! playerRepository.deleteAllPlayers()
                 action()
             }
         } label: {

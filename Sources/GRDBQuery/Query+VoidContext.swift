@@ -13,7 +13,7 @@ extension Query where Request.Context == Void {
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
     ///
-    ///     // PlayersRequest feeds from nothing (Void)
+    ///     // PlayersRequest needs no context (Void)
     ///     func publisher(in _: Void) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
@@ -45,13 +45,13 @@ extension Query where Request.Context == Void {
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
     ///
-    ///     // PlayersRequest feeds from nothing (Void)
+    ///     // PlayersRequest needs no context (Void)
     ///     func publisher(in _: Void) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
     /// }
     ///
-    /// struct RootView {
+    /// struct RootView: View {
     ///     @State var request: PlayersRequest
     ///
     ///     var body: some View {
@@ -89,7 +89,7 @@ extension Query where Request.Context == Void {
     /// struct PlayersRequest: Queryable {
     ///     static var defaultValue: [Player] { [] }
     ///
-    ///     // PlayersRequest feeds from nothing (Void)
+    ///     // PlayersRequest needs no context (Void)
     ///     func publisher(in _: Void) -> AnyPublisher<[Player], Error> {
     ///         ...
     ///     }
@@ -115,7 +115,7 @@ extension Query where Request.Context == Void {
 }
 
 extension EnvironmentValues {
-    /// A dummy property with type `Void`, as a support for convenience
-    /// ``Query`` initializers with `Request.DatabaseContext == Void`.
+    /// A dummy property with type `Void`, to support convenience
+    /// ``Query`` initializers with `Request.Context == Void`.
     fileprivate var void: Void { () }
 }

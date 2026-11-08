@@ -1,9 +1,9 @@
 import Combine
 import GRDB
 
-/// A type that provides a read-only database access.
+/// A type that provides read-only database access.
 public protocol TopLevelDatabaseReader {
-    /// Provides a read-only access to the database.
+    /// Provides read-only access to the database.
     @MainActor var reader: any DatabaseReader { get throws }
 }
 
@@ -18,7 +18,7 @@ extension DatabaseSnapshot: TopLevelDatabaseReader { }
 extension DatabaseSnapshotPool: TopLevelDatabaseReader { }
 
 extension DatabaseReader {
-    // Workaround compiler that won't open the TopLevelDatabaseReader.reader
+    // Work around the compiler, which won't open the TopLevelDatabaseReader.reader
     // existential
     func publish<R: ValueReducer>(
         _ observation: ValueObservation<R>,

@@ -23,7 +23,7 @@ struct MyApp: App {
 }
 ```
 
-SwiftUI previews can use specific, in-memory, databases:
+SwiftUI previews can use specific in-memory databases:
 
 ```swift
 #Preview {
@@ -32,7 +32,7 @@ SwiftUI previews can use specific, in-memory, databases:
 }
 ```
 
-To prevent SwiftUI views from writing in the database, use ``DatabaseContext/readOnly(_:)`` instead of ``DatabaseContext/readWrite(_:)``.
+To prevent SwiftUI views from writing to the database, use ``DatabaseContext/readOnly(_:)`` instead of ``DatabaseContext/readWrite(_:)``.
 
 Apps that connect to multiple databases need further customization.
 
@@ -42,7 +42,7 @@ See <doc:CustomDatabaseContexts>.
 
 **Next, define a queryable type that publishes database values.**
 
-For example, let's build `PlayersRequest`, that observes the list of player models, and publishes fresh values whenever the database changes:
+For example, let's build `PlayersRequest`, which observes the list of player models, and publishes fresh values whenever the database changes:
 
 ```swift
 import Combine
@@ -70,7 +70,7 @@ Queryable types support customization:
 
 ## Feed a SwiftUI View
 
-**Finally**, define the SwiftUI view that feeds from `PlayersRequest`. It automatically updates its content when the database changes:
+**Finally**, define the SwiftUI view that is fed by `PlayersRequest`. It automatically updates its content when the database changes:
 
 ```swift
 import GRDBQuery
@@ -89,7 +89,7 @@ Apps that connect to multiple databases, or do not use `DatabaseContext`, need t
 
 > Tip: By default, `@Query` listens to the database values for the whole duration of the presence of the view in the SwiftUI engine.
 >
-> Apps can spare resources by stopping and restarting the database observation when views appear and disappear: see ``QueryObservation``.
+> Apps can save resources by stopping and restarting the database observation when views appear and disappear: see ``QueryObservation``.
 
 ## Handling Errors
 
@@ -105,7 +105,7 @@ struct PlayerList: View {
     var body: some View {
         if let error = $players.error {
             ContentUnavailableView {
-                Label("An error occured", systemImage: "xmark.circle")
+                Label("An error occurred", systemImage: "xmark.circle")
             } description: {
                 Text(error.localizedDescription)
             }
@@ -117,9 +117,9 @@ struct PlayerList: View {
 ```
 
 
-## Writing into the database
+## Writing to the database
 
-Apps can, when desired, write in the database with the ``SwiftUI/EnvironmentValues/databaseContext`` environment key:
+Apps can, when desired, write to the database with the ``SwiftUI/EnvironmentValues/databaseContext`` environment key:
 
 ```swift
 import GRDB
@@ -132,7 +132,7 @@ struct PlayerList: View {
     
     var body: some View {
         List(players) { player in
-            List(players) { player in Text(player.name) }
+            Text(player.name)
         }
         .toolbar {
             Button("Delete All") {

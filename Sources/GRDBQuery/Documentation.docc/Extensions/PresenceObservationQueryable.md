@@ -20,7 +20,7 @@ struct PlayerPresenceRequest: PresenceObservationQueryable {
 }
 ```
 
-This `PlayerPresenceRequest` type will automatically update a SwiftUI view on every database changes, when wrapped by the `@Query` property wrapper:
+This `PlayerPresenceRequest` type will automatically update a SwiftUI view on every database change, when wrapped by the `@Query` property wrapper:
 
 ```swift
 import GRDBQuery
@@ -38,7 +38,7 @@ struct PlayerView: View {
         case .missing:
             Text("Player does not exist.")
 
-        case .exists(let player):
+        case .existing(let player):
             Text("Player \(player.name) exists.")
 
         case .gone(let player):
@@ -59,19 +59,19 @@ See <doc:QueryableParameters> for more explanations about the `PlayerView` initi
 By default, a `PresenceObservationQueryable` type fetches its initial value as soon as a SwiftUI view needs it, from the main thread. This is undesired when the database fetch is slow, because this blocks the user interface. For slow fetches, use the `.async` option, as below. The SwiftUI view will display the default value until the initial fetch is completed.
 
 ```swift
-struct PlayersRequest: ValueObservationQueryable {
-    // Opt-in for async fetch
+struct PlayerPresenceRequest: PresenceObservationQueryable {
+    // Opt in to async fetch
     static let queryableOptions = QueryableOptions.async
     
-    static var defaultValue: [Player] { [] }
+    var playerId: Int64
 
-    func fetch(_ db: Database) throws -> [Player] {
-        try Player.fetchAll(db)
+    func fetch(_ db: Database) throws -> Player? {
+        try Player.fetchOne(db, id: playerId)
     }
 }
 ```
 
-The other option is ``QueryableOptions/constantRegion``. When appropriate, it that can enable scheduling optimizations in the most demanding apps. Check the documentation of this option.
+The other option is ``QueryableOptions/constantRegion``. When appropriate, it can enable scheduling optimizations in the most demanding apps. Check the documentation of this option.
 
 ## Topics
 

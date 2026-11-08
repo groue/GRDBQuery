@@ -41,7 +41,7 @@ import SwiftUI
     ///
     /// The `request` must have a `Context` type identical to the type of
     /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
-    /// default context of queryable requests), of any other type (see
+    /// default context of queryable requests), or any other type (see
     /// <doc:CustomDatabaseContexts>).
     ///
     /// For example:
@@ -84,11 +84,11 @@ import SwiftUI
     ///
     /// The `request` must have a `Context` type identical to the type of
     /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
-    /// default context of queryable requests), of any other type (see
+    /// default context of queryable requests), or any other type (see
     /// <doc:CustomDatabaseContexts>).
     ///
     /// The SwiftUI bindings returned by the ``projectedValue`` wrapper
-    /// (`$players`) can not update the database content: the request is
+    /// (`$players`) cannot update the database content: the request is
     /// "constant". See <doc:QueryableParameters> for more details.
     ///
     /// For example:
@@ -97,7 +97,7 @@ import SwiftUI
     /// struct PlayerList: View {
     ///     @Query<PlayersRequest> private var players: [Player]
     ///
-    ///     init(constantRequest request: Binding<PlayersRequest>) {
+    ///     init(constantRequest request: PlayersRequest) {
     ///         _players = Query(constant: request, in: \.myDatabase)
     ///     }
     ///
@@ -122,7 +122,7 @@ import SwiftUI
     ///
     /// The `request` must have a `Context` type identical to the type of
     /// `keyPath` in the environment. It can be ``DatabaseContext`` (the
-    /// default context of queryable requests), of any other type (see
+    /// default context of queryable requests), or any other type (see
     /// <doc:CustomDatabaseContexts>).
     ///
     /// Both the `request` Binding argument, and the SwiftUI bindings
@@ -133,7 +133,7 @@ import SwiftUI
     /// For example:
     ///
     /// ```swift
-    /// struct RootView {
+    /// struct RootView: View {
     ///     @State private var request: PlayersRequest
     ///
     ///     var body: some View {
@@ -236,7 +236,7 @@ import SwiftUI
         /// The database value.
         var value: Request.Value?
         
-        /// The latest eventual error.
+        /// The latest error, if any.
         var error: Error?
         
         /// The request set by the `Wrapper.request` binding.

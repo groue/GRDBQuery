@@ -12,7 +12,7 @@ extension Player {
         "Victor", "Violette", "Wilfried", "Wilhelmina", "Yvon", "Yann",
         "Zazie", "Zoé"]
     
-    /// Creates a new player with random name and random score
+    /// Creates a new player with a random name and a random score
     static func makeRandom(id: Int64? = nil) -> Player {
         Player(
             id: id,

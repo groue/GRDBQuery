@@ -17,7 +17,7 @@
 		564014F628364A5300EEA9BC /* MVVMDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564014F528364A5300EEA9BC /* MVVMDemoTests.swift */; };
 		5640151028364AB500EEA9BC /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 5640150F28364AB500EEA9BC /* GRDB */; };
 		5640151D28364B3D00EEA9BC /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151628364B3D00EEA9BC /* PlayerView.swift */; };
-		5640151E28364B3D00EEA9BC /* PlayerEditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151728364B3D00EEA9BC /* PlayerEditionView.swift */; };
+		5640151E28364B3D00EEA9BC /* PlayerEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151728364B3D00EEA9BC /* PlayerEditorView.swift */; };
 		5640151F28364B3D00EEA9BC /* DatabaseButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151828364B3D00EEA9BC /* DatabaseButtons.swift */; };
 		5640152028364B3E00EEA9BC /* PlayerFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151928364B3D00EEA9BC /* PlayerFormView.swift */; };
 		5640152128364B3E00EEA9BC /* PlayerNotFoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640151A28364B3D00EEA9BC /* PlayerNotFoundView.swift */; };
@@ -26,7 +26,7 @@
 		5640152C28364DE600EEA9BC /* GRDBQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 5640152B28364DE600EEA9BC /* GRDBQuery */; };
 		5640152F28364E2C00EEA9BC /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640152E28364E2C00EEA9BC /* AppViewModel.swift */; };
 		564015322836508500EEA9BC /* PlayerFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564015312836508500EEA9BC /* PlayerFormViewModel.swift */; };
-		564015352836657400EEA9BC /* PlayerEditionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564015342836657400EEA9BC /* PlayerEditionViewModel.swift */; };
+		564015352836657400EEA9BC /* PlayerEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564015342836657400EEA9BC /* PlayerEditorViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,7 +51,7 @@
 		564014F128364A5300EEA9BC /* MVVMDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MVVMDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		564014F528364A5300EEA9BC /* MVVMDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVVMDemoTests.swift; sourceTree = "<group>"; };
 		5640151628364B3D00EEA9BC /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
-		5640151728364B3D00EEA9BC /* PlayerEditionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEditionView.swift; sourceTree = "<group>"; };
+		5640151728364B3D00EEA9BC /* PlayerEditorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEditorView.swift; sourceTree = "<group>"; };
 		5640151828364B3D00EEA9BC /* DatabaseButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseButtons.swift; sourceTree = "<group>"; };
 		5640151928364B3D00EEA9BC /* PlayerFormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerFormView.swift; sourceTree = "<group>"; };
 		5640151A28364B3D00EEA9BC /* PlayerNotFoundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerNotFoundView.swift; sourceTree = "<group>"; };
@@ -60,7 +60,7 @@
 		5640152928364D9A00EEA9BC /* GRDBQuery */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = GRDBQuery; path = ../..; sourceTree = "<group>"; };
 		5640152E28364E2C00EEA9BC /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		564015312836508500EEA9BC /* PlayerFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerFormViewModel.swift; sourceTree = "<group>"; };
-		564015342836657400EEA9BC /* PlayerEditionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEditionViewModel.swift; sourceTree = "<group>"; };
+		564015342836657400EEA9BC /* PlayerEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEditorViewModel.swift; sourceTree = "<group>"; };
 		5640153A2836921900EEA9BC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -142,7 +142,7 @@
 				5640152D28364E2200EEA9BC /* AppView */,
 				5640151828364B3D00EEA9BC /* DatabaseButtons.swift */,
 				5640151B28364B3D00EEA9BC /* InformationStyle.swift */,
-				564015332836656900EEA9BC /* PlayerEditionView */,
+				564015332836656900EEA9BC /* PlayerEditorView */,
 				564015302836507D00EEA9BC /* PlayerFormView */,
 				5640151A28364B3D00EEA9BC /* PlayerNotFoundView.swift */,
 				5640151628364B3D00EEA9BC /* PlayerView.swift */,
@@ -184,13 +184,13 @@
 			path = PlayerFormView;
 			sourceTree = "<group>";
 		};
-		564015332836656900EEA9BC /* PlayerEditionView */ = {
+		564015332836656900EEA9BC /* PlayerEditorView */ = {
 			isa = PBXGroup;
 			children = (
-				5640151728364B3D00EEA9BC /* PlayerEditionView.swift */,
-				564015342836657400EEA9BC /* PlayerEditionViewModel.swift */,
+				5640151728364B3D00EEA9BC /* PlayerEditorView.swift */,
+				564015342836657400EEA9BC /* PlayerEditorViewModel.swift */,
 			);
-			path = PlayerEditionView;
+			path = PlayerEditorView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -304,13 +304,13 @@
 				5640152128364B3E00EEA9BC /* PlayerNotFoundView.swift in Sources */,
 				5640152228364B3E00EEA9BC /* InformationStyle.swift in Sources */,
 				5640152F28364E2C00EEA9BC /* AppViewModel.swift in Sources */,
-				564015352836657400EEA9BC /* PlayerEditionViewModel.swift in Sources */,
+				564015352836657400EEA9BC /* PlayerEditorViewModel.swift in Sources */,
 				564014E528364A5200EEA9BC /* MVVMDemoApp.swift in Sources */,
 				56089A1429CF068E003B3D49 /* Player+App.swift in Sources */,
 				564015322836508500EEA9BC /* PlayerFormViewModel.swift in Sources */,
 				5640151D28364B3D00EEA9BC /* PlayerView.swift in Sources */,
 				5640151F28364B3D00EEA9BC /* DatabaseButtons.swift in Sources */,
-				5640151E28364B3D00EEA9BC /* PlayerEditionView.swift in Sources */,
+				5640151E28364B3D00EEA9BC /* PlayerEditorView.swift in Sources */,
 				56089A1529CF068E003B3D49 /* PlayerRepository+App.swift in Sources */,
 				56089A1C29CF1BF9003B3D49 /* PlayerRepository+SwiftUI.swift in Sources */,
 				5640152328364B3E00EEA9BC /* AppView.swift in Sources */,

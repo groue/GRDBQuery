@@ -32,12 +32,12 @@ It comes in two flavors:
 
     See <doc:GettingStarted>.
 
-- The `@EnvironmentStateObject` property wrapper helps building `ObservableObject` models from the SwiftUI environment:
+- The `@EnvironmentStateObject` property wrapper helps build `ObservableObject` models from the SwiftUI environment:
 
     ```swift
     /// Displays an always up-to-date list of database players.
     struct PlayerList: View {
-        @EnvironmentStateObject var model: PlayerListModel = []
+        @EnvironmentStateObject var model: PlayerListModel
         
         init() {
             _model = EnvironmentStateObject { env in
@@ -50,18 +50,23 @@ It comes in two flavors:
         }
     }
 
-    class PlayerListModel: ObservableObject {
-        @Published private(set) var players: [Player]
-        private var cancellable: DatabaseCancellable?
+    @MainActor class PlayerListModel: ObservableObject {
+        @Published private(set) var players: [Player] = []
+        private var cancellable: AnyDatabaseCancellable?
 
         init(databaseContext: DatabaseContext) {
             let observation = ValueObservation.tracking { db in
                 try Player.fetchAll(db)
-            } 
-            cancellable = observation.start(in: databaseContext.reader, scheduling: .immediate) { error in
+            }
+            do {
+                let reader = try databaseContext.reader
+                cancellable = observation.start(in: reader, scheduling: .immediate) { error in
+                    // Handle error
+                } onChange: { [weak self] players in
+                    self?.players = players
+                }
+            } catch {
                 // Handle error
-            } onChange: { players in
-                self.players =  players
             }
         }
     }

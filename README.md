@@ -25,12 +25,12 @@ It comes in two flavors:
     }
     ```
 
-- The `@EnvironmentStateObject` property wrapper helps building `ObservableObject` models from the SwiftUI environment:
+- The `@EnvironmentStateObject` property wrapper helps build `ObservableObject` models from the SwiftUI environment:
 
     ```swift
     /// Displays an always up-to-date list of database players.
     struct PlayerList: View {
-        @EnvironmentStateObject var model: PlayerListModel = []
+        @EnvironmentStateObject var model: PlayerListModel
         
         init() {
             _model = EnvironmentStateObject { env in
@@ -54,7 +54,7 @@ Check out the **[GRDBQuery demo apps]**, and the **[GRDB demo apps]** for variou
 
 ## Thanks
 
-🙌 `@Query` was vastly inspired from [Core Data and SwiftUI](https://davedelong.com/blog/2021/04/03/core-data-and-swiftui/) by [@davedelong](https://github.com/davedelong), with [a critical improvement](https://github.com/groue/GRDB.swift/pull/955) contributed by [@steipete](https://github.com/steipete), and enhancements inspired by conversations with [@stephencelis](https://github.com/stephencelis). Many thanks to all of you!
+🙌 `@Query` was greatly inspired by [Core Data and SwiftUI](https://davedelong.com/blog/2021/04/03/core-data-and-swiftui/) by [@davedelong](https://github.com/davedelong), with [a critical improvement](https://github.com/groue/GRDB.swift/pull/955) contributed by [@steipete](https://github.com/steipete), and enhancements inspired by conversations with [@stephencelis](https://github.com/stephencelis). Many thanks to all of you!
 
 
 [GRDB]: http://github.com/groue/GRDB.swift

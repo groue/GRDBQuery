@@ -12,8 +12,8 @@ public struct DatabaseContext {
     /// `DatabaseContext` are refreshed for unrelated environment changes
     /// (see <https://github.com/groue/GRDBQuery/issues/68>).
     ///
-    /// Replacing `Result` with `ConnectionResult` whose failure type is a
-    /// class fixes this problem (not a struct).
+    /// Replacing `Result` with `ConnectionResult`, whose failure type is a
+    /// class (not a struct), fixes this problem.
     private final class ConnectionFailure {
         let error: any Error
         
@@ -79,7 +79,7 @@ extension DatabaseContext {
     /// database reads performed from the resulting context throw that
     /// same error.
     ///
-    /// Attempts to write in the database through the ``writer`` property
+    /// Attempts to write to the database through the ``writer`` property
     /// throw ``DatabaseContextError/readOnly``, even if the input
     /// connection can perform writes.
     ///
@@ -112,11 +112,11 @@ extension DatabaseContext {
         }
     }
     
-    /// Creates a `DatabaseContext` with a read/write access on an existing
+    /// Creates a `DatabaseContext` with read/write access to an existing
     /// database connection.
     ///
     /// The input closure is evaluated once. If it throws an error, all
-    /// database accesses performed from the resulting context throw that
+    /// database operations performed from the resulting context throw that
     /// same error.
     ///
     /// For example:
@@ -149,7 +149,7 @@ extension DatabaseContext {
     }
 }
 
-/// An error thrown by `DatabaseContext` when a database access is
+/// An error thrown by `DatabaseContext` when database access is
 /// not available.
 public enum DatabaseContextError: Error {
     /// Database is not connected.

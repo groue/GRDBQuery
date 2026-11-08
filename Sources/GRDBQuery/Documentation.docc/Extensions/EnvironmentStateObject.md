@@ -7,7 +7,7 @@ SwiftUI environment.
 
 `@EnvironmentStateObject` is similar to SwiftUI `@StateObject`, and provides the same essential services:
 
-- `@EnvironmentStateObject` instantiates the observable object right before the initial `body` rendering, and deallocates its when the view is no longer rendered.
+- `@EnvironmentStateObject` instantiates the observable object right before the initial `body` rendering, and deallocates it when the view is no longer rendered.
 - When published properties of the observable object change, SwiftUI updates the parts of any view that depend on those properties.
 - Get a `Binding` to one of the observable object’s properties using the `$` operator.
 
@@ -17,7 +17,7 @@ What `@EnvironmentStateObject` brings on top of `@StateObject` is the ability to
 
 **If the lifetime of your observable object is different from the one `@StateObject` would provide**, then `@EnvironmentStateObject` is not what you need. Have a look at `@ObservedObject`, `@EnvironmentObject`, etc.
 
-> Important: Just as `@StateObject`, `@EnvironmentStateObject` ties the lifetime of the observable object to the lifetime of the view identity. Once the observable object has been instantiated (right before the initial `body` rendering), changes in environment values or other parameters are just ignored.
+> Important: Just like `@StateObject`, `@EnvironmentStateObject` ties the lifetime of the observable object to the lifetime of the view identity. Once the observable object has been instantiated (right before the initial `body` rendering), changes in environment values or other parameters are just ignored.
 >
 > Just like `@StateObject`, you can force a new instantiation of the observable object by changing the view identity.
 
@@ -44,7 +44,7 @@ The application defines an [EnvironmentKey](https://developer.apple.com/document
 import SwiftUI
 
 extension EnvironmentValues {
-    var database: MyService { ... }
+    var database: MyDatabase { ... }
     var network: MyNetwork { ... }
 }
 ```
@@ -66,8 +66,8 @@ struct MyView: View {
 
     var body: some View {
         HStack {
-            TextField(viewModel.fieldTitle, text: $model.fieldValue)
-            Button("save") { viewModel.save() }
+            TextField(model.fieldTitle, text: $model.fieldValue)
+            Button("save") { model.save() }
         }
     }
 }
@@ -101,7 +101,7 @@ You can have the container view responsible for instantiating the observable obj
 struct MyView: View {
     @EnvironmentStateObject private var model: MyModel
 
-    init(_ makeModel: @escaping (EnvironmentValue) -> MyModel) {
+    init(_ makeModel: @escaping (EnvironmentValues) -> MyModel) {
         _model = EnvironmentStateObject(makeModel)
     }
 }
@@ -176,7 +176,7 @@ struct MyView_Previews: PreviewProvider {
 
 ### MVVM
 
-`@EnvironmentStateObject` exists as a support for MVVM applications that use the SwiftUI environment as a solution for dependency injection. See <doc:MVVM> for more information.
+`@EnvironmentStateObject` exists to support MVVM applications that use the SwiftUI environment as a solution for dependency injection. See <doc:MVVM> for more information.
 
 ## Topics
 

@@ -16,7 +16,7 @@ where Context: TopLevelDatabaseReader,
     ///
     /// - The initial value is immediately fetched, right on
     ///   subscription. This might not be suitable for slow
-    ///   database accesses.
+    ///   database access.
     /// - The tracked database region is not considered constant, which
     ///   prevents some scheduling optimizations.
     ///

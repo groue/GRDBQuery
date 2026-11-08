@@ -1,14 +1,14 @@
 import Combine
 import GRDB
 
-/// An enum that with three distinct cases, regarding the presence of a
+/// An enum with three distinct cases, regarding the presence of a
 /// value: `.missing`, `.existing`, or `.gone`. The `.gone` case contains
 /// the latest known value.
 ///
 /// # Overview
 ///
 /// `Presence` makes it possible to display values on screen, even after
-/// they no longer exist. See ``PresenceObservationQueryable`` for a
+/// they no longer exist. See ``PresenceObservationQueryable`` for
 /// sample code.
 ///
 /// All Combine publishers that publish optional values can be turned into
@@ -70,7 +70,7 @@ extension Publisher {
     ///
     /// For example:
     ///
-    ///     publisher   publisher.presence()
+    ///     publisher   publisher.scanPresence()
     ///     | nil       | .missing
     ///     | 1         | .existing(1)
     ///     | 2         | .existing(2)

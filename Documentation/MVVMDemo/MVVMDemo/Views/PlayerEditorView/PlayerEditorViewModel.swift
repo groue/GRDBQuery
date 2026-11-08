@@ -2,8 +2,8 @@ import Combine
 import GRDB
 import Players
 
-/// The view model for ``PlayerEditionView``.
-final class PlayerEditionViewModel: ObservableObject {
+/// The view model for ``PlayerEditorView``.
+final class PlayerEditorViewModel: ObservableObject {
     // We handle three distinct cases regarding the presence of the
     // edited player:
     private enum PlayerPresence {

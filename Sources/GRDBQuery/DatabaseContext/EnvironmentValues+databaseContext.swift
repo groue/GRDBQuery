@@ -41,7 +41,7 @@ extension View {
 }
 
 extension Scene {
-    /// Set the database context in the SwiftUI environment of a `Scene`.
+    /// Sets the database context in the SwiftUI environment of a `Scene`.
     ///
     /// For example:
     ///

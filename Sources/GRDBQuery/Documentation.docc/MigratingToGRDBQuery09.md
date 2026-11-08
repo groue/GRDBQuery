@@ -4,7 +4,7 @@ GRDBQuery 0.9 makes it easier than ever to access the database from SwiftUI view
 
 ## Overview
 
-This release aims at streamlining the application code that feeds the `@Query` property wrapper.
+This release aims to streamline the application code that feeds the `@Query` property wrapper.
 
 - ✨ You no longer need to write Combine publishers in your queryable types, thanks to new convenience protocols that address the most common use cases.
 
@@ -39,11 +39,11 @@ This release aims at streamlining the application code that feeds the `@Query` p
     
     For your more specific needs, the base ``Queryable`` protocol still accepts your custom Combine publishers.  
 
-- ✨ The new ``DatabaseContext`` type and the `databaseContext` environment key provides a unified way to read or observe a database from SwiftUI views. This can remove a lot of boilerplate code, such as a custom environment key, or convenience `Query` initializers from this environment key. 
+- ✨ The new ``DatabaseContext`` type and the `databaseContext` environment key provide a unified way to read or observe a database from SwiftUI views. This can remove a lot of boilerplate code, such as a custom environment key, or convenience `Query` initializers from this environment key. 
 
     See the focused migration guides at the end of this article for more details.
 
-- ✨ The `@Query` property wrapper now exposes its eventual database error. See ``Query/Wrapper/error``.
+- ✨ The `@Query` property wrapper now exposes its database error, if any. See ``Query/Wrapper/error``.
 
 ## Breaking changes
 
@@ -51,7 +51,7 @@ All the new features are opt-in, and your GRDBQuery-powered application should c
 
 - The minimum Swift version is now 5.10 (Xcode 15.3+).
 - GRDBQuery now depends on GRDB. If you do not want to embed GRDB in your application, _do not upgrade_, and consider [vendoring](https://stackoverflow.com/questions/26217488/what-is-vendoring) GRDBQuery 0.8.0 in your application.
-- The `Queryable` protocol has an associated type that was renamed from `DatabaseContext` to `Context`. Perform a find and replace in your application in order to fix the eventual compiler errors.
+- The `Queryable` protocol has an associated type that was renamed from `DatabaseContext` to `Context`. Perform a find and replace in your application in order to fix any resulting compiler errors.
 - `@Query` is now main-actor isolated. This will automatically isolate views that embed `@Query` to the main actor, and their `async` methods will start running on the main actor as well. This might be undesired, so it is recommended to review the `async` methods of those views. 
 - If your project uses the [`DisableOutwardActorInference`](https://github.com/apple/swift-evolution/blob/main/proposals/0401-remove-property-wrapper-isolation.md) upcoming feature of the Swift compiler, in order to avoid the automatic main actor isolation mentioned above, you will have to annotate some views as `@MainActor`.
 

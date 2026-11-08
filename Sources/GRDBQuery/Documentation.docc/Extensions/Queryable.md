@@ -32,7 +32,7 @@ struct PlayersRequest: Queryable {
 }
 ```
 
-This `PlayersRequest` type will automatically update a SwiftUI view on every database changes, when wrapped by the `@Query` property wrapper:
+This `PlayersRequest` type will automatically update a SwiftUI view on every database change, when wrapped by the `@Query` property wrapper:
 
 ```swift
 import GRDBQuery
@@ -49,7 +49,7 @@ struct PlayerList: View {
 
 > Important: Make sure a valid database context has been provided in the environment, or the `@Query` property will emit an ``Query/Wrapper/error``. See <doc:GettingStarted>.
 
-## Convenience database accesses
+## Convenience database access
 
 The `Queryable` protocol can build arbitrary Combine publishers, from a ``DatabaseContext`` or from any other data source (see <doc:CustomDatabaseContexts>). It is very versatile.
 
@@ -57,7 +57,7 @@ However, many views just want to observe the database, or perform a single datab
 
 That's why `Queryable` has three derived protocols that address those use cases specifically: ``ValueObservationQueryable``, ``PresenceObservationQueryable`` and ``FetchQueryable``.
 
-For example, the `PlayersRequest` defined above can be streamlined as below, for an identical behavior:
+For example, the `PlayersRequest` defined above can be streamlined as below, with identical behavior:
 
 ```swift
 struct PlayersRequest: ValueObservationQueryable {

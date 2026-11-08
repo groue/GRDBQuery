@@ -20,7 +20,7 @@ struct PlayersRequest: ValueObservationQueryable {
 }
 ```
 
-This `PlayersRequest` type will automatically update a SwiftUI view on every database changes, when wrapped by the `@Query` property wrapper:
+This `PlayersRequest` type will automatically update a SwiftUI view on every database change, when wrapped by the `@Query` property wrapper:
 
 ```swift
 import GRDBQuery
@@ -48,7 +48,7 @@ By default, a `ValueObservationQueryable` type fetches its initial value as soon
 
 ```swift
 struct PlayersRequest: ValueObservationQueryable {
-    // Opt-in for async fetch
+    // Opt in to async fetch
     static let queryableOptions = QueryableOptions.async
     
     static var defaultValue: [Player] { [] }
@@ -59,7 +59,7 @@ struct PlayersRequest: ValueObservationQueryable {
 }
 ```
 
-The other option is ``QueryableOptions/constantRegion``. When appropriate, it that can enable scheduling optimizations in the most demanding apps. Check the documentation of this option.
+The other option is ``QueryableOptions/constantRegion``. When appropriate, it can enable scheduling optimizations in the most demanding apps. Check the documentation of this option.
 
 ## Topics
 

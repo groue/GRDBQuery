@@ -34,6 +34,6 @@ public protocol Queryable<Context>: Equatable {
     /// main actor.
     ///
     /// - parameter database: Provides access to the database.
-    /// - throws: Any error that prevents the publisher to be returned.
+    /// - throws: Any error that prevents the publisher from being returned.
     @MainActor func publisher(in database: Context) throws -> ValuePublisher
 }

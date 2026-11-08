@@ -1,8 +1,8 @@
 # Migrating an application that directly uses a DatabaseQueue or DatabasePool
 
-## Is my application concerned?
+## Does this guide apply to my application?
 
-If your application defines SwiftUI views that read and write in the database via a raw GRDB connection (`DatabaseQueue` or `DatabasePool`), and observe the database with the `@Query` property wrapper, then GRDBQuery 0.9 can greatly simplify the your setup.
+If your application defines SwiftUI views that read from and write to the database via a raw GRDB connection (`DatabaseQueue` or `DatabasePool`), and observe the database with the `@Query` property wrapper, then GRDBQuery 0.9 can greatly simplify your setup.
 
 ### Remove the custom environment key
 
@@ -65,7 +65,7 @@ To migrate:
 
 ### Simplify queryable types
 
-Before the migration, the application defines queryable types that feed from a `DatabaseQueue`:
+Before the migration, the application defines queryable types that read from a `DatabaseQueue`:
 
 ```swift
 // BEFORE MIGRATION
@@ -115,7 +115,7 @@ To migrate:
 
 ### Migrate views that perform writes
 
-Before the migration, the application defines views that write in the database:
+Before the migration, the application defines views that write to the database:
 
 ```swift
 // BEFORE MIGRATION
@@ -125,7 +125,7 @@ struct DeletePlayersButton: View {
     var body: some View {
         Button("Delete Players") {
             do {
-                try dbQueue.write {
+                try dbQueue.write { db in
                     try Player.deleteAll(db)
                 }
             } catch {
@@ -148,7 +148,7 @@ To migrate:
         var body: some View {
             Button("Delete Players") {
                 do {
-                    try databaseContext.writer.write {
+                    try databaseContext.writer.write { db in
                         try Player.deleteAll(db)
                     }
                 } catch {

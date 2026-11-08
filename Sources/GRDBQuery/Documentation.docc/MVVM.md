@@ -1,10 +1,10 @@
 # MVVM and Dependency Injection
 
-Learn how the `@EnvironmentStateObject` property wrapper helps building MVVM applications.
+Learn how the `@EnvironmentStateObject` property wrapper helps build MVVM applications.
 
 ## What are we talking about?
 
-Since many programming patterns can be called by the "MVVM" and "Dependency Injection" names, we'll start by making explicit our usage of those terms in this guide. Hopefully you will feel at home.
+Since many programming patterns can be called by the "MVVM" and "Dependency Injection" names, we'll start by making our usage of those terms in this guide explicit. Hopefully you will feel at home.
 
 ### MVVM
 
@@ -16,23 +16,23 @@ _MVVM_ stands for "Model-View-ViewModel", and it describes an application archit
 
 For example, we can have the `Player` model (a regular Swift struct), the `PlayerListViewModel` (an observable object), and the `PlayerListView` (a SwiftUI view). Naming conventions may vary.
 
-An MVVM application is slightly more complex than a naive or "quick and dirty" app, and there exists reasons for that. The [wikipedia page](https://en.wikipedia.org/wiki/Model-view-viewmodel) describes a few of the MVVM goals. We can add a few technical ones:
+An MVVM application is slightly more complex than a naive or "quick and dirty" app, and there are reasons for that. The [Wikipedia page](https://en.wikipedia.org/wiki/Model-view-viewmodel) describes a few of the MVVM goals. We can add a few technical ones:
 
-- A view model supports many kinds of tests: unit tests, integration tests, end-to-end tests, ui tests, you name it.
+- A view model supports many kinds of tests: unit tests, integration tests, end-to-end tests, UI tests, you name it.
 
-- When view models access models through dependency injection, this helps testability. For example, one may want to test a view model in the context of a successful or failing network, or in the context of different database setups (empty database, large database, etc).
+- When view models access models through dependency injection, this helps testability. For example, one may want to test a view model in the context of a successful or failing network, or in the context of different database setups (empty database, large database, etc.).
 
 - In a SwiftUI application, previews can be seen as quick visual tests. Again, dependency injection makes it possible to run previews in various contexts.  
 
 ### Dependency Injection
 
-_Dependency Injection_, or DI, is a programming technique that allows separation of concerns. A typical benefit of DI, in an MVVM application, is to make the developer able to instantiate a view model in the desired context.
+_Dependency Injection_, or DI, is a programming technique that allows separation of concerns. A typical benefit of DI, in an MVVM application, is to enable the developer to instantiate a view model in the desired context.
 
-For example, the application configures a view model with a real network access, while tests and previews use network mocks in order to leverage the desired behaviors.
+For example, the application configures a view model with a real network access, while tests and previews use network mocks in order to simulate the desired behaviors.
 
 In the context of databases, the application uses a database persisted on disk, but tests and previews may prefer light and fast in-memory databases configured as desired.
 
-There exist many available DI solutions for Swift, but this guide focuses on the one that is built-in with SwiftUI: **the SwiftUI environment**. Please refer to the [SwiftUI documentation](https://developer.apple.com/documentation/swiftui/environment) to learn more about the environment.
+There exist many available DI solutions for Swift, but this guide focuses on the one that is built into SwiftUI: **the SwiftUI environment**. Please refer to the [SwiftUI documentation](https://developer.apple.com/documentation/swiftui/environment) to learn more about the environment.
 
 The SwiftUI environment has great developer ergonomics. For example, it is easy to configure previews:
 
@@ -73,13 +73,13 @@ class MyViewModel: ObservableObject {
 
 ## Lifetimes of a ViewModel
 
-In a MVVM application, a view relies on its view model for grabbing on-screen values, and handling user actions. Keeping the view model alive is important as long as a view is on screen.
+In an MVVM application, a view relies on its view model for grabbing on-screen values, and handling user actions. Keeping the view model alive is important as long as a view is on screen.
 
 SwiftUI ships with a lot of ready-made property wrappers that control the lifetime of view models, and you are probably already using them in your MVVM SwiftUI applications:
  
-- [`@Environment`](https://developer.apple.com/documentation/swiftui/environment) and [`@EnvironmentObject`](https://developer.apple.com/documentation/swiftui/environmentobject) support well view models that outlive the views they feed.
+- [`@Environment`](https://developer.apple.com/documentation/swiftui/environment) and [`@EnvironmentObject`](https://developer.apple.com/documentation/swiftui/environmentobject) are well suited for view models that outlive the views they feed.
 
-- [`@StateObject`](https://developer.apple.com/documentation/swiftui/stateobject) support view models that live exactly as long as a SwiftUI view.
+- [`@StateObject`](https://developer.apple.com/documentation/swiftui/stateobject) supports view models that live exactly as long as a SwiftUI view.
 
 - [`@ObservedObject`](https://developer.apple.com/documentation/swiftui/observedobject) leaves the lifetime control to some other place in the application: it only propagates a view model through a view hierarchy.
 
@@ -92,7 +92,7 @@ struct MyView: View {
 }
 ```
 
-If you've already scratched your head in front of this puzzle, you're at the correct place 🙂. And let's look at the solution below.
+If you've already scratched your head in front of this puzzle, you're in the right place 🙂. Let's look at the solution below.
 
 ## The @EnvironmentStateObject Property Wrapper
 
@@ -110,11 +110,11 @@ struct MyView: View {
 }
 ```
 
-In the above sample code, `env.database` and `env.network` are defined with SwiftUI [EnvironmentKey](https://developer.apple.com/documentation/swiftui/environmentkey). See <doc:GettingStarted> for some sample code.
+In the above sample code, `env.database` and `env.network` are defined with SwiftUI [EnvironmentKey](https://developer.apple.com/documentation/swiftui/environmentkey). See <doc:CustomDatabaseContexts> for some sample code.
 
 `@EnvironmentStateObject` is quite similar to SwiftUI `@StateObject`, and provides the same essential services:
 
-- `@EnvironmentStateObject` instantiates the observable object right before the initial `body` rendering, and deallocates its when the view is no longer rendered.
+- `@EnvironmentStateObject` instantiates the observable object right before the initial `body` rendering, and deallocates it when the view is no longer rendered.
 - When published properties of the observable object change, SwiftUI updates the parts of any view that depend on those properties.
 - Get a `Binding` to one of the observable object’s properties using the `$` operator.
 

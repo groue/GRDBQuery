@@ -9,7 +9,7 @@ where Context: TopLevelDatabaseReader,
     /// Options for the database fetch.
     ///
     /// The default behavior immediately fetches the value, right on
-    /// subscription. This might not be suitable for slow database accesses.
+    /// subscription. This might not be suitable for slow database access.
     ///
     /// See ``QueryableOptions`` for more options.
     static var queryableOptions: QueryableOptions { get }

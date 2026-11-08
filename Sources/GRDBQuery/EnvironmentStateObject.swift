@@ -86,7 +86,7 @@ where ObjectType: ObservableObject
             let object = makeObject()
             self.object = object
             
-            // Transmit all object changes
+            // Forward all object changes
             var isUpdating = true
             cancellable = object.objectWillChange.sink { [weak self] value in
                 guard let self = self else { return }

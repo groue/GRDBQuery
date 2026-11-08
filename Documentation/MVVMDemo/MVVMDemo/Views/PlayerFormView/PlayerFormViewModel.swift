@@ -34,7 +34,7 @@ final class PlayerFormViewModel: ObservableObject {
             player = updatedPlayer
         } catch RecordError.recordNotFound {
             // Oops, player does not exist.
-            // Ignore this error: `PlayerEditionView` will dismiss.
+            // Ignore this error: `PlayerEditorView` will dismiss.
         } catch {
             // Ignore other errors.
         }

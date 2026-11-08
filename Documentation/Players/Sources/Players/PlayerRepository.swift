@@ -25,13 +25,13 @@ import os.log
 /// - ``init(_:)``
 /// - ``makeConfiguration(_:)``
 ///
-/// ### Performing read-only accesses
+/// ### Performing read-only access
 ///
 /// - ``reader``
 ///
 /// ### Performing writes
 ///
-/// - ``deleteAllPlayer()``
+/// - ``deleteAllPlayers()``
 /// - ``insert(_:)``
 /// - ``update(_:)``
 public struct PlayerRepository: Sendable {
@@ -47,7 +47,7 @@ public struct PlayerRepository: Sendable {
     
     /// Provides access to the database.
     ///
-    /// Application can use a `DatabasePool`, while SwiftUI previews and tests
+    /// The application can use a `DatabasePool`, while SwiftUI previews and tests
     /// can use a fast in-memory `DatabaseQueue`.
     ///
     /// See <https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/databaseconnections>
@@ -111,7 +111,7 @@ extension PlayerRepository {
             config.prepareDatabase { db in
                 db.trace {
                     // It's ok to log statements publicly. Sensitive
-                    // information (statement arguments) are not logged
+                    // information (statement arguments) is not logged
                     // unless config.publicStatementArguments is set
                     // (see below).
                     os_log("%{public}@", log: sqlLogger, type: .debug, String(describing: $0))
@@ -150,7 +150,7 @@ extension PlayerRepository {
     }
     
     /// Deletes all players.
-    public func deleteAllPlayer() throws {
+    public func deleteAllPlayers() throws {
         try dbWriter.write { db in
             _ = try Player.deleteAll(db)
         }
@@ -160,11 +160,11 @@ extension PlayerRepository {
 // MARK: - Database Access: Reads
 
 // This demo app does not provide any specific reading method, and instead
-// gives an unrestricted read-only access to the rest of the application.
+// gives unrestricted read-only access to the rest of the application.
 // In your app, you are free to choose another path, and define focused
 // reading methods.
 extension PlayerRepository {
-    /// Provides a read-only access to the database.
+    /// Provides read-only access to the database.
     public var reader: any GRDB.DatabaseReader {
         dbWriter
     }

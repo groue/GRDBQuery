@@ -7,7 +7,7 @@ their requests.
 
 By default, `@Query` observes its ``Queryable`` request for the whole duration of the presence of the view in the SwiftUI engine: it subscribes to the request before the first `body` rendering, and cancels the subscription when the view is no longer rendered.
 
-You can spare resources by stopping request observation when views are not on screen, with the `View.queryObservation(_:)` method. It enables request observation in the chosen time intervals, for all `@Query` property wrappers embedded in the view.
+You can save resources by stopping request observation when views are not on screen, with the `View.queryObservation(_:)` method. It enables request observation in the chosen time intervals, for all `@Query` property wrappers embedded in the view.
 
 Given this general timeline of SwiftUI events:
 
@@ -51,7 +51,7 @@ Given this general timeline of SwiftUI events:
 
 > Note: Only `.onRender` and `.always` have `@Query` feed a view on its initial `body` rendering. This avoids SwiftUI animations for the initial rendering of database values.
 
-> Note: When the request does not publish its initial value right on subscription, `.onRender` and `.onAppear` will have your view display obsolete database values when they re-appear.
+> Note: When the request does not publish its initial value right on subscription, `.onRender` and `.onAppear` will have your view display obsolete database values when it reappears.
 >
 > By default, a convenience ``ValueObservationQueryable``, ``PresenceObservationQueryable``, or ``FetchQueryable`` type does publish its value right on subscription.
 
@@ -59,7 +59,7 @@ Given this general timeline of SwiftUI events:
 
 > Tip: For *slow and asynchronous* database publishers that publish all their values asynchronously, prefer `QueryObservation.always`, in order to reduce the probability that the application user can see obsolete database values.
 >
-> When you use a convenience ``ValueObservationQueryable``, ``PresenceObservationQueryable``, or ``FetchQueryable`` request, you opt in for such an asynchronous publishers with the ``QueryableOptions/async`` option.
+> When you use a convenience ``ValueObservationQueryable``, ``PresenceObservationQueryable``, or ``FetchQueryable`` request, you opt in to such asynchronous publishers with the ``QueryableOptions/async`` option.
 >
 > You can also consider using `.onAppear` and a plain ``Queryable`` type that prepends its publisher with a sentinel value. This value will allow the view to display a loading indicator instead of obsolete database values, whenever the view appears or re-appears.
 

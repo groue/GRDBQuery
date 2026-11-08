@@ -50,7 +50,7 @@ By default, a `FetchQueryable` type fetches the value as soon as a SwiftUI view 
 
 ```swift
 struct PlayersRequest: FetchQueryable {
-    // Opt-in for async fetch
+    // Opt in to async fetch
     static let queryableOptions = QueryableOptions.async
     
     static var defaultValue: [Player] { [] }

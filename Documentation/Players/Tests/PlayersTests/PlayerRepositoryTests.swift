@@ -44,7 +44,7 @@ final class PlayerRepositoryTests: XCTestCase {
         _ = try repo.insert(Player(name: "Arthur", score: 1000, photoID: 1))
 
         // When we delete all players
-        try repo.deleteAllPlayer()
+        try repo.deleteAllPlayers()
         
         // Then no player exists
         let count = try repo.reader.read(Player.fetchCount(_:))

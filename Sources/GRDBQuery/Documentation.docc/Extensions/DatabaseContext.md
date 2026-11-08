@@ -4,9 +4,9 @@ A `DatabaseContext` gives access to a GRDB database, and feeds the `@Query` prop
 
 ## Overview
 
-`DatabaseContext` provides a read-only access to a database, as well as an optional write access. It can deal with errors that happen during database initialization.
+`DatabaseContext` provides read-only access to a database, as well as optional write access. It can deal with errors that happen during database initialization.
 
-All ``Queryable`` types, by default, feed from a `DatabaseContext`. This can be configured: see <doc:CustomDatabaseContexts>.
+All ``Queryable`` types, by default, read from a `DatabaseContext`. This can be configured: see <doc:CustomDatabaseContexts>.
 
 To create a `DatabaseContext`, first [connect to a database](https://swiftpackageindex.com/groue/grdb.swift/documentation/grdb/databaseconnections):
 
@@ -22,7 +22,7 @@ let databaseContext = DatabaseContext.readOnly { dbQueue }
 
 ## DatabaseContext and the SwiftUI environment
 
-When put in the SwiftUI environment, a `DatabaseContext` allows SwiftUI views to read, observe, and even write in the database, when desired. For example:
+When put in the SwiftUI environment, a `DatabaseContext` allows SwiftUI views to read, observe, and even write to the database, when desired. For example:
 
 ```swift
 import GRDBQuery
@@ -49,8 +49,8 @@ For example, here is how to create a read-only `DatabaseContext` from a `PlayerR
 
 ```swift
 extension PlayerRepository: TopLevelDatabaseReader {
-    /// Provides a read-only access to the database, or throws an error if
-    /// database connection could not be opened.
+    /// Provides read-only access to the database, or throws an error if
+    /// the database connection could not be opened.
     var reader: GRDB.DatabaseReader {
         get throws { /* return a DatabaseReader */ }
     }

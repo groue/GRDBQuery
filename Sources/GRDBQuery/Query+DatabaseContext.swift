@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension Query where Request.Context == DatabaseContext {
-    /// Creates a `Query` that feeds from the `databaseContext`
+    /// Creates a `Query` that reads from the `databaseContext`
     /// environment key, given an initial ``Queryable`` request.
     ///
     /// See ``init(_:in:)-2o5mo`` for more information about the runtime
@@ -26,7 +26,7 @@ extension Query where Request.Context == DatabaseContext {
         self.init(request, in: \.databaseContext)
     }
     
-    /// Creates a `Query` that feeds from the `databaseContext`
+    /// Creates a `Query` that reads from the `databaseContext`
     /// environment key, given a ``Queryable`` request.
     ///
     /// See ``init(constant:in:)`` for more information about the runtime
@@ -55,7 +55,7 @@ extension Query where Request.Context == DatabaseContext {
         self.init(constant: request, in: \.databaseContext)
     }
     
-    /// Creates a `Query` that feeds from the `databaseContext`
+    /// Creates a `Query` that reads from the `databaseContext`
     /// environment key, given a SwiftUI binding to its
     /// ``Queryable`` request.
     ///
@@ -65,7 +65,7 @@ extension Query where Request.Context == DatabaseContext {
     /// For example:
     ///
     /// ```swift
-    /// struct RootView {
+    /// struct RootView: View {
     ///     @State var request: PlayersRequest
     ///
     ///     var body: some View {

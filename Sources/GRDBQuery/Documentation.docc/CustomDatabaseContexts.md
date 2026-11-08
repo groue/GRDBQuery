@@ -1,15 +1,15 @@
 # Custom Database Contexts
 
-Control the database accesses in your application.
+Control database access in your application.
 
 ## Overview
 
-Applications can perform unrestricted read and write database accesses from their SwiftUI views, for convenience, or rapid prototyping. See <doc:GettingStarted> for such a setup.
+Applications can perform unrestricted read and write database access from their SwiftUI views, for convenience, or rapid prototyping. See <doc:GettingStarted> for such a setup.
 
 Some apps have other needs, though:
 
 - An app that enforces **database invariants** must disallow unrestricted writes. Database invariants are important for the integrity of application data, as described in the [GRDB Concurrency Guide]. 
-- An app that connects to **multiple databases** and has to specify which database a `@Query` property connects to.
+- An app that connects to **multiple databases** has to specify which database a `@Query` property connects to.
 
 We will address those needs below.
 
@@ -38,7 +38,7 @@ With a read-only context, all attempts to perform writes via the `databaseContex
 
 Now that it is impossible to perform unrestricted writes from the `databaseContext` environment, some applications need views to perform controlled database writes — again, for convenience, or rapid prototyping.
 
-This is case of the [GRDBQuery demo app], that uses the techniques described here.
+This is the case with the [GRDBQuery demo app], which uses the techniques described here.
 
 Define a "database manager" type that declares the set of permitted writes. For example:
 
@@ -51,7 +51,7 @@ struct PlayerRepository {
 
 extension PlayerRepository {
     /// Inserts a player.
-    func insert(_ player: Player) {
+    func insert(_ player: Player) throws {
         try writer.write { ... }
     }
     
@@ -68,7 +68,7 @@ Then, define a custom SwiftUI environment key for the database manager:
 import SwiftUI
 
 private struct PlayerRepositoryKey: EnvironmentKey {
-    /// The default dbQueue is an empty in-memory database
+    /// The default repository is an empty in-memory database
     static var defaultValue: PlayerRepository { /* default PlayerRepository */ }
 }
 
@@ -87,7 +87,7 @@ extension View {
 }
 ```
 
-Now, the application can inject a `PlayerRepository` in the environment, and views can use it to write in the database:
+Now, the application can inject a `PlayerRepository` into the environment, and views can use it to write to the database:
 
 ```swift
 @main
@@ -117,12 +117,12 @@ struct DeletePlayersButton: View {
 
 Finally, let SwiftUI views use the `@Query` property wrapper, as below:
 
-1. Expose a read-only access from the database manager.
+1. Expose read-only access from the database manager.
 2. Update the `View.playerRepository(_:)` method so that it puts a read-only database context in the environment.
 
 ```swift
 extension PlayerRepository {
-    /// Provides a read-only access to the database.
+    /// Provides read-only access to the database.
     var reader: GRDB.DatabaseReader { writer }
 }
 
@@ -137,17 +137,17 @@ extension View {
 }
 ```
 
-Now everything is working as expected: views can perform controlled writes, and use the `@Query` propoerty wrapper.
+Now everything is working as expected: views can perform controlled writes, and use the `@Query` property wrapper.
 
 ## Replacing DatabaseContext with a custom database manager, and connecting to multiple databases
 
-It is also possible to get rid of `DatabaseContext` entirely, and perform all database accesses from a database manager.
+It is also possible to get rid of `DatabaseContext` entirely, and perform all database access from a database manager.
 
 This technique can be used to prevent unrestricted reads. It is also useful in applications that connect to multiple databases (just define multiple database managers).   
 
 First, stop defining the `databaseContext` environment value, since it is useless.
 
-For `@Query` to be able to feed from a database manager, it is necessary to instruct `Queryable` types to access the database through this database manager, instead of `DatabaseContext`.
+For `@Query` to be able to read from a database manager, it is necessary to instruct `Queryable` types to access the database through this database manager, instead of `DatabaseContext`.
 
 - For ``Queryable`` types, build the publisher from a database manager instead of a database context:
 
@@ -164,7 +164,7 @@ For `@Query` to be able to feed from a database manager, it is necessary to inst
 
     ```swift
     extension PlayerRepository: TopLevelDatabaseReader {
-        /// Provides a read-only access to the database.
+        /// Provides read-only access to the database.
         var reader: GRDB.DatabaseReader { writer }
     }
 
@@ -193,26 +193,26 @@ struct PlayerList: View {
 
 > Tip: It is possible to use a `@Query` that connects to a custom database manager without specifying an explicit environment key in each and every view.
 >
-> To do so, declare somewhere in your application convenience `Query` initializers, as below. To decide which initializer to use, see <doc:QueryableParameters>: 
+> To do so, declare convenience `Query` initializers somewhere in your application, as below. To decide which initializer to use, see <doc:QueryableParameters>: 
 >
 > ```swift
 > // Convenience Query initializers for requests
-> // that feed from `DatabaseQueue`.
+> // that read from `PlayerRepository`.
 > extension Query where Request.Context == PlayerRepository {
->     /// Creates a `Query` that feeds from the `playerRepository`
+>     /// Creates a `Query` that reads from the `playerRepository`
 >     /// environment key, given an initial `Queryable` request.
 >     init(_ request: Request) {
 >         self.init(request, in: \.playerRepository)
 >     }
 >
->     /// Creates a `Query` that feeds from the `playerRepository`
+>     /// Creates a `Query` that reads from the `playerRepository`
 >     /// environment key, given a SwiftUI binding to its
 >     /// `Queryable` request.
 >     init(_ request: Binding<Request>) {
 >         self.init(request, in: \.playerRepository)
 >     }
 >
->     /// Creates a `Query` that feeds from the `playerRepository`
+>     /// Creates a `Query` that reads from the `playerRepository`
 >     /// environment key, given a `Queryable` request.
 >     init(constant request: Request) {
 >         self.init(constant: request, in: \.playerRepository)

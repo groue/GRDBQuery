@@ -1,8 +1,8 @@
 # Migrating an application that uses a database manager
 
-## Is my application concerned?
+## Does this guide apply to my application?
 
-In such an application, SwiftUI views read and write in the database via a "database manager" that encapsulates a GRDB connection. Some views access the database with the `@Query` property wrapper.
+In such an application, SwiftUI views read from and write to the database via a "database manager" that encapsulates a GRDB connection. Some views access the database with the `@Query` property wrapper.
 
 If the application connects to multiple databases, read this guide for an overview of the benefits of GRDBQuery 0.9, but prefer the techniques described in <doc:CustomDatabaseContexts>.  
 
@@ -46,11 +46,11 @@ To migrate:
 
 - ✨ Delete the extra `Query` initializers.
 
-- ✨ Expose a read-only access from the database manager:
+- ✨ Expose read-only access from the database manager:
 
     ```swift
     extension PlayerRepository {
-        /// Provides a read-only access to the database.
+        /// Provides read-only access to the database.
         var reader: GRDB.DatabaseReader { writer }
     }
     ```
@@ -72,7 +72,7 @@ To migrate:
 
 ### Simplify queryable types
 
-Before the migration, the application defines queryable types that feed from the database manager:
+Before the migration, the application defines queryable types that read from the database manager:
 
 ```swift
 // BEFORE MIGRATION
@@ -107,7 +107,7 @@ To migrate:
     }
     ```
 
-- ✨ For queryable types that can't use any of the convenience protocols, update the argument of `publisher(in:)` from `DatabaseQueue` to `DatabaseContext`:
+- ✨ For queryable types that can't use any of the convenience protocols, update the argument of `publisher(in:)` from `PlayerRepository` to `DatabaseContext`:
 
     ```swift
     // AFTER MIGRATION
@@ -115,7 +115,7 @@ To migrate:
         static var defaultValue: [Player] { [] }
         
         func publisher(in context: DatabaseContext) -> ... {
-            // Read from context.reader instead of dbQueue
+            // Read from context.reader instead of repository.reader
         }
     }
     ```
